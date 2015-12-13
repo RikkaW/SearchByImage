@@ -2,25 +2,14 @@ package rikka.searchbyimage;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URI;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 
 /**
@@ -30,7 +19,7 @@ public class HttpUploadFile {
 
     String boundary = "----WebKitFormBoundaryAAGZldGncBiDdsTP";
 
-    public String Upload(String uri, String fileFromName, InputStream inputStream) {
+    public String Upload(String uri, String fileFromName, String filePath) {
 
 
         byte[] postHeaderBytes = getHeadBytes(fileFromName);
@@ -39,6 +28,8 @@ public class HttpUploadFile {
         HttpURLConnection connection = null;
         BufferedInputStream fileStream = null;
         String responseUri = null;
+        File file = new File(filePath);
+        InputStream inputStream;
 
         try {
             /*Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1",
@@ -62,7 +53,7 @@ public class HttpUploadFile {
 
             byte[] buffer = new byte[4096];
 
-
+            inputStream = new FileInputStream(file);
             fileStream = new BufferedInputStream(inputStream);
             while ((fileStream.read(buffer)) != -1) {
                 os.write(buffer);
@@ -89,6 +80,13 @@ public class HttpUploadFile {
                     e.printStackTrace();
                 }
                 connection.disconnect();
+            }
+            if (fileStream!=null){
+                try {
+                    fileStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return responseUri;

@@ -11,12 +11,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,15 +33,11 @@ public class MainActivity extends AppCompatActivity {
             mContext = context;
         }
 
-        protected String doInBackground(Uri...imageUrl) {
+        protected String doInBackground(Uri... imageUrl) {
             HttpUploadFile httpUploadFile = new HttpUploadFile();
 
-            try {
-                return httpUploadFile.Upload("http://www.google.com/searchbyimage/upload", "QAQQQQ", mContext.getContentResolver().openInputStream(imageUrl[0]));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return "";
-            }
+            return httpUploadFile.Upload("http://www.google.com/searchbyimage/upload", "QAQQQQ", getImageUrlWithAuthority(mContext, imageUrl[0]));
+
         }
 
 
@@ -134,5 +136,67 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static String getImageUrlWithAuthority(Context context, Uri uri) {
+        InputStream is = null;
+        OutputStream os = null;
+        File file = null;
+        if (uri.getAuthority() != null) {
+            try {
+                is = context.getContentResolver().openInputStream(uri);
+                String RootPath = context.getCacheDir().getAbsolutePath();
+                String FilePath = RootPath + "/image/" + getImageFileName(uri);
+                file = new File(FilePath);
+                if (!file.getParentFile().exists()) {
+                    //noinspection ResultOfMethodCallIgnored
+                    file.getParentFile().mkdirs();
+                }
+                try {
+                    //noinspection ResultOfMethodCallIgnored
+                    file.createNewFile();
+                } catch (IOException e) {
+                    Log.e("在保存图片时出错：", e.toString());
+                }
+                os = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = is != null ? is.read(buf) : 0) > 0) {
+                    os.write(buf, 0, len);
+                }
+                os.flush();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (e instanceof FileNotFoundException) {
+                    //ask for permission and do it again
+                }
+            } finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (os != null) {
+                        os.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return file.getAbsolutePath();
+    }
+
+    private static String getImageFileName(Uri uri) {
+        int last = uri.toString().lastIndexOf("/");
+        String fileName = uri.toString().substring(last + 1);
+        if (!fileName.contains(".")) {
+            fileName += ".jpg";
+        }
+        return fileName;
     }
 }
