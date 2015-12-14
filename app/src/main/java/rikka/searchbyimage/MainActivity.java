@@ -1,14 +1,18 @@
 package rikka.searchbyimage;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,19 +41,19 @@ public class MainActivity extends AppCompatActivity {
             HttpUploadFile httpUploadFile = new HttpUploadFile();
 
             return httpUploadFile.Upload("http://www.google.com/searchbyimage/upload", "QAQQQQ", getImageUrlWithAuthority(mContext, imageUrl[0]));
-
         }
 
 
         protected void onPostExecute(String result) {
             mProgressDialog.cancel();
 
-            if (!result.equals("")) {
+            if (result.startsWith("http")) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(result));
                 startActivity(intent);
             } else {
-                Toast.makeText(MainActivity.this, "failed?", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "failed?", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "上传出错了吗 0.0\n" + result, Toast.LENGTH_LONG).show();
             }
 
             finish();
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -136,9 +140,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
-    private static String getImageUrlWithAuthority(Context context, Uri uri) {
+    private String getImageUrlWithAuthority(Context context, Uri uri) {
         InputStream is = null;
         OutputStream os = null;
         File file = null;
@@ -156,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
                     //noinspection ResultOfMethodCallIgnored
                     file.createNewFile();
                 } catch (IOException e) {
-                    Log.e("在保存图片时出错：", e.toString());
+                    Log.e("在保存图片时出错: ", e.toString());
+                    Toast.makeText(context, "在保存图片时出错:\n" + e.toString(), Toast.LENGTH_LONG).show();
                 }
                 os = new FileOutputStream(file);
                 byte[] buf = new byte[1024];
@@ -170,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 if (e instanceof FileNotFoundException) {
                     //ask for permission and do it again
+                    getPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    Toast.makeText(context, "FileNotFoundException" + e.toString(), Toast.LENGTH_LONG).show();
                 }
             } finally {
                 try {
@@ -199,4 +206,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return fileName;
     }
+
+    private void getPermission(String permission)
+    {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, 0);
+        }
+    }
+
 }
