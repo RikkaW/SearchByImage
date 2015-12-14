@@ -71,7 +71,8 @@ public class HttpUploadFile {
         } catch (IOException e) {
             e.printStackTrace();
 
-            responseUri = "";
+            responseUri = e.toString();
+
         } finally {
             if (fileStream != null) {
                 try {
