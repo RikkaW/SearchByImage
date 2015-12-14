@@ -70,8 +70,8 @@ public class HttpUploadFile {
 
         } catch (IOException e) {
             e.printStackTrace();
-
-            responseUri = e.toString();
+            StackTraceElement stackTraceElement= e.getStackTrace()[0];// 得到异常棧的首个元素
+            responseUri = e.toString() + "\n" + stackTraceElement.getLineNumber() + "\n" + stackTraceElement.getMethodName();
 
         } finally {
             if (fileStream != null) {
