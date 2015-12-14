@@ -1,5 +1,9 @@
 package rikka.searchbyimage;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.os.Build;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -19,7 +25,7 @@ public class HttpUploadFile {
 
     String boundary = "----WebKitFormBoundaryAAGZldGncBiDdsTP";
 
-    public String Upload(String uri, String fileFromName, String filePath) {
+    public String Upload(Context context, String uri, String fileFromName, String filePath) {
 
 
         byte[] postHeaderBytes = getHeadBytes(fileFromName);
@@ -32,8 +38,9 @@ public class HttpUploadFile {
         InputStream inputStream;
 
         try {
-            /*Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1",
-                    27000));*/
+            /*Proxy proxy = new Proxy(Proxy.Type., new InetSocketAddress("127.0.0.1",
+                    ));*/
+
             connection = (HttpURLConnection) new URL(uri).openConnection();
 
 
@@ -43,11 +50,20 @@ public class HttpUploadFile {
             connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
             connection.setRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
-            connection.setRequestProperty("connection", "Keep-Alive");
+            //connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("user-agent",
                     "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.152 Safari/535.19");
-            connection.setConnectTimeout(60 * 1000);
+
+            if (Build.VERSION.SDK_INT > 13){
+                connection.setRequestProperty("connection", "close");
+            }
+
+
+
+
+            connection.setConnectTimeout(2 * 1000);
             connection.setDoOutput(true);
+            connection.setDoInput(true);
             OutputStream os = connection.getOutputStream();
             os.write(postHeaderBytes);
 
@@ -67,11 +83,15 @@ public class HttpUploadFile {
             connection.getInputStream();
 
             responseUri = connection.getURL().toString();
-
         } catch (IOException e) {
             e.printStackTrace();
-            StackTraceElement stackTraceElement= e.getStackTrace()[0];// 得到异常棧的首个元素
-            responseUri = e.toString() + "\n" + stackTraceElement.getLineNumber() + "\n" + stackTraceElement.getMethodName();
+
+            for (StackTraceElement stackTraceElement:
+            e.getStackTrace()) {
+                if (stackTraceElement.getFileName().startsWith("HttpUploadFile"))
+                    responseUri = "Error: " + e.toString() +"\nFile: " + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
+            }
+
 
         } finally {
             if (fileStream != null) {

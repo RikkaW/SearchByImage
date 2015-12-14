@@ -1,6 +1,8 @@
 package rikka.searchbyimage;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Uri... imageUrl) {
             HttpUploadFile httpUploadFile = new HttpUploadFile();
 
-            return httpUploadFile.Upload("http://www.google.com/searchbyimage/upload", "QAQQQQ", getImageUrlWithAuthority(mContext, imageUrl[0]));
+            return httpUploadFile.Upload(mContext, "http://www.google.com/searchbyimage/upload", "QAQQQQ", getImageUrlWithAuthority(mContext, imageUrl[0]));
         }
 
 
@@ -51,12 +53,25 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(result));
                 startActivity(intent);
+
+                finish();
             } else {
                 //Toast.makeText(MainActivity.this, "failed?", Toast.LENGTH_LONG).show();
-                Toast.makeText(mContext, "上传出错了吗 0.0\n" + result, Toast.LENGTH_LONG).show();
+                //Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(result);
+                builder.show();
+
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        finish();
+                    }
+                });
             }
 
-            finish();
+            //finish();
         }
     }
 
