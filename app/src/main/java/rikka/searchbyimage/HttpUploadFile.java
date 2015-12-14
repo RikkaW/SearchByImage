@@ -25,7 +25,7 @@ public class HttpUploadFile {
 
     String boundary = "----WebKitFormBoundaryAAGZldGncBiDdsTP";
 
-    public String Upload(Context context, String uri, String fileFromName, String filePath) {
+    public String Upload(String uri, String fileFromName, String filePath) {
 
 
         byte[] postHeaderBytes = getHeadBytes(fileFromName);
@@ -47,8 +47,8 @@ public class HttpUploadFile {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
-            connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-            connection.setRequestProperty("Cache-Control", "no-cache");
+            connection.setRequestProperty("accept-encoding", "gzip, deflate");
+            connection.setRequestProperty("cache-control", "no-cache");
             connection.setUseCaches(false);
             //connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("user-agent",
@@ -57,9 +57,6 @@ public class HttpUploadFile {
             if (Build.VERSION.SDK_INT > 13){
                 connection.setRequestProperty("connection", "close");
             }
-
-
-
 
             connection.setConnectTimeout(2 * 1000);
             connection.setDoOutput(true);
