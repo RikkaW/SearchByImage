@@ -1,0 +1,11 @@
+<resources>
+    <string-array name="search_engines">
+        <item>@string/google</item>
+        <item>@string/baidu</item>
+    </string-array>
+
+    <string-array name="search_engines_value">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+</resources>

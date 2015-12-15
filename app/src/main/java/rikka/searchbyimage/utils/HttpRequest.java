@@ -152,7 +152,8 @@ public class HttpRequest {
         connection.setUseCaches(false);
         //connection.setRequestProperty("connection", "Keep-Alive");
         connection.setRequestProperty("user-agent",
-                "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.152 Safari/535.19");
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36");
+                //"Mozilla / 5.0 (Linux; Android 5.1 .1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.20 Mobile Safari/537.36");
         connection.setConnectTimeout(2 * 1000);
 
         if (Build.VERSION.SDK_INT > 13){

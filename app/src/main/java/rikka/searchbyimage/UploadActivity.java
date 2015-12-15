@@ -6,11 +6,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,12 +38,24 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected String doInBackground(Uri... imageUrl) {
+            String uploadUri;
+            String name;
 
-            HttpRequest httpRequest = new HttpRequest("http://www.google.com/searchbyimage/upload", "POST");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+            if (sharedPref.getString("search_engine_preference", "0").equals("0")) {
+                uploadUri = "http://www.google.com/searchbyimage/upload";
+                name = "encoded_image";
+            } else {
+                uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
+                name = "image";
+            }
+
+            HttpRequest httpRequest = new HttpRequest(uploadUri, "POST");
             String responseUri = "";
 
             try {
-                httpRequest.addFormData("encoded_image", getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
+                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
                 responseUri = httpRequest.getResponseUri();
             } catch (IOException e) {
                 e.printStackTrace();

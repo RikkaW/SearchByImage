@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">以图搜图</string>
-    <string name="share_action_name">Google 图片搜索</string>
-    <string name="hello">在分享菜单选择该应用将图片上传至 Google 以图搜图</string>
+    <string name="share_action_name">图片搜索</string>
+    <string name="hello">在分享菜单选择该应用将图片上传至选择的搜索引擎</string>
     <string name="uploading">上传中...</string>
+
+    <string name="google">Google</string>
+    <string name="baidu">百度</string>
 
 </resources>

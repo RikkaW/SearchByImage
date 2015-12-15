@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference
+        android:title="使用方法"
+        android:summary="@string/hello"/>
+
+    <PreferenceCategory
+        android:title="通用">
+
+        <rikka.searchbyimage.widget.ListPreferenceShowValue
+            android:key="search_engine_preference"
+            android:title="搜索引擎"
+            android:entries="@array/search_engines"
+            android:entryValues="@array/search_engines_value"
+            android:defaultValue="0"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="关于">
+
+        <Preference
+            android:title="开源"
+            android:summary="https://github.com/RikkaW/SearchByImage">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/RikkaW/SearchByImage" />
+        </Preference>
+
+    </PreferenceCategory>
+</PreferenceScreen>
