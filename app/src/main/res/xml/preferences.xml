@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage">
 
     <Preference
         android:title="使用方法"
@@ -9,11 +10,11 @@
     <PreferenceCategory
         android:title="通用">
 
-        <rikka.searchbyimage.widget.ListPreferenceShowValue
+        <rikka.searchbyimage.widget.DropDownPreference
             android:key="search_engine_preference"
             android:title="搜索引擎"
-            android:entries="@array/search_engines"
-            android:entryValues="@array/search_engines_value"
+            app:entries="@array/search_engines"
+            app:entryValues="@array/search_engines_value"
             android:defaultValue="0"/>
 
     </PreferenceCategory>
