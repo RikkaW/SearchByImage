@@ -1,4 +1,12 @@
 <resources>
-    <string name="app_name">SearchByImage</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Search By Image</string>
+    <string name="share_action_name">Image Search</string>
+    <string name="hello">Select this app in share menu to upload image to selected search engine</string>
+    <string name="uploading">Uploading...</string>
+
+    <string-array name="search_engines">
+        <item>Google</item>
+        <item>Baidu</item>
+    </string-array>
+
 </resources>
