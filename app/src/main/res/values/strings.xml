@@ -2,5 +2,5 @@
     <string name="app_name">Search By Image</string>
     <string name="share_action_name">Image Search</string>
     <string name="hello">Select this app in share menu to upload image to Google image search</string>
-
+    <string name="uploading">Uploading...</string>
 </resources>

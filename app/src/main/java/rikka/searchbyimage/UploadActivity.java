@@ -2,7 +2,6 @@ package rikka.searchbyimage;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,17 +9,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -29,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import rikka.searchbyimage.utils.HttpRequest;
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -40,11 +36,25 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected String doInBackground(Uri... imageUrl) {
-            HttpUploadFile httpUploadFile = new HttpUploadFile();
 
-            return httpUploadFile.Upload("http://www.google.com/searchbyimage/upload", getImageFileName(imageUrl[0]), getImageUrlWithAuthority(mContext, imageUrl[0]));
+            HttpRequest httpRequest = new HttpRequest("http://www.google.com/searchbyimage/upload", "POST");
+            String responseUri = "";
+
+            try {
+                httpRequest.addFormData("encoded_image", getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
+                responseUri = httpRequest.getResponseUri();
+            } catch (IOException e) {
+                e.printStackTrace();
+
+                for (StackTraceElement stackTraceElement:
+                        e.getStackTrace()) {
+                    if (stackTraceElement.getFileName().startsWith("HttpRequest"))
+                        responseUri = "Error: " + e.toString() +"\nFile: " + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
+                }
+            }
+
+            return responseUri;
         }
-
 
         protected void onPostExecute(String result) {
             mProgressDialog.cancel();
@@ -56,22 +66,18 @@ public class UploadActivity extends AppCompatActivity {
 
                 finish();
             } else {
-                //Toast.makeText(MainActivity.this, "failed?", Toast.LENGTH_LONG).show();
-                //Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(result);
-                builder.show();
-
+                builder.setTitle("出错了 OAO");
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         finish();
                     }
                 });
-            }
 
-            //finish();
+                builder.show();
+            }
         }
     }
 
@@ -95,10 +101,16 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private ProgressDialog showDialog() {
-        ProgressDialog progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            progressDialog = new ProgressDialog(this, R.style.DialogStyle);
+        else
+            progressDialog = new ProgressDialog(this);
+
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(true);
-        progressDialog.setMessage("Uploading...");
+        progressDialog.setMessage(getString(R.string.uploading));
 
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
