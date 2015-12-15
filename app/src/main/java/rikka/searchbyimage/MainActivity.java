@@ -1,11 +1,10 @@
 package rikka.searchbyimage;
 
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.preference.PreferenceFragment;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,14 +17,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getFragmentManager().beginTransaction().replace(R.id.view,
+        getSupportFragmentManager().beginTransaction().replace(R.id.view,
                 new SettingsFragment()).commit();
     }
 
-    public static class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.preferences);
         }
 

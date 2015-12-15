@@ -2,7 +2,8 @@ package rikka.searchbyimage.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 import android.view.View;
@@ -67,10 +68,10 @@ public class DropDownPreference extends Preference {
 
         // Support XML specification like ListPreferences do.
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DropDownPreference);
-        CharSequence[] entries = a.getTextArray(R.styleable.DropDownPreference_entries);
-        CharSequence[] values = a.getTextArray(R.styleable.DropDownPreference_entryValues);
+        CharSequence[] entries = a.getTextArray(R.styleable.DropDownPreference_myEntries);
+        CharSequence[] values = a.getTextArray(R.styleable.DropDownPreference_myEntryValues);
         if (entries != null && values != null) {
-            for (int i= 0; i < entries.length; i++) {
+            for (int i = 0; i < entries.length; i++) {
                 addItem(entries[i].toString(), values[i]);
             }
         }
@@ -127,19 +128,19 @@ public class DropDownPreference extends Preference {
         return mAdapter.getCount();
     }
 
-    public void clearItems(){
+    public void clearItems() {
         mAdapter.clear();
         mValues.clear();
     }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        if (view.equals(mSpinner.getParent())) return;
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        if (holder.equals(mSpinner.getParent())) return;
         if (mSpinner.getParent() != null) {
-            ((ViewGroup)mSpinner.getParent()).removeView(mSpinner);
+            ((ViewGroup) mSpinner.getParent()).removeView(mSpinner);
         }
-        final ViewGroup vg = (ViewGroup)view;
+        final ViewGroup vg = (ViewGroup) holder.itemView;
         vg.addView(mSpinner, 0);
         final ViewGroup.LayoutParams lp = mSpinner.getLayoutParams();
         lp.width = 0;
