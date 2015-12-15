@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="DropDownPreference">
-        <attr name="entries" format="reference" />
-        <attr name="entryValues" format="reference" />
+        <attr name="myEntries" format="reference"/>
+        <attr name="myEntryValues" format="reference"/>
     </declare-styleable>
 </resources>
