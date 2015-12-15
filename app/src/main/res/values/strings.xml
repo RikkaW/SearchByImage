@@ -4,7 +4,9 @@
     <string name="hello">Select this app in share menu to upload image to selected search engine</string>
     <string name="uploading">Uploading...</string>
 
-    <string name="google">Google</string>
-    <string name="baidu">Baidu</string>
+    <string-array name="search_engines">
+        <item>Google</item>
+        <item>Baidu</item>
+    </string-array>
 
 </resources>

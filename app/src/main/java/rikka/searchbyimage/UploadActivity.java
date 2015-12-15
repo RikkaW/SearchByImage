@@ -43,7 +43,10 @@ public class UploadActivity extends AppCompatActivity {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            if (sharedPref.getString("search_engine_preference", "0").equals("0")) {
+            boolean isGoogle = sharedPref.getString("search_engine_preference", "0").equals("0");
+            boolean safeSearch = isGoogle && sharedPref.getBoolean("safe_search_preference", false);
+
+            if (isGoogle) {
                 uploadUri = "http://www.google.com/searchbyimage/upload";
                 name = "encoded_image";
             } else {
@@ -57,6 +60,7 @@ public class UploadActivity extends AppCompatActivity {
             try {
                 httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
                 responseUri = httpRequest.getResponseUri();
+                responseUri += safeSearch ? "&safe=active" : "&safe=off";
             } catch (IOException e) {
                 e.printStackTrace();
 

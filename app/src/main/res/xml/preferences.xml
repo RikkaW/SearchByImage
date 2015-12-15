@@ -17,6 +17,11 @@
             app:entryValues="@array/search_engines_value"
             android:defaultValue="0"/>
 
+        <SwitchPreference
+            android:key="safe_search_preference"
+            android:title="安全搜索"
+            android:defaultValue="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
