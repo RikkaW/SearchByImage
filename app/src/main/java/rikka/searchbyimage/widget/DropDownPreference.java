@@ -23,7 +23,10 @@ public class DropDownPreference extends Preference {
     private Context mContext;
     private ArrayAdapter<String> mAdapter;
     private AppCompatSpinner mSpinner;
-    private ArrayList<Object> mValues = new ArrayList<Object>();
+    private ArrayList<Object> mValues = new ArrayList<>();
+
+    private CharSequence[] mEntries;
+    private CharSequence[] mEntryValues;
 
     private Callback mCallback;
     private int mSelectedPosition = -1;
@@ -68,17 +71,46 @@ public class DropDownPreference extends Preference {
 
         // Support XML specification like ListPreferences do.
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DropDownPreference);
-        CharSequence[] entries = a.getTextArray(R.styleable.DropDownPreference_myEntries);
-        CharSequence[] values = a.getTextArray(R.styleable.DropDownPreference_myEntryValues);
-        if (entries != null && values != null) {
-            for (int i = 0; i < entries.length; i++) {
-                addItem(entries[i].toString(), values[i]);
+        mEntries = a.getTextArray(R.styleable.DropDownPreference_myEntries);
+        mEntryValues = a.getTextArray(R.styleable.DropDownPreference_myEntryValues);
+        if (mEntries != null && mEntryValues != null) {
+            for (int i = 0; i < mEntries.length; i++) {
+                addItem(mEntries[i].toString(), mEntryValues[i]);
             }
         }
     }
 
     public DropDownPreference(Context context) {
         super(context, null);
+    }
+
+    @Override
+    protected Object onGetDefaultValue(TypedArray a, int index) {
+        return a.getString(index);
+    }
+
+    @Override
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        if (restoreValue) {
+            int index = findIndexByEntryValues(getPersistedString(""));
+            if (index != -1 && index < mEntries.length) {
+                setSelectedItem(index);
+            }
+        }
+    }
+
+    public int findIndexByEntryValues(String value) {
+        if (mEntryValues == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < mEntryValues.length; i++) {
+            if (value.equals(mEntryValues[i])) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public void setDropDownWidth(int dimenResId) {
@@ -94,6 +126,8 @@ public class DropDownPreference extends Preference {
     }
 
     public void setSelectedItem(int position, boolean fromSpinner) {
+        boolean changed = mSelectedPosition != position;
+
         if (fromSpinner && position == mSelectedPosition) {
             return;
         }
@@ -106,6 +140,10 @@ public class DropDownPreference extends Preference {
         setSummary(mAdapter.getItem(position));
         final boolean disableDependents = value == null;
         notifyDependencyChange(disableDependents);
+
+        if (changed && value != null) {
+            persistString(value.toString());
+        }
     }
 
     public void setSelectedValue(Object value) {

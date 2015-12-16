@@ -8,7 +8,8 @@
         android:title="@string/usage"/>
 
     <PreferenceCategory
-        android:title="@string/general">
+        android:title="@string/general"
+        android:key="category_general">
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:defaultValue="0"
