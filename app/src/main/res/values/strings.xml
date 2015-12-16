@@ -15,4 +15,9 @@
     <string name="about">About</string>
     <string name="open_source">Open Source</string>
     <string name="general">General</string>
+    <string name="rate">Rate App</string>
+    <string name="rate_summary">Rate on Play Store</string>
+    <string name="build_version">Build Version</string>
+
+    <string name="safe_search_summary">Block inappropriate or explicit images</string>
 </resources>

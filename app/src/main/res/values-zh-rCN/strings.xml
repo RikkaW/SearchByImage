@@ -15,5 +15,9 @@
     <string name="about">关于</string>
     <string name="open_source">开源</string>
     <string name="general">通用</string>
+    <string name="safe_search_summary">阻止不合适的图片</string>
+    <string name="rate">评分</string>
+    <string name="rate_summary">在 Play 商店打分</string>
+    <string name="build_version">版本号</string>
 
 </resources>

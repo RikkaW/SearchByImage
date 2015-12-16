@@ -8,8 +8,8 @@ android {
         applicationId "rikka.searchbyimage"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 10002
-        versionName "1.0.2"
+        versionCode 10003
+        versionName "1.0.3"
     }
     buildTypes {
         release {
