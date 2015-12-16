@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             if (click == 5)
                 Toast.makeText(getContext(), "OAO", Toast.LENGTH_SHORT).show();
             else if (click == 10)
-                Toast.makeText(getContext(), "><", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "><", Toast.LENGTH_SHORT).show();
             else if (click == 25)
                 Toast.makeText(getContext(), "QAQ", Toast.LENGTH_LONG).show();
 

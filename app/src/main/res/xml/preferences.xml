@@ -6,11 +6,13 @@
 
     <Preference
         android:summary="@string/hello"
-        android:title="@string/usage"/>
+        android:title="@string/usage"
+        android:order="0"/>
 
     <PreferenceCategory
         android:title="@string/general"
-        android:key="category_general">
+        android:key="category_general"
+        android:order="1">
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:defaultValue="0"
@@ -24,7 +26,7 @@
     <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
-        android:order="1">
+        android:order="2">
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
@@ -47,7 +49,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/about">
+        android:title="@string/about"
+        android:order="3">
 
         <Preference
             android:title="@string/build_version"
