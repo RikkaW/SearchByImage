@@ -29,17 +29,17 @@
         android:order="2">
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
-            android:title="@string/safe_search"/>
+            android:title="@string/safe_search"
+            android:defaultValue="false"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
-            android:defaultValue="0"
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
-            app:myEntryValues="@array/google_region_redirect_value"/>
+            app:myEntryValues="@array/google_region_redirect_value"
+            android:defaultValue="0"/>
 
         <rikka.searchbyimage.widget.EditTextPreference2
             android:key="google_region"
@@ -49,8 +49,22 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/iqdb_settings"
+        android:key="category_iqdb"
+        android:order="2">
+
+        <MultiSelectListPreference
+            android:key="iqdb_service"
+            android:title="@string/iqdb_service_select"
+            android:entries="@array/iqdb_service_title"
+            android:entryValues="@array/iqdb_service_id"
+            android:defaultValue="@array/iqdb_service_id"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/about"
-        android:order="3">
+        android:order="9">
 
         <Preference
             android:title="@string/build_version"

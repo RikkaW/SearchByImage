@@ -31,7 +31,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay">
+    <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay.v14.Material">
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
         <item name="preferenceFragmentStyle">@style/PreferenceFragment</item>
         <item name="preferenceCategoryStyle">@style/AppTheme.Preference.Category</item>

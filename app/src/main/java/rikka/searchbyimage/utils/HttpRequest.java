@@ -11,6 +11,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -41,7 +42,7 @@ public class HttpRequest {
             this.inputStream = inputStream;
         }
 
-        public void writeForm(OutputStream os) throws IOException {
+        public void writeForm(OutputStream os, String boundary) throws IOException {
             os.write(getFormByteHead(boundary));
 
             switch (type) {
@@ -116,9 +117,7 @@ public class HttpRequest {
         }
     }
 
-    private static String boundary = "----WebKitFormBoundaryAAGZldGncBiDdsTP";
-
-
+    private String boundary;
     private String uri;
     private String method;
     private int timeout;
@@ -131,6 +130,21 @@ public class HttpRequest {
     public HttpRequest(String uri, String method) {
         this.uri = uri;
         this.method = method;
+
+        this.boundary = generateBoundary();
+    }
+
+    private final static char[] MULTIPART_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
+    private String generateBoundary() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("----WebKitFormBoundary");
+
+        Random rand = new Random();
+        for (int i = 0; i < 16; i++) {
+            buffer.append(MULTIPART_CHARS[rand.nextInt(MULTIPART_CHARS.length)]);
+        }
+        return buffer.toString();
     }
 
     public void addFormData(String name, String str) {
@@ -150,15 +164,14 @@ public class HttpRequest {
         connection.setRequestProperty("accept-encoding", "gzip, deflate");
         connection.setRequestProperty("cache-control", "no-cache");
         connection.setUseCaches(false);
-        //connection.setRequestProperty("connection", "Keep-Alive");
+        connection.setRequestProperty("connection", "Keep-Alive");
         connection.setRequestProperty("user-agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36");
                 //"Mozilla / 5.0 (Linux; Android 5.1 .1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.20 Mobile Safari/537.36");
         connection.setConnectTimeout(2 * 1000);
 
-        if (Build.VERSION.SDK_INT > 13){
-            connection.setRequestProperty("connection", "close");
-        }
+        //connection.setRequestProperty("connection", "close");
+
 
         return connection;
     }
@@ -169,7 +182,7 @@ public class HttpRequest {
         OutputStream os = connection.getOutputStream();
 
         for (int i = 0; i < formDataList.size(); i++) {
-            formDataList.get(i).writeForm(os);
+            formDataList.get(i).writeForm(os, boundary);
         }
 
         os.write(HttpFormData.getFormByteEnd(boundary));
