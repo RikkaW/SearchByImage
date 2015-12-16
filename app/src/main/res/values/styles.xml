@@ -40,7 +40,7 @@
         <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference</item>
         <item name="switchPreferenceCompatStyle">@style/AppTheme.Preference.SwitchPreference</item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
-        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference
+        <item name="editTextPreferenceStyle">@style/AppTheme.Preference.EditTextPreference
         </item>
         <item name="preferenceFragmentListStyle">@style/AppTheme.PreferenceFragmentList</item>
     </style>
@@ -55,6 +55,10 @@
     </style>
 
     <style name="AppTheme.Preference.SwitchPreference" parent="@style/Preference.SwitchPreferenceCompat">
+        <item name="android:layout">@layout/preference_material</item>
+    </style>
+
+    <style name="AppTheme.Preference.EditTextPreference" parent="@style/Preference.DialogPreference.EditTextPreference">
         <item name="android:layout">@layout/preference_material</item>
     </style>
 

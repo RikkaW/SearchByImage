@@ -20,4 +20,14 @@
     <string name="rate_summary">在 Play 商店打分</string>
     <string name="build_version">版本号</string>
 
+    <string name="google_settings">Google 设置</string>
+    <string name="google_region_redirect">区域重定向</string>
+    <string name="google_region_redirect_custom">自定义区域</string>
+
+    <string-array name="google_region_redirects">
+        <item>默认</item>
+        <item>使用 google.com</item>
+        <item>自定义</item>
+    </string-array>
+
 </resources>

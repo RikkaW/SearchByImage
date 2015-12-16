@@ -140,6 +140,7 @@ public class DropDownPreference extends Preference {
         setSummary(mAdapter.getItem(position));
         final boolean disableDependents = value == null;
         notifyDependencyChange(disableDependents);
+        notifyChanged();
 
         if (changed && value != null) {
             persistString(value.toString());

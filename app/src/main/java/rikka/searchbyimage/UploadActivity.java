@@ -44,7 +44,7 @@ public class UploadActivity extends AppCompatActivity {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             boolean isGoogle = sharedPref.getString("search_engine_preference", "0").equals("0");
-            boolean safeSearch = isGoogle && sharedPref.getBoolean("safe_search_preference", false);
+
 
             if (isGoogle) {
                 uploadUri = "http://www.google.com/searchbyimage/upload";
@@ -60,7 +60,34 @@ public class UploadActivity extends AppCompatActivity {
             try {
                 httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
                 responseUri = httpRequest.getResponseUri();
-                responseUri += safeSearch ? "&safe=active" : "&safe=off";
+
+                if (!responseUri.startsWith("http")) {
+                    return responseUri;
+                }
+
+                if (isGoogle) {
+                    boolean safeSearch = sharedPref.getBoolean("safe_search_preference", false);
+                    boolean noRedirect = sharedPref.getString("google_region_preference", "0").equals("1");
+                    boolean customRedirect = sharedPref.getString("google_region_preference", "0").equals("2");
+
+                    responseUri += safeSearch ? "&safe=active" : "&safe=off";
+
+                    if (noRedirect || customRedirect) {
+                        responseUri += "?gws_rd=cr";
+                    }
+
+                    // find google. /
+                    int start = responseUri.indexOf("www.google.");
+                    int end =  responseUri.indexOf("/", start);
+
+                    String googleUri =  "www.google.com";
+                    
+                    if (customRedirect) {
+                        googleUri = sharedPref.getString("google_region", googleUri);
+                    }
+
+                    responseUri = responseUri.substring(0, start) + googleUri + responseUri.substring(end);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
 

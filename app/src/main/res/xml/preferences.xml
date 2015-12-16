@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage">
+    xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage"
+    android:key="screen">
 
     <Preference
         android:summary="@string/hello"
@@ -18,11 +19,30 @@
             app:myEntries="@array/search_engines"
             app:myEntryValues="@array/search_engines_value"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/google_settings"
+        android:key="category_google"
+        android:order="1">
+
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"/>
+
+        <rikka.searchbyimage.widget.DropDownPreference
+            android:defaultValue="0"
+            android:key="google_region_preference"
+            android:title="@string/google_region_redirect"
+            app:myEntries="@array/google_region_redirects"
+            app:myEntryValues="@array/google_region_redirect_value"/>
+
+        <rikka.searchbyimage.widget.EditTextPreference2
+            android:key="google_region"
+            android:title="@string/google_region_redirect_custom"
+            android:defaultValue= "www.google.com"/>
 
     </PreferenceCategory>
 
