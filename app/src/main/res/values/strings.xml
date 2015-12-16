@@ -9,4 +9,10 @@
         <item>Baidu</item>
     </string-array>
 
+    <string name="usage">Usage</string>
+    <string name="search_engine">Search Engine</string>
+    <string name="safe_search">Safe Search</string>
+    <string name="about">About</string>
+    <string name="open_source">Open Source</string>
+    <string name="general">General</string>
 </resources>

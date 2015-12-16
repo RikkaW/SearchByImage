@@ -5,31 +5,31 @@
 
     <Preference
         android:summary="@string/hello"
-        android:title="使用方法"/>
+        android:title="@string/usage"/>
 
     <PreferenceCategory
-        android:title="通用">
+        android:title="@string/general">
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:defaultValue="0"
             android:key="search_engine_preference"
-            android:title="搜索引擎"
+            android:title="@string/search_engine"
             app:myEntries="@array/search_engines"
             app:myEntryValues="@array/search_engines_value"/>
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="safe_search_preference"
-            android:title="安全搜索"/>
+            android:title="@string/safe_search"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="关于">
+        android:title="@string/about">
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"
-            android:title="开源">
+            android:title="@string/open_source">
 
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/RikkaW/SearchByImage" />

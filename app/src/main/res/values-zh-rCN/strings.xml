@@ -9,5 +9,11 @@
         <item>百度</item>
     </string-array>
 
+    <string name="usage">使用方法</string>
+    <string name="search_engine">搜索引擎</string>
+    <string name="safe_search">安全搜索</string>
+    <string name="about">关于</string>
+    <string name="open_source">开源</string>
+    <string name="general">通用</string>
 
 </resources>
