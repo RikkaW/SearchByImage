@@ -3,29 +3,28 @@ package rikka.searchbyimage.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 /**
  * Created by Rikka on 2015/12/1.
  */
-public class ListPreferenceShowValue extends ListPreference {
+public class ListPreference2 extends android.support.v7.preference.ListPreference {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ListPreferenceShowValue(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ListPreference2(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ListPreferenceShowValue(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ListPreference2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public ListPreferenceShowValue(Context context, AttributeSet attrs) {
+    public ListPreference2(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ListPreferenceShowValue(Context context) {
+    public ListPreference2(Context context) {
         super(context, null);
     }
 

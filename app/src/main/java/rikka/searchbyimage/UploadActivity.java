@@ -31,6 +31,10 @@ import rikka.searchbyimage.utils.HttpRequest;
 public class UploadActivity extends AppCompatActivity {
 
     private class UploadTask extends AsyncTask<Uri, Void, String> {
+        public final static int SITE_GOOGLE = 0;
+        public final static int SITE_BAIDU = 1;
+        public final static int SITE_IQDB = 2;
+
         private Context mContext;
 
         public UploadTask(Context context) {
@@ -38,29 +42,70 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected String doInBackground(Uri... imageUrl) {
-            String uploadUri;
-            String name;
 
+            String uploadUri = null;
+            String name = null;
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            boolean isGoogle = sharedPref.getString("search_engine_preference", "0").equals("0");
-            boolean safeSearch = isGoogle && sharedPref.getBoolean("safe_search_preference", false);
-
-            if (isGoogle) {
-                uploadUri = "http://www.google.com/searchbyimage/upload";
-                name = "encoded_image";
-            } else {
-                uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
-                name = "image";
+            int siteId = Integer.parseInt(sharedPref.getString("search_engine_preference", "0"));
+            switch (siteId) {
+                case SITE_GOOGLE: {
+                    uploadUri = "http://www.google.com/searchbyimage/upload";
+                    name = "encoded_image";
+                    break;
+                }
+                case SITE_BAIDU: {
+                    uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
+                    name = "image";
+                    break;
+                }
+                case SITE_IQDB: {
+                    uploadUri = "http://iqdb.org/";
+                    name = "file";
+                }
             }
+
 
             HttpRequest httpRequest = new HttpRequest(uploadUri, "POST");
             String responseUri = "";
 
+            if (siteId == SITE_IQDB) {
+                httpRequest.addFormData("MAX_FILE_SIZE", "8388608");
+                httpRequest.addFormData("service[]", "1");
+
+                //httpRequest.addFormData("forcegray", "on");
+            }
+
             try {
                 httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
                 responseUri = httpRequest.getResponseUri();
-                responseUri += safeSearch ? "&safe=active" : "&safe=off";
+
+                if (!responseUri.startsWith("http")) {
+                    return responseUri;
+                }
+
+                if (siteId == SITE_GOOGLE) {
+                    boolean safeSearch = sharedPref.getBoolean("safe_search_preference", false);
+                    boolean noRedirect = sharedPref.getString("google_region_preference", "0").equals("1");
+                    boolean customRedirect = sharedPref.getString("google_region_preference", "0").equals("2");
+
+                    responseUri += safeSearch ? "&safe=active" : "&safe=off";
+
+                    if (noRedirect || customRedirect) {
+                        responseUri += "?gws_rd=cr";
+                    }
+
+                    int start = responseUri.indexOf("www.google.");
+                    int end =  responseUri.indexOf("/", start);
+
+                    String googleUri =  "www.google.com";
+                    
+                    if (customRedirect) {
+                        googleUri = sharedPref.getString("google_region", googleUri);
+                    }
+
+                    responseUri = responseUri.substring(0, start) + googleUri + responseUri.substring(end);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
 

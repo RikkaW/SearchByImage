@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
@@ -17,10 +18,11 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowIsFloating">true</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/AppTheme.Preference</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -29,4 +31,39 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
+        <item name="preferenceFragmentStyle">@style/PreferenceFragment</item>
+        <item name="preferenceCategoryStyle">@style/AppTheme.Preference.Category</item>
+        <item name="preferenceStyle">@style/AppTheme.PreferenceStyle</item>
+        <item name="preferenceInformationStyle">@style/Preference.Information</item>
+        <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference</item>
+        <item name="switchPreferenceCompatStyle">@style/AppTheme.Preference.SwitchPreference</item>
+        <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
+        <item name="editTextPreferenceStyle">@style/AppTheme.Preference.EditTextPreference
+        </item>
+        <item name="preferenceFragmentListStyle">@style/AppTheme.PreferenceFragmentList</item>
+    </style>
+
+    <style name="AppTheme.PreferenceStyle" parent="@style/Preference">
+        <item name="android:layout">@layout/preference_material</item>
+
+    </style>
+
+    <style name="AppTheme.Preference.Category" parent="@style/Preference.Category">
+        <item name="android:layout">@layout/preference_category_material</item>
+    </style>
+
+    <style name="AppTheme.Preference.SwitchPreference" parent="@style/Preference.SwitchPreferenceCompat">
+        <item name="android:layout">@layout/preference_material</item>
+    </style>
+
+    <style name="AppTheme.Preference.EditTextPreference" parent="@style/Preference.DialogPreference.EditTextPreference">
+        <item name="android:layout">@layout/preference_material</item>
+    </style>
+
+    <style name="AppTheme.PreferenceFragmentList">
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
 </resources>

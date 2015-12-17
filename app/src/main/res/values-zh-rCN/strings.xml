@@ -7,7 +7,42 @@
     <string-array name="search_engines">
         <item>Google</item>
         <item>百度</item>
+        <item>iqdb</item>
     </string-array>
 
+    <string name="usage">使用方法</string>
+    <string name="search_engine">搜索引擎</string>
+    <string name="safe_search">安全搜索</string>
+    <string name="about">关于</string>
+    <string name="open_source">开源</string>
+    <string name="general">通用</string>
+    <string name="safe_search_summary">阻止不合适的图片</string>
+    <string name="rate">评分</string>
+    <string name="rate_summary">在 Play 商店打分</string>
+    <string name="build_version">版本号</string>
 
+    <string name="google_settings">Google 设置</string>
+    <string name="google_region_redirect">区域重定向</string>
+    <string name="google_region_redirect_custom">自定义区域</string>
+
+    <string-array name="google_region_redirects">
+        <item>默认</item>
+        <item>使用 google.com</item>
+        <item>自定义</item>
+    </string-array>
+
+    <string name="iqdb_settings">iqdb 设置</string>
+    <string name="iqdb_service_select">搜索网站</string>
+    <string-array name="iqdb_service_title">
+        <item>Danbooru (anime artwork)</item>
+        <item>Konachan (anime wallpapers)</item>
+        <item>yande.re (high-res scans)</item>
+        <item>Gelbooru (anime artwork)</item>
+        <item>Sankaku Channel (anime/manga/game images)</item>
+        <item>e-shuushuu (anime/manga/game images)</item>
+        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
+        <item>Zerochan (anime images &amp; wallpapers)</item>
+        <item>Manga Drawing (anime/manga/game images)</item>
+        <item>Anime-Pictures (anime pictures and wallpapers)</item>
+    </string-array>
 </resources>

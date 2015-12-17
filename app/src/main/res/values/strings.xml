@@ -7,6 +7,43 @@
     <string-array name="search_engines">
         <item>Google</item>
         <item>Baidu</item>
+        <item>iqdb</item>
     </string-array>
 
+    <string name="usage">Usage</string>
+    <string name="search_engine">Search Engine</string>
+    <string name="safe_search">Safe Search</string>
+    <string name="about">About</string>
+    <string name="open_source">Open Source</string>
+    <string name="general">General</string>
+    <string name="rate">Rate App</string>
+    <string name="rate_summary">Rate on Play Store</string>
+    <string name="build_version">Build Version</string>
+
+    <string name="safe_search_summary">Block inappropriate or explicit images</string>
+
+    <string name="google_settings">Google Settings</string>
+    <string name="google_region_redirect">Region Redirect</string>
+    <string name="google_region_redirect_custom">Custom Region</string>
+
+    <string-array name="google_region_redirects">
+        <item>Default</item>
+        <item>Use google.com</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string name="iqdb_settings">iqdb Settings</string>
+    <string name="iqdb_service_select">Search Sites</string>
+    <string-array name="iqdb_service_title">
+        <item>Danbooru (anime artwork)</item>
+        <item>Konachan (anime wallpapers)</item>
+        <item>yande.re (high-res scans)</item>
+        <item>Gelbooru (anime artwork)</item>
+        <item>Sankaku Channel (anime/manga/game images)</item>
+        <item>e-shuushuu (anime/manga/game images)</item>
+        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
+        <item>Zerochan (anime images &amp; wallpapers)</item>
+        <item>Manga Drawing (anime/manga/game images)</item>
+        <item>Anime-Pictures (anime pictures and wallpapers)</item>
+    </string-array>
 </resources>
