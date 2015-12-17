@@ -24,7 +24,7 @@
 
     <string name="google_settings">Google Settings</string>
     <string name="google_region_redirect">Region Redirect</string>
-    <string name="google_region_redirect_custom">Custom Region</string>
+    <string name="google_region_redirect_custom">Custom Google URL</string>
 
     <string-array name="google_region_redirects">
         <item>Default</item>
