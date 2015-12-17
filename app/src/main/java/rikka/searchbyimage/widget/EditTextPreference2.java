@@ -1,12 +1,13 @@
 package rikka.searchbyimage.widget;
 
 import android.content.Context;
+import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 /**
  * Created by Rikka on 2015/12/1.
  */
-public class EditTextPreference2 extends android.support.v7.preference.EditTextPreference {
+public class EditTextPreference2 extends EditTextPreference {
 
 
     public EditTextPreference2(Context context) {

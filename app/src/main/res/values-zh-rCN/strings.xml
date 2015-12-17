@@ -23,7 +23,7 @@
 
     <string name="google_settings">Google 设置</string>
     <string name="google_region_redirect">区域重定向</string>
-    <string name="google_region_redirect_custom">自定义区域</string>
+    <string name="google_region_redirect_custom">自定义 Google URL</string>
 
     <string-array name="google_region_redirects">
         <item>默认</item>

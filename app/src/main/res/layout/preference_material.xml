@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:gravity="center_vertical"
-    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-    android:background="?android:attr/selectableItemBackground"
-    android:clipToPadding="false"
-    android:focusable="true">
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
 
     <RelativeLayout
         android:layout_width="0dp"

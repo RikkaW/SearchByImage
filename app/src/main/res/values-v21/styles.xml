@@ -1,7 +1,7 @@
 <resources>>
 
     <style name="AppTheme.NoActionBar">
-        <item name="preferenceTheme">@style/AppTheme.Preference</item>
+        <!--<item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

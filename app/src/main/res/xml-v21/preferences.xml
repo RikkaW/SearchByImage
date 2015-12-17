@@ -7,86 +7,74 @@
     <Preference
         android:summary="@string/hello"
         android:title="@string/usage"
-        android:order="0"
-        android:layout="@layout/preference_material"/>
+        android:order="0"/>
 
     <PreferenceCategory
         android:title="@string/general"
         android:key="category_general"
-        android:order="1"
-        android:layout="@layout/preference_category_material">
+        android:order="1">
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:defaultValue="0"
             android:key="search_engine_preference"
             android:title="@string/search_engine"
             app:myEntries="@array/search_engines"
-            app:myEntryValues="@array/search_engines_value"
-            android:layout="@layout/preference_material"/>
+            app:myEntryValues="@array/search_engines_value"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
-        android:order="2"
-        android:layout="@layout/preference_category_material">
+        android:order="2">
 
         <SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="false"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
             app:myEntryValues="@array/google_region_redirect_value"
-            android:defaultValue="0"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="0"/>
 
         <rikka.searchbyimage.widget.EditTextPreference2
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
-            android:defaultValue= "www.google.com"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue= "www.google.com"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/iqdb_settings"
         android:key="category_iqdb"
-        android:order="3"
-        android:layout="@layout/preference_category_material">
+        android:order="2">
 
         <MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="@array/iqdb_service_id_default"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/about"
-        android:order="9"
-        android:layout="@layout/preference_category_material">
+        android:order="9">
 
         <Preference
             android:title="@string/build_version"
-            android:key="version"
-            android:layout="@layout/preference_material">
+            android:key="version">
 
         </Preference>
 
         <Preference
             android:title="@string/rate"
-            android:summary="@string/rate_summary"
-            android:layout="@layout/preference_material">
+            android:summary="@string/rate_summary">
 
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
@@ -95,8 +83,7 @@
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"
-            android:title="@string/open_source"
-            android:layout="@layout/preference_material">
+            android:title="@string/open_source">
 
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/RikkaW/SearchByImage" />

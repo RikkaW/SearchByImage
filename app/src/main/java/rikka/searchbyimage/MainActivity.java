@@ -1,17 +1,19 @@
 package rikka.searchbyimage;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.Toolbar;
+
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,39 +23,49 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.view,
-                new SettingsFragment()).commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction().replace(R.id.settings_container,
+                    new SettingsFragment()).commit();
+        }
+
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat implements
+    public static class SettingsFragment extends PreferenceFragment implements
             OnSharedPreferenceChangeListener,
             Preference.OnPreferenceClickListener {
 
+        Context mContext;
+
         PreferenceCategory mCategoryGoogle;
-        SwitchPreferenceCompat mSafeSearch;
+        PreferenceCategory mCategoryIqdb;
+        SwitchPreference mSafeSearch;
         PreferenceScreen mScreen;
         EditTextPreference mCustomGoogleUri;
 
         @Override
-        public void onCreatePreferences(Bundle bundle, String s) {
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
             mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
-            mSafeSearch = (SwitchPreferenceCompat) findPreference("safe_search_preference");
+            mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
+            mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
             mScreen = (PreferenceScreen) findPreference("screen");
             mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
             setSafeSearchHide();
             setCustomGoogleUriHide();
 
+            mContext = getActivity();
+
             Preference versionPref = findPreference("version");
             versionPref.setOnPreferenceClickListener(this);
 
             try {
-                versionPref.setSummary(getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName);
+                versionPref.setSummary(mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -100,12 +112,24 @@ public class MainActivity extends AppCompatActivity {
         private void setSafeSearchHide() {
             SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
 
-            boolean isGoogle = sharedPreferences.getString("search_engine_preference", "0").equals("0");
+            int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
 
-            if (isGoogle) {
-                mScreen.addPreference(mCategoryGoogle);
-            } else {
-                mScreen.removePreference(mCategoryGoogle);
+            switch (siteId) {
+                case 0 :{
+                    mScreen.addPreference(mCategoryGoogle);
+                    mScreen.removePreference(mCategoryIqdb);
+                    break;
+                }
+                case 1 :{
+                    mScreen.removePreference(mCategoryGoogle);
+                    mScreen.removePreference(mCategoryIqdb);
+                    break;
+                }
+                case 2 :{
+                    mScreen.removePreference(mCategoryGoogle);
+                    mScreen.addPreference(mCategoryIqdb);
+                    break;
+                }
             }
         }
 
@@ -126,11 +150,11 @@ public class MainActivity extends AppCompatActivity {
             click ++;
 
             if (click == 5)
-                Toast.makeText(getContext(), "OAO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "OAO", Toast.LENGTH_SHORT).show();
             else if (click == 10)
-                Toast.makeText(getContext(), "><", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "><", Toast.LENGTH_SHORT).show();
             else if (click == 25)
-                Toast.makeText(getContext(), "QAQ", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "QAQ", Toast.LENGTH_LONG).show();
 
             return false;
         }
