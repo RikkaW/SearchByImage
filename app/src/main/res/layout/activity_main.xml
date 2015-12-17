@@ -17,17 +17,19 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:title="@string/app_name"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:theme="@style/AppTheme"/>
 
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
+        android:id="@+id/settings_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="rikka.searchbyimage.MainActivity"
-        tools:showIn="@layout/activity_main"
-        android:id="@+id/settings_container">
+        tools:showIn="@layout/activity_main">
 
     </RelativeLayout>
 
