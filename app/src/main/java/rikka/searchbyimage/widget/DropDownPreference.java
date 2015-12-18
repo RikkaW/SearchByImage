@@ -2,7 +2,8 @@ package rikka.searchbyimage.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 import android.view.View;
@@ -171,7 +172,7 @@ public class DropDownPreference extends Preference {
         mValues.clear();
     }
 
-    /*@Override
+    @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         if (holder.equals(mSpinner.getParent())) return;
@@ -183,20 +184,20 @@ public class DropDownPreference extends Preference {
         final ViewGroup.LayoutParams lp = mSpinner.getLayoutParams();
         lp.width = 0;
         mSpinner.setLayoutParams(lp);
-    }*/
-    @Override
-    public void onBindView(View view) {
-        super.onBindView(view);
-        if (view.equals(mSpinner.getParent())) return;
-        if (mSpinner.getParent() != null) {
-            ((ViewGroup)mSpinner.getParent()).removeView(mSpinner);
-        }
-        final ViewGroup vg = (ViewGroup)view;
-        vg.addView(mSpinner, 0);
-        final ViewGroup.LayoutParams lp = mSpinner.getLayoutParams();
-        lp.width = 0;
-        mSpinner.setLayoutParams(lp);
     }
+    //    @Override
+    //    public void onBindView(View view) {
+    //        super.onBindView(view);
+    //        if (view.equals(mSpinner.getParent())) return;
+    //        if (mSpinner.getParent() != null) {
+    //            ((ViewGroup)mSpinner.getParent()).removeView(mSpinner);
+    //        }
+    //        final ViewGroup vg = (ViewGroup)view;
+    //        vg.addView(mSpinner, 0);
+    //        final ViewGroup.LayoutParams lp = mSpinner.getLayoutParams();
+    //        lp.width = 0;
+    //        mSpinner.setLayoutParams(lp);
+    //    }
 
     public interface Callback {
         boolean onItemSelected(int pos, Object value);

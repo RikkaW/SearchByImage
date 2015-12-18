@@ -5,15 +5,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
+import android.support.v14.preference.PreferenceFragment;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
-
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(R.id.settings_container,
@@ -45,11 +44,42 @@ public class MainActivity extends AppCompatActivity {
         PreferenceScreen mScreen;
         EditTextPreference mCustomGoogleUri;
 
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
+        //        @Override
+        //        public void onCreate(Bundle savedInstanceState) {
+        //            super.onCreate(savedInstanceState);
+        //            addPreferencesFromResource(R.xml.preferences);
+        //
+        //            mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
+        //            mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
+        //            mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
+        //            mScreen = (PreferenceScreen) findPreference("screen");
+        //            mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
+        //
+        //            setSafeSearchHide();
+        //            setCustomGoogleUriHide();
+        //
+        //            mContext = getActivity();
+        //
+        //            Preference versionPref = findPreference("version");
+        //            versionPref.setOnPreferenceClickListener(this);
+        //
+        //            try {
+        //                versionPref.setSummary(mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+        //            } catch (PackageManager.NameNotFoundException e) {
+        //                e.printStackTrace();
+        //            }
+        //        }
+        private int click = 0;
+        private Runnable clearClickCount = new Runnable() {
+            @Override
+            public void run() {
+                click = 0;
+            }
+        };
 
+        @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+            setPreferencesFromResource(R.xml.preferences, s);
             mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
             mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
             mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
@@ -108,24 +138,23 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         private void setSafeSearchHide() {
             SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
 
             int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
 
             switch (siteId) {
-                case 0 :{
+                case 0: {
                     mScreen.addPreference(mCategoryGoogle);
                     mScreen.removePreference(mCategoryIqdb);
                     break;
                 }
-                case 1 :{
+                case 1: {
                     mScreen.removePreference(mCategoryGoogle);
                     mScreen.removePreference(mCategoryIqdb);
                     break;
                 }
-                case 2 :{
+                case 2: {
                     mScreen.removePreference(mCategoryGoogle);
                     mScreen.addPreference(mCategoryIqdb);
                     break;
@@ -133,21 +162,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        private int click = 0;
-
-        private Runnable clearClickCount = new Runnable() {
-            @Override
-            public void run() {
-                click = 0;
-            }
-        };
-
         @Override
         public boolean onPreferenceClick(Preference preference) {
             getActivity().getWindow().getDecorView().removeCallbacks(clearClickCount);
             getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
 
-            click ++;
+            click++;
 
             if (click == 5)
                 Toast.makeText(mContext, "OAO", Toast.LENGTH_SHORT).show();
