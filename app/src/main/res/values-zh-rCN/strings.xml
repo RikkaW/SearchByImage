@@ -45,4 +45,9 @@
         <item>Manga Drawing (anime/manga/game images)</item>
         <item>Anime-Pictures (anime pictures and wallpapers)</item>
     </string-array>
+    <string name="iqdb_forcegray">忽略颜色</string>
+
+    <string name="save_link">保存链接</string>
+    <string name="save_image">保存图片</string>
+
 </resources>

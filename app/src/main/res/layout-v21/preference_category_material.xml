@@ -3,8 +3,10 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp">
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:minHeight="32dp">
 
     <TextView
         android:id="@android:id/title"
@@ -13,7 +15,6 @@
         android:text="title"
         android:textColor="@color/colorAccent"
         android:textSize="14sp"
-        android:fontFamily="sans-serif-medium"
-        android:layout_gravity="bottom" />
+        android:fontFamily="sans-serif-medium" />
 
 </LinearLayout>

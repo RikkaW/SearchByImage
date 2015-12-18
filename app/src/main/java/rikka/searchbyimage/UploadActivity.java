@@ -25,12 +25,32 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
-import rikka.searchbyimage.utils.HttpRequest;
+import rikka.searchbyimage.utils.HttpRequestUtils;
 
 public class UploadActivity extends AppCompatActivity {
 
-    private class UploadTask extends AsyncTask<Uri, Void, String> {
+    private class HttpUpload {
+        public String url;
+        public String html;
+        public String uploadUrl;
+
+        HttpUpload() {
+
+        }
+
+        HttpUpload(String uploadUrl, String url, String html) {
+            this.url = url;
+            this.uploadUrl = uploadUrl;
+            this.html = html;
+        }
+    }
+
+    private class UploadTask extends AsyncTask<Uri, Void, HttpUpload> {
+
+
         public final static int SITE_GOOGLE = 0;
         public final static int SITE_BAIDU = 1;
         public final static int SITE_IQDB = 2;
@@ -41,7 +61,7 @@ public class UploadActivity extends AppCompatActivity {
             mContext = context;
         }
 
-        protected String doInBackground(Uri... imageUrl) {
+        protected HttpUpload doInBackground(Uri... imageUrl) {
 
             String uploadUri = null;
             String name = null;
@@ -66,22 +86,30 @@ public class UploadActivity extends AppCompatActivity {
             }
 
 
-            HttpRequest httpRequest = new HttpRequest(uploadUri, "POST");
+            HttpRequestUtils httpRequest = new HttpRequestUtils(uploadUri, "POST");
             String responseUri = "";
 
             if (siteId == SITE_IQDB) {
-                httpRequest.addFormData("MAX_FILE_SIZE", "8388608");
-                httpRequest.addFormData("service[]", "1");
+                //httpRequest.addFormData("MAX_FILE_SIZE", "8388608");
 
-                //httpRequest.addFormData("forcegray", "on");
+                Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());
+                String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
+
+                for (String aSelected : selected) {
+                    httpRequest.addFormData("service[]", aSelected);
+                }
+
+                if (sharedPref.getBoolean("iqdb_forcegray", false)) {
+                    httpRequest.addFormData("forcegray", "on");
+                }
             }
 
             try {
                 httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
-                responseUri = httpRequest.getResponseUri();
+                responseUri = httpRequest.getResponseUri(mContext);
 
                 if (!responseUri.startsWith("http")) {
-                    return responseUri;
+                    return new HttpUpload(uploadUri, responseUri, null);
                 }
 
                 if (siteId == SITE_GOOGLE) {
@@ -111,26 +139,35 @@ public class UploadActivity extends AppCompatActivity {
 
                 for (StackTraceElement stackTraceElement:
                         e.getStackTrace()) {
-                    if (stackTraceElement.getFileName().startsWith("HttpRequest"))
+                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil"))
                         responseUri = "Error: " + e.toString() +"\nFile: " + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
                 }
             }
 
-            return responseUri;
+            return new HttpUpload(uploadUri, responseUri, httpRequest.getHtml());
         }
 
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(HttpUpload result) {
             mProgressDialog.cancel();
 
-            if (result.startsWith("http")) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(result));
-                startActivity(intent);
+            if (result.url.startsWith("http")) {
+
+                if (result.url.equals(result.uploadUrl)) {
+                    // for iqdb.org
+                    Intent intent = new Intent(getBaseContext(), WebViewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("EXTRA_INPUT", result.html);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(result.url));
+                    startActivity(intent);
+                }
 
                 finish();
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage(result);
+                builder.setMessage(result.url);
                 builder.setTitle("出错了 OAO");
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
