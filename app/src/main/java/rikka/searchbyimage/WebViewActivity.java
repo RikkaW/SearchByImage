@@ -3,16 +3,14 @@ package rikka.searchbyimage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -35,6 +33,8 @@ public class WebViewActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
     private ProgressBar mProgressBar;
+    private String htmlFilePath;
+    private String mImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class WebViewActivity extends AppCompatActivity {
                 mToolbar.setTitle(url);
                 mProgressBar.setProgress(0);
                 //mToolbar.setVisibility(View.VISIBLE);
-                setAppbarVisibility(true);
+                setMyProgressBarVisibility(true);
                 return true;
             }
 
@@ -85,7 +85,7 @@ public class WebViewActivity extends AppCompatActivity {
                 super.onPageFinished(view, url);
                 mToolbar.setTitle(url);
                 //mToolbar.setVisibility(View.INVISIBLE);
-                setAppbarVisibility(false);
+                setMyProgressBarVisibility(false);
             }
         });
 
@@ -103,22 +103,13 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-    private void setAppbarVisibility(boolean visible) {
+    private void setMyProgressBarVisibility(boolean visible) {
         if (visible) {
-            //mAppBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-            //mWebView.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
-            mAppBarLayout.setExpanded(true, true);
-        }
-        else {
-            //mAppBarLayout.animate().translationY(-mToolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-            //mWebView.animate().translationY(-mToolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+        } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
-            mAppBarLayout.setExpanded(false, true);
         }
     }
-
-    private String htmlFilePath;
 
     private void loadSearchResult(String path) {
         mToolbar.setTitle("http://iqdb.org");
@@ -129,7 +120,7 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void loadSearchResult() {
-        setAppbarVisibility(true);
+        setMyProgressBarVisibility(true);
 
         File file = new File(htmlFilePath);
 
@@ -161,7 +152,6 @@ public class WebViewActivity extends AppCompatActivity {
                 "http://iqdb.org");
     }
 
-
     @Override
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
@@ -178,8 +168,6 @@ public class WebViewActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    private String mImageUrl;
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
