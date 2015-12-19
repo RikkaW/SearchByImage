@@ -56,8 +56,10 @@ public class WebViewActivity extends AppCompatActivity {
 
         mWebView.clearCache(true);
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.setDisplayZoomControls(false);
+
+        webSettings.setSupportZoom(false);
+        webSettings.setBuiltInZoomControls(false);
+        //webSettings.setDisplayZoomControls(false);
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {

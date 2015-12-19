@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 click = -10;
             }
 
-            //startActivity(new Intent(mContext, WebViewActivity.class));
+            startActivity(new Intent(mContext, WebViewActivity.class));
 
             return false;
         }
