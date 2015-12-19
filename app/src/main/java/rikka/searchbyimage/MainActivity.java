@@ -1,6 +1,7 @@
 package rikka.searchbyimage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
@@ -173,8 +174,15 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "OAO", Toast.LENGTH_SHORT).show();
             else if (click == 10)
                 Toast.makeText(mContext, "><", Toast.LENGTH_SHORT).show();
-            else if (click == 25)
-                Toast.makeText(mContext, "QAQ", Toast.LENGTH_LONG).show();
+            else if (click == 15)
+                Toast.makeText(mContext, "www", Toast.LENGTH_SHORT).show();
+            else if (click == 25) {
+                Toast.makeText(mContext, "QAQ", Toast.LENGTH_SHORT).show();
+
+                click = -10;
+            }
+
+            startActivity(new Intent(mContext, WebViewActivity.class));
 
             return false;
         }

@@ -60,6 +60,11 @@
             android:entryValues="@array/iqdb_service_id"
             android:defaultValue="@array/iqdb_service_id_default"/>
 
+        <SwitchPreference
+            android:key="iqdb_forcegray"
+            android:title="@string/iqdb_forcegray"
+            android:defaultValue="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

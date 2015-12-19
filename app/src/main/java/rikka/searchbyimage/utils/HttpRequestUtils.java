@@ -1,23 +1,31 @@
 package rikka.searchbyimage.utils;
 
+import android.content.Context;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 
 /**
  * Created by Rikka on 2015/12/12.
  */
-public class HttpRequest {
+public class HttpRequestUtils {
 
     public static class HttpFormData {
         public final static int FORM_DATA_TEXT = 0x1;
@@ -104,9 +112,19 @@ public class HttpRequest {
             return b;
         }
 
-        private static byte[] getFormByteEnd(String boundary) {
+        private static byte[] getFormByteNewLine() {
             StringBuilder sb = new StringBuilder();
             sb.append("\r\n");
+
+            ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(sb.toString());
+            byte[] b = new byte[byteBuffer.remaining()];
+            byteBuffer.get(b);
+            return b;
+        }
+
+        private static byte[] getFormByteEnd(String boundary) {
+            StringBuilder sb = new StringBuilder();
+            //sb.append("\r\n");
             sb.append("--").append(boundary).append("--");
             sb.append("\r\n");
 
@@ -122,12 +140,13 @@ public class HttpRequest {
     private String method;
     private int timeout;
     private HttpURLConnection connection;
+    private String html;
 
     private String responseUri;
 
     private ArrayList<HttpFormData> formDataList = new ArrayList<>();
 
-    public HttpRequest(String uri, String method) {
+    public HttpRequestUtils(String uri, String method) {
         this.uri = uri;
         this.method = method;
 
@@ -158,10 +177,10 @@ public class HttpRequest {
     public HttpURLConnection openConnection() throws IOException {
         connection = (HttpURLConnection) new URL(uri).openConnection();
 
-        connection.setRequestMethod("POST");
+        connection.setRequestMethod(method);
         connection.setRequestProperty("accept", "*/*");
         connection.setRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
-        connection.setRequestProperty("accept-encoding", "gzip, deflate");
+        connection.setRequestProperty("accept-encoding", "deflate");
         connection.setRequestProperty("cache-control", "no-cache");
         connection.setUseCaches(false);
         connection.setRequestProperty("connection", "Keep-Alive");
@@ -183,6 +202,7 @@ public class HttpRequest {
 
         for (int i = 0; i < formDataList.size(); i++) {
             formDataList.get(i).writeForm(os, boundary);
+            os.write(HttpFormData.getFormByteNewLine());
         }
 
         os.write(HttpFormData.getFormByteEnd(boundary));
@@ -191,21 +211,50 @@ public class HttpRequest {
         os.close();
     }
 
-    public void connect() throws IOException {
+    public void connect(Context context) throws IOException {
         if (formDataList.size() > 0)
             writeForm();
 
         connection.connect();
-        connection.getInputStream();
+
+        InputStream inputStream = connection.getInputStream();
+        String RootPath = context.getCacheDir().getAbsolutePath();
+        String FilePath = RootPath + "/html/result.html";
+
+        File file = new File(FilePath);
+        if (!file.getParentFile().exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            file.getParentFile().mkdirs();
+        }
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileOutputStream outputStream = new FileOutputStream(FilePath);
+
+        int bytesRead;
+        byte[] buffer = new byte[1024];
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        html = FilePath;
 
         responseUri = connection.getURL().toString();
 
         connection.disconnect();
     }
 
-    public String getResponseUri() throws IOException {
+    public String getResponseUri(Context context) throws IOException {
         openConnection();
-        connect();
+        connect(context);
         return responseUri;
+    }
+
+    public String getHtml() {
+        return html;
     }
 }
