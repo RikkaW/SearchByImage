@@ -103,14 +103,16 @@ public class WebViewActivity extends AppCompatActivity {
 
     private void setAppbarVisibility(boolean visible) {
         if (visible) {
-            mAppBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            //mAppBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
             //mWebView.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mAppBarLayout.setExpanded(true, true);
         }
         else {
-            mProgressBar.setVisibility(ProgressBar.GONE);
-            mAppBarLayout.animate().translationY(-mToolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+            //mAppBarLayout.animate().translationY(-mToolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
             //mWebView.animate().translationY(-mToolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+            mProgressBar.setVisibility(ProgressBar.GONE);
+            mAppBarLayout.setExpanded(false, true);
         }
     }
 
