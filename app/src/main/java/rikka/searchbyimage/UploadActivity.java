@@ -216,6 +216,7 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 mUploadTask.cancel(true);
+                finish();
             }
         });
 
