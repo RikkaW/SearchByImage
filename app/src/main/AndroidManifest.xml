@@ -35,9 +35,8 @@
         </activity>
         <activity
             android:name=".WebViewActivity"
-            android:theme="@style/AppTheme">
-        </activity>
-
+            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".ResultActivity"></activity>
     </application>
 
 </manifest>

@@ -106,8 +106,10 @@ public class WebViewActivity extends AppCompatActivity {
     private void setMyProgressBarVisibility(boolean visible) {
         if (visible) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mAppBarLayout.setExpanded(visible, true);
         } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
+            mAppBarLayout.setExpanded(visible, true);
         }
     }
 
