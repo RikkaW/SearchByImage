@@ -104,9 +104,6 @@
             android:title="@string/open_source"
             android:layout="@layout/preference_material"
             android:key="open_source">
-
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://github.com/RikkaW/SearchByImage" />
         </Preference>
 
     </PreferenceCategory>

@@ -205,7 +205,7 @@ public class UploadActivity extends AppCompatActivity {
     private ProgressDialog showDialog() {
         ProgressDialog progressDialog;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1)
             progressDialog = new ProgressDialog(this, R.style.DialogStyle);
         else
             progressDialog = new ProgressDialog(this);
