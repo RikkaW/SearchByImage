@@ -17,16 +17,25 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.IqdbResultCollecter;
 
 public class WebViewActivity extends AppCompatActivity {
+    public static final String EXTRA_URL =
+            "rikka.searchbyimage.WebViewActivity.EXTRA_URL";
+
+    public static final String EXTRA_FILE =
+            "rikka.searchbyimage.WebViewActivity.EXTRA_FILE";
+
     private WebView mWebView;
     private Context mContext;
     private Activity mActivity;
@@ -93,21 +102,24 @@ public class WebViewActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        if (intent.hasExtra("EXTRA_INPUT")) {
+        if (intent.hasExtra(EXTRA_FILE)) {
             //mWebView.loadData(intent.getStringExtra("EXTRA_INPUT"), "text/html", "UTF-8");
             //mWebView.loadUrl("file://" + intent.getStringExtra("EXTRA_INPUT"));
-            loadSearchResult(intent.getStringExtra("EXTRA_INPUT"));
+            loadSearchResult(intent.getStringExtra(EXTRA_FILE));
 
-        } else {
-            mWebView.loadUrl("http://www.iqdb.org/");
+        } else if (intent.hasExtra(EXTRA_URL)){
+            mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
+            mToolbar.setTitle(intent.getStringExtra(EXTRA_URL));
         }
     }
 
     private void setMyProgressBarVisibility(boolean visible) {
         if (visible) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mAppBarLayout.setExpanded(visible, true);
         } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
+            mAppBarLayout.setExpanded(visible, true);
         }
     }
 
@@ -150,6 +162,11 @@ public class WebViewActivity extends AppCompatActivity {
                 "text/html",
                 "utf-8",
                 "http://iqdb.org");
+
+        ArrayList<IqdbResultCollecter.IqdbItem> list = IqdbResultCollecter.getItemList(sb.toString());
+        if (list.size() > 0) {
+            Toast.makeText(this, "poi", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

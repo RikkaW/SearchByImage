@@ -1,5 +1,6 @@
 package rikka.searchbyimage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,8 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
+
+import rikka.searchbyimage.utils.URLUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             OnSharedPreferenceChangeListener,
             Preference.OnPreferenceClickListener {
 
-        Context mContext;
+        Activity mActivity;
 
         PreferenceCategory mCategoryGoogle;
         PreferenceCategory mCategoryIqdb;
@@ -90,13 +93,16 @@ public class MainActivity extends AppCompatActivity {
             setSafeSearchHide();
             setCustomGoogleUriHide();
 
-            mContext = getActivity();
+            mActivity = getActivity();
 
             Preference versionPref = findPreference("version");
             versionPref.setOnPreferenceClickListener(this);
 
+            Preference githubPref = findPreference("open_source");
+            githubPref.setOnPreferenceClickListener(this);
+
             try {
-                versionPref.setSummary(mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+                versionPref.setSummary(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -165,24 +171,30 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            getActivity().getWindow().getDecorView().removeCallbacks(clearClickCount);
-            getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
+            String key = preference.getKey();
 
-            click++;
+            if (key.equals("version"))
+            {
+                getActivity().getWindow().getDecorView().removeCallbacks(clearClickCount);
+                getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
 
-            if (click == 5)
-                Toast.makeText(mContext, "OAO", Toast.LENGTH_SHORT).show();
-            else if (click == 10)
-                Toast.makeText(mContext, "><", Toast.LENGTH_SHORT).show();
-            else if (click == 15)
-                Toast.makeText(mContext, "www", Toast.LENGTH_SHORT).show();
-            else if (click == 25) {
-                Toast.makeText(mContext, "QAQ", Toast.LENGTH_SHORT).show();
+                click++;
 
-                click = -10;
+                if (click == 5)
+                    Toast.makeText(mActivity, "OAO", Toast.LENGTH_SHORT).show();
+                else if (click == 10)
+                    Toast.makeText(mActivity, "><", Toast.LENGTH_SHORT).show();
+                else if (click == 15)
+                    Toast.makeText(mActivity, "www", Toast.LENGTH_SHORT).show();
+                else if (click == 25) {
+                    Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
+
+                    click = -10;
+                }
             }
-
-            startActivity(new Intent(mContext, WebViewActivity.class));
+            else {
+                URLUtils.Open("https://github.com/RikkaW/SearchByImage", mActivity);
+            }
 
             return false;
         }
