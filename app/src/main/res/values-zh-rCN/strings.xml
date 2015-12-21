@@ -51,6 +51,7 @@
     <string name="save_image">保存图片</string>
 
     <string name="share">分享</string>
+    <string name="share_url">分享链接</string>
 
 
 </resources>

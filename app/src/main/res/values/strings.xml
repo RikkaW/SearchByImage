@@ -52,6 +52,7 @@
     <string name="save_image">Save image</string>
 
     <string name="share">Share</string>
+    <string name="share_url">Share url</string>
 
 
 </resources>

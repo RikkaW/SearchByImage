@@ -33,10 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".WebViewActivity"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".ResultActivity"></activity>
+        <activity android:name=".WebViewActivity"/>
+        <activity android:name=".ResultActivity"/>
+
+        <receiver android:name=".receiver.ShareBroadcastReceiver" />
     </application>
 
 </manifest>

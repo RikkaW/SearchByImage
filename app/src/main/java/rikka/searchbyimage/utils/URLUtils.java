@@ -8,6 +8,7 @@ import android.support.customtabs.CustomTabsIntent;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.WebViewActivity;
+import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
 
 /**
  * Created by Rikka on 2015/12/21.
@@ -23,17 +24,17 @@ public class URLUtils {
         int color = activity.getResources().getColor(R.color.colorPrimary);
         intentBuilder.setToolbarColor(color);
         intentBuilder.setShowTitle(true);
-        intentBuilder.addMenuItem(activity.getString(R.string.share), createPendingShareIntent(uri.toString(), activity));
+        intentBuilder.addMenuItem(activity.getString(R.string.share), createPendingShareIntent(activity));
 
         CustomTabActivityHelper.openCustomTab(
                 activity, intentBuilder.build(), uri, new WebViewFallback());
     }
 
-    private static PendingIntent createPendingShareIntent(String uri, Activity activity) {
-        Intent actionIntent = new Intent(Intent.ACTION_SEND);
-        actionIntent.setType("text/plain");
-        actionIntent.putExtra(Intent.EXTRA_TEXT, uri);
-        return PendingIntent.getActivity(activity.getApplicationContext(), 0, actionIntent, 0);
+    private static PendingIntent createPendingShareIntent(Activity activity) {
+        Intent actionIntent = new Intent(
+                activity.getApplicationContext(), ShareBroadcastReceiver.class);
+
+        return PendingIntent.getBroadcast(activity.getApplicationContext(), 0, actionIntent, 0);
     }
 
     public static class WebViewFallback implements CustomTabActivityHelper.CustomTabFallback {
