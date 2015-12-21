@@ -1,7 +1,9 @@
 package rikka.searchbyimage;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,24 +19,35 @@ import java.util.ArrayList;
 
 import rikka.searchbyimage.apdater.RecyclerViewAdapter;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
+import rikka.searchbyimage.utils.URLUtils;
 import rikka.searchbyimage.widget.SimpleDividerItemDecoration;
 
 public class ResultActivity extends AppCompatActivity {
+
+    public static final String EXTRA_FILE =
+            "rikka.searchbyimage.ResultActivity.EXTRA_FILE";
+
+    public static final String EXTRA_SITE_ID =
+            "rikka.searchbyimage.ResultActivity.EXTRA_SITE_ID";
+
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
+    Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        mActivity = this;
+
         ArrayList<IqdbResultCollecter.IqdbItem> list;
 
         Intent intent = getIntent();
-        if (intent.hasExtra("EXTRA_INPUT")) {
+        if (intent.hasExtra(EXTRA_FILE)) {
             //mWebView.loadData(intent.getStringExtra("EXTRA_INPUT"), "text/html", "UTF-8");
             //mWebView.loadUrl("file://" + intent.getStringExtra("EXTRA_INPUT"));
-            list = loadSearchResult(intent.getStringExtra("EXTRA_INPUT"));
+            list = loadSearchResult(intent.getStringExtra(EXTRA_FILE));
 
             mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             //mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -48,9 +61,11 @@ public class ResultActivity extends AppCompatActivity {
 
                 @Override
                 public void onItemClick(View view, int position, IqdbResultCollecter.IqdbItem item) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(item.imageURL));
-                    startActivity(intent);
+                    startActivity(intent);*/
+
+                    URLUtils.Open(item.imageURL, mActivity);
                 }
 
                 @Override

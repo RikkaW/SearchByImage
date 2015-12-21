@@ -182,8 +182,6 @@ public class MainActivity extends AppCompatActivity {
                 click = -10;
             }
 
-            startActivity(new Intent(mContext, ResultActivity.class));
-
             return false;
         }
     }

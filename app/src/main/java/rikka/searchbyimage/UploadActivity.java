@@ -1,6 +1,7 @@
 package rikka.searchbyimage;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import rikka.searchbyimage.utils.HttpRequestUtils;
+import rikka.searchbyimage.utils.URLUtils;
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -36,15 +38,17 @@ public class UploadActivity extends AppCompatActivity {
         public String url;
         public String html;
         public String uploadUrl;
+        public int siteId;
 
         HttpUpload() {
 
         }
 
-        HttpUpload(String uploadUrl, String url, String html) {
+        HttpUpload(String uploadUrl, String url, String html, int siteId) {
             this.url = url;
             this.uploadUrl = uploadUrl;
             this.html = html;
+            this.siteId = siteId;
         }
     }
 
@@ -55,17 +59,17 @@ public class UploadActivity extends AppCompatActivity {
         public final static int SITE_BAIDU = 1;
         public final static int SITE_IQDB = 2;
 
-        private Context mContext;
+        private Activity mActivity;
 
-        public UploadTask(Context context) {
-            mContext = context;
+        public UploadTask(Activity activity) {
+            mActivity = activity;
         }
 
         protected HttpUpload doInBackground(Uri... imageUrl) {
 
             String uploadUri = null;
             String name = null;
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
             int siteId = Integer.parseInt(sharedPref.getString("search_engine_preference", "0"));
             switch (siteId) {
@@ -105,11 +109,11 @@ public class UploadActivity extends AppCompatActivity {
             }
 
             try {
-                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mContext.getContentResolver().openInputStream(imageUrl[0]));
-                responseUri = httpRequest.getResponseUri(mContext);
+                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mActivity.getContentResolver().openInputStream(imageUrl[0]));
+                responseUri = httpRequest.getResponseUri(mActivity);
 
                 if (!responseUri.startsWith("http")) {
-                    return new HttpUpload(uploadUri, responseUri, null);
+                    return new HttpUpload(uploadUri, responseUri, null, siteId);
                 }
 
                 if (siteId == SITE_GOOGLE) {
@@ -144,7 +148,7 @@ public class UploadActivity extends AppCompatActivity {
                 }
             }
 
-            return new HttpUpload(uploadUri, responseUri, httpRequest.getHtml());
+            return new HttpUpload(uploadUri, responseUri, httpRequest.getHtml(), siteId);
         }
 
         protected void onPostExecute(HttpUpload result) {
@@ -153,20 +157,18 @@ public class UploadActivity extends AppCompatActivity {
             if (result.url.startsWith("http")) {
 
                 if (result.url.equals(result.uploadUrl)) {
-                    // for iqdb.org
                     Intent intent = new Intent(getBaseContext(), ResultActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("EXTRA_INPUT", result.html);
+                    intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
+                    intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(result.url));
-                    startActivity(intent);
+                    URLUtils.Open(result.url, mActivity);
                 }
 
                 finish();
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.url);
                 builder.setTitle("出错了 OAO");
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -233,28 +235,6 @@ public class UploadActivity extends AppCompatActivity {
             mUploadTask = (UploadTask) new UploadTask(this).execute(imageUri);
         }
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     private String getImageUrlWithAuthority(Context context, Uri uri) {
         InputStream is = null;
