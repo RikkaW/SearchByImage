@@ -88,10 +88,8 @@
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"
-            android:title="@string/open_source">
-
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://github.com/RikkaW/SearchByImage" />
+            android:title="@string/open_source"
+            android:key="open_source">
         </Preference>
 
     </PreferenceCategory>
