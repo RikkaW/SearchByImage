@@ -154,7 +154,7 @@ public class UploadActivity extends AppCompatActivity {
 
                 if (result.url.equals(result.uploadUrl)) {
                     // for iqdb.org
-                    Intent intent = new Intent(getBaseContext(), WebViewActivity.class);
+                    Intent intent = new Intent(getBaseContext(), ResultActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("EXTRA_INPUT", result.html);
                     startActivity(intent);

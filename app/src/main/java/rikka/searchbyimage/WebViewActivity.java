@@ -17,14 +17,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.IqdbResultCollecter;
 
 public class WebViewActivity extends AppCompatActivity {
     private WebView mWebView;
@@ -152,6 +155,11 @@ public class WebViewActivity extends AppCompatActivity {
                 "text/html",
                 "utf-8",
                 "http://iqdb.org");
+
+        ArrayList<IqdbResultCollecter.IqdbItem> list = IqdbResultCollecter.getItemList(sb.toString());
+        if (list.size() > 0) {
+            Toast.makeText(this, "poi", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
