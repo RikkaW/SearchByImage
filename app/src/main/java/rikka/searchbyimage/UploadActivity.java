@@ -91,7 +91,7 @@ public class UploadActivity extends AppCompatActivity {
 
 
             HttpRequestUtils httpRequest = new HttpRequestUtils(uploadUri, "POST");
-            String responseUri = "";
+            String responseUri;
 
             if (siteId == SITE_IQDB) {
                 //httpRequest.addFormData("MAX_FILE_SIZE", "8388608");
@@ -141,10 +141,12 @@ public class UploadActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
 
+                responseUri = "Error: " + e.toString() +"\nFile: ";
+
                 for (StackTraceElement stackTraceElement:
                         e.getStackTrace()) {
-                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil"))
-                        responseUri = "Error: " + e.toString() +"\nFile: " + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
+                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
+                        responseUri += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
                 }
             }
 
@@ -218,7 +220,6 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 mUploadTask.cancel(true);
-                finish();
             }
         });
 

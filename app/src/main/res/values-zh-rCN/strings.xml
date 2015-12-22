@@ -53,5 +53,6 @@
     <string name="share">分享</string>
     <string name="share_url">分享链接</string>
 
-
+    <string name="use_chrome_custom_tabs">使用 Chrome Custom Tabs</string>
+    <string name="use_chrome_custom_tabs_summary">如果没有安装 Chrome 将使用内置 WebView</string>
 </resources>

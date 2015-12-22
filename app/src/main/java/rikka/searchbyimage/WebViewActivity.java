@@ -108,8 +108,8 @@ public class WebViewActivity extends AppCompatActivity {
             loadSearchResult(intent.getStringExtra(EXTRA_FILE));
 
         } else if (intent.hasExtra(EXTRA_URL)){
-            mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
             mToolbar.setTitle(intent.getStringExtra(EXTRA_URL));
+            mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
         }
     }
 
@@ -162,11 +162,6 @@ public class WebViewActivity extends AppCompatActivity {
                 "text/html",
                 "utf-8",
                 "http://iqdb.org");
-
-        ArrayList<IqdbResultCollecter.IqdbItem> list = IqdbResultCollecter.getItemList(sb.toString());
-        if (list.size() > 0) {
-            Toast.makeText(this, "poi", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override

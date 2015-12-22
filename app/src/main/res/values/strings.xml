@@ -54,5 +54,6 @@
     <string name="share">Share</string>
     <string name="share_url">Share url</string>
 
-
+    <string name="use_chrome_custom_tabs">Use Chrome Custom Tabs</string>
+    <string name="use_chrome_custom_tabs_summary">Use WebView if Chrome not installed</string>
 </resources>

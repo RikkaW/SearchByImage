@@ -24,6 +24,13 @@
             app:myEntryValues="@array/search_engines_value"
             android:layout="@layout/preference_material"/>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="use_chrome_custom_tabs"
+            android:title="@string/use_chrome_custom_tabs"
+            android:summary="@string/use_chrome_custom_tabs_summary"
+            android:layout="@layout/preference_material"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
