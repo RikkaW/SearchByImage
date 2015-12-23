@@ -12,19 +12,19 @@
     </string-array>
 
     <string name="usage">Usage</string>
-    <string name="search_engine">Search Engine</string>
-    <string name="safe_search">Safe Search</string>
+    <string name="search_engine">Search engine</string>
+    <string name="safe_search">Safe search</string>
     <string name="about">About</string>
-    <string name="open_source">Open Source</string>
+    <string name="open_source">Open source</string>
     <string name="general">General</string>
-    <string name="rate">Rate App</string>
-    <string name="rate_summary">Rate on Play Store</string>
-    <string name="build_version">Build Version</string>
+    <string name="rate">Rate me</string>
+    <string name="rate_summary">I\'ll be happy if you give me 5 stars. >﹏&lt; </string>
+    <string name="build_version">Build version</string>
 
     <string name="safe_search_summary">Block inappropriate or explicit images</string>
 
-    <string name="google_settings">Google Settings</string>
-    <string name="google_region_redirect">Region Redirect</string>
+    <string name="google_settings">Google settings</string>
+    <string name="google_region_redirect">Region redirect</string>
     <string name="google_region_redirect_custom">Custom Google URL</string>
 
     <string-array name="google_region_redirects">
@@ -33,8 +33,8 @@
         <item>Custom</item>
     </string-array>
 
-    <string name="iqdb_settings">iqdb Settings</string>
-    <string name="iqdb_service_select">Search Sites</string>
+    <string name="iqdb_settings">iqdb settings</string>
+    <string name="iqdb_service_select">Search sites</string>
     <string-array name="iqdb_service_title">
         <item>Danbooru (anime artwork)</item>
         <item>Konachan (anime wallpapers)</item>
@@ -53,7 +53,7 @@
     <string name="save_image">Save image</string>
 
     <string name="share">Share</string>
-    <string name="share_url">Share url</string>
+    <string name="share_url">Share via</string>
 
     <string name="use_chrome_custom_tabs">Use Chrome Custom Tabs</string>
     <string name="use_chrome_custom_tabs_summary">Use WebView if Chrome not installed</string>
@@ -61,10 +61,10 @@
     <string name="search_result">%s Search Result</string>
 
     <string name="settings">Settings</string>
-    <string name="setting_each_time">Open settings before upload</string>
+    <string name="setting_each_time">Open settings before upload</string>r
     <string name="start_upload">Start upload</string>
 
-    <string name="permission_require">Permission Require</string>
+    <string name="permission_require">Permission require</string>
     <string name="permission_require_detail">It seems the application need READ_EXTERNAL_STORAGE permission to upload file, please try again after authorize.</string>
     <string name="ok">get permission</string>
 
