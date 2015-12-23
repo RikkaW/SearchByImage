@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".UploadActivity"
             android:label="@string/share_action_name"
@@ -26,17 +26,25 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WebViewActivity"/>
-        <activity android:name=".ResultActivity"/>
+        <activity android:name=".WebViewActivity" />
+        <activity android:name=".ResultActivity" />
 
         <receiver android:name=".receiver.ShareBroadcastReceiver" />
+
+        <activity android:name=".ChromeCustomTabsActivity"/>
+
+        <activity
+            android:name=".PopupSettingsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/PopupTheme"/>
+
     </application>
 
 </manifest>

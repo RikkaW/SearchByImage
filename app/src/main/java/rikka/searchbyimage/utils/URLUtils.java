@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
 
@@ -55,6 +56,11 @@ public class URLUtils {
         @Override
         public void openUri(Activity activity, Uri uri) {
             Intent intent = new Intent(activity, WebViewActivity.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            } else {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
             activity.startActivity(intent);
         }

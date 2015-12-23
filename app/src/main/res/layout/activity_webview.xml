@@ -19,8 +19,7 @@
             android:background="?attr/colorPrimary"
             android:title="@string/app_name"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/AppTheme" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <ProgressBar
             android:id="@+id/progressBar"

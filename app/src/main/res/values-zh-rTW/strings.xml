@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">以圖搜圖</string>
+    <string name="share_action_name">圖片搜尋</string>
+    <string name="hello">在分享選單選擇該應用將圖片上傳至選擇的搜尋引擎</string>
+    <string name="uploading">上傳中...</string>
+
+    <string-array name="search_engines">
+        <item>Google</item>
+        <item>百度</item>
+        <item>iqdb</item>
+        <item>TinEye</item>
+    </string-array>
+
+    <string name="usage">使用方法</string>
+    <string name="search_engine">搜尋引擎</string>
+    <string name="safe_search">安全搜尋</string>
+    <string name="about">關於</string>
+    <string name="open_source">開源</string>
+    <string name="general">通用</string>
+    <string name="safe_search_summary">阻止不合適的圖片</string>
+    <string name="rate">評分</string>
+    <string name="rate_summary">在 Play 商店評分</string>
+    <string name="build_version">版本</string>
+
+    <string name="google_settings">Google 設置</string>
+    <string name="google_region_redirect">區域重定向</string>
+    <string name="google_region_redirect_custom">自定義 Google URL</string>
+
+    <string-array name="google_region_redirects">
+        <item>默認</item>
+        <item>使用 google.com</item>
+        <item>自定義</item>
+    </string-array>
+
+    <string name="iqdb_settings">iqdb 設置</string>
+    <string name="iqdb_service_select">搜尋網站</string>
+    <string-array name="iqdb_service_title">
+        <item>Danbooru (anime artwork)</item>
+        <item>Konachan (anime wallpapers)</item>
+        <item>yande.re (high-res scans)</item>
+        <item>Gelbooru (anime artwork)</item>
+        <item>Sankaku Channel (anime/manga/game images)</item>
+        <item>e-shuushuu (anime/manga/game images)</item>
+        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
+        <item>Zerochan (anime images &amp; wallpapers)</item>
+        <item>Manga Drawing (anime/manga/game images)</item>
+        <item>Anime-Pictures (anime pictures and wallpapers)</item>
+    </string-array>
+    <string name="iqdb_forcegray">忽略顏色</string>
+
+    <string name="save_link">保存連接</string>
+    <string name="save_image">保存圖片</string>
+
+    <string name="share">分享</string>
+    <string name="share_url">分享連接</string>
+
+    <string name="use_chrome_custom_tabs">使用 Chrome Custom Tabs</string>
+    <string name="use_chrome_custom_tabs_summary">如果沒有安裝 Chrome 將使用內置 WebView</string>
+
+    <string name="search_result">%s 搜尋結果</string>
+
+    <string name="settings">設置</string>
+    <string name="setting_each_time">上載前打開設置</string>
+    <string name="start_upload">開始上載</string>
+
+    <string name="permission_require">需要权限</string>
+    <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能正常上載該圖片，請在授予權限後重新嘗試上傳。</string>
+    <string name="ok">獲取權限</string>
+
+
+</resources>

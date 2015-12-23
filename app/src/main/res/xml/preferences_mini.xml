@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage"
     android:key="screen">
 
-    <Preference
-        android:summary="@string/hello"
-        android:title="@string/usage"
-        android:order="0"
-        android:layout="@layout/preference_material"/>
-
     <PreferenceCategory
         android:title="@string/general"
         android:key="category_general"
@@ -22,20 +16,6 @@
             android:title="@string/search_engine"
             app:myEntries="@array/search_engines"
             app:myEntryValues="@array/search_engines_value"
-            android:layout="@layout/preference_material"/>
-
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="setting_each_time"
-            android:title="@string/setting_each_time"
-            android:layout="@layout/preference_material"/>
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="use_chrome_custom_tabs"
-            android:title="@string/use_chrome_custom_tabs"
-            android:summary="@string/use_chrome_custom_tabs_summary"
             android:layout="@layout/preference_material"/>
 
     </PreferenceCategory>
@@ -91,34 +71,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/about"
-        android:order="9"
-        android:layout="@layout/preference_category_material">
-
-        <Preference
-            android:title="@string/build_version"
-            android:key="version"
-            android:layout="@layout/preference_material">
-
-        </Preference>
-
-        <Preference
-            android:title="@string/rate"
-            android:summary="@string/rate_summary"
-            android:layout="@layout/preference_material">
-
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
-        </Preference>
-
-
-        <Preference
-            android:summary="https://github.com/RikkaW/SearchByImage"
-            android:title="@string/open_source"
-            android:layout="@layout/preference_material"
-            android:key="open_source">
-        </Preference>
-
-    </PreferenceCategory>
 </PreferenceScreen>

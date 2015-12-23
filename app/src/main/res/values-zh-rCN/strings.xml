@@ -8,6 +8,7 @@
         <item>Google</item>
         <item>百度</item>
         <item>iqdb</item>
+        <item>TinEye</item>
     </string-array>
 
     <string name="usage">使用方法</string>
@@ -55,4 +56,16 @@
 
     <string name="use_chrome_custom_tabs">使用 Chrome Custom Tabs</string>
     <string name="use_chrome_custom_tabs_summary">如果没有安装 Chrome 将使用内置 WebView</string>
+
+    <string name="search_result">%s 搜索结果</string>
+
+    <string name="settings">设置</string>
+    <string name="setting_each_time">上传前打开设置</string>
+    <string name="start_upload">开始上传</string>
+
+    <string name="permission_require">需要权限</string>
+    <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能正常上传该图片，请在授予权限后重新尝试上传。</string>
+    <string name="ok">获取权限</string>
+
+
 </resources>
