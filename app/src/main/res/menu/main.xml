@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/ok"
-        android:icon="@drawable/cloud_upload"
+        android:icon="@drawable/check"
         android:title="@string/start_upload"
         app:showAsAction="always" />
 </menu>

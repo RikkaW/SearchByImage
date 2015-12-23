@@ -165,8 +165,6 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(HttpUpload result) {
-            mProgressDialog.cancel();
-
             if (result.url == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.url);
@@ -179,6 +177,8 @@ public class UploadActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+
+                mProgressDialog.cancel();
             }
 
             if (result.url.startsWith("http")) {
@@ -216,10 +216,19 @@ public class UploadActivity extends AppCompatActivity {
                     //ActivityManager.AppTask.startActivity(mActivity, intent, null);
                     //URLUtils.Open(result.url, mActivity);
                 }
+
+                mProgressDialog.cancel();
+
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.url);
                 builder.setTitle("出错了 OAO");
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        finish();
+                    }
+                });
 
                 builder.show();
             }
