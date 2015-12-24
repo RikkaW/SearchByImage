@@ -9,6 +9,8 @@
         <item>百度</item>
         <item>iqdb</item>
         <item>TinEye</item>
+        <item>TinEye</item>
+
     </string-array>
 
     <string name="usage">使用方法</string>
@@ -54,8 +56,8 @@
     <string name="share">分享</string>
     <string name="share_url">选择分享方式</string>
 
-    <string name="use_chrome_custom_tabs">使用 Chrome Custom Tabs</string>
-    <string name="use_chrome_custom_tabs_summary">如果没有安装 Chrome 将使用内置 WebView</string>
+    <string name="use_chrome_custom_tabs">使用内置浏览器</string>
+    <string name="use_chrome_custom_tabs_summary">使用 WebView 或 Chrome custom tabs</string>
 
     <string name="search_result">%s 搜索结果</string>
 
@@ -67,5 +69,7 @@
     <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能正常上传该图片，请在授予权限后重新尝试上传。</string>
     <string name="ok">获取权限</string>
 
+    <string name="donate">捐赠 (使用 Google Wallet / Alipay)</string>
 
+    <string name="something_wrong">出错了 OAO</string>
 </resources>

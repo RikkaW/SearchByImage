@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -40,6 +41,7 @@ public class UploadActivity extends AppCompatActivity {
     public final static int SITE_BAIDU = 1;
     public final static int SITE_IQDB = 2;
     public final static int SITE_TINEYE = 3;
+    public final static int SITE_SAUCENAO = 4;
 
 
     private class HttpUpload {
@@ -69,6 +71,13 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected HttpUpload doInBackground(Uri... imageUrl) {
+            InputStream inputStream = null;
+            try {
+                inputStream = mActivity.getContentResolver().openInputStream(imageUrl[0]);
+            } catch (FileNotFoundException e) {
+                return new HttpUpload();
+            }
+
 
             String uploadUri = null;
             String name = null;
@@ -76,49 +85,51 @@ public class UploadActivity extends AppCompatActivity {
 
             int siteId = Integer.parseInt(sharedPref.getString("search_engine_preference", "0"));
             switch (siteId) {
-                case SITE_GOOGLE: {
+                case SITE_GOOGLE:
                     uploadUri = "http://www.google.com/searchbyimage/upload";
                     name = "encoded_image";
                     break;
-                }
-                case SITE_BAIDU: {
+                case SITE_BAIDU:
                     uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
                     name = "image";
                     break;
-                }
-                case SITE_IQDB: {
+                case SITE_IQDB:
                     uploadUri = "http://iqdb.org/";
                     name = "file";
                     break;
-                }
-
-                case SITE_TINEYE: {
+                case SITE_TINEYE:
                     uploadUri = "http://www.tineye.com/search";
                     name = "image";
-                }
+                    break;
+                case SITE_SAUCENAO:
+                    uploadUri = "http://saucenao.com/search.php";
+                    name = "file";
+                    break;
             }
-
 
             HttpRequestUtils httpRequest = new HttpRequestUtils(uploadUri, "POST");
             String responseUri;
 
-            if (siteId == SITE_IQDB) {
-                //httpRequest.addFormData("MAX_FILE_SIZE", "8388608");
+            switch (siteId) {
+                case SITE_IQDB:
+                    Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());
+                    String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
 
-                Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());
-                String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
+                    for (String aSelected : selected) {
+                        httpRequest.addFormData("service[]", aSelected);
+                    }
 
-                for (String aSelected : selected) {
-                    httpRequest.addFormData("service[]", aSelected);
-                }
-
-                if (sharedPref.getBoolean("iqdb_forcegray", false)) {
-                    httpRequest.addFormData("forcegray", "on");
-                }
+                    if (sharedPref.getBoolean("iqdb_forcegray", false)) {
+                        httpRequest.addFormData("forcegray", "on");
+                    }
+                    break;
+                case SITE_SAUCENAO:
+                    //httpRequest.addFormData("url", "");
+                    break;
             }
 
             try {
-                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mActivity.getContentResolver().openInputStream(imageUrl[0]));
+                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), inputStream);
                 responseUri = httpRequest.getResponseUri(mActivity);
 
                 if (!responseUri.startsWith("http")) {
@@ -147,8 +158,6 @@ public class UploadActivity extends AppCompatActivity {
 
                     responseUri = responseUri.substring(0, start) + googleUri + responseUri.substring(end);
                 }
-            } catch (FileNotFoundException e) {
-                responseUri = null;
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -177,52 +186,61 @@ public class UploadActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
-
-                mProgressDialog.cancel();
+                mProgressDialog.dismiss();
+                return;
             }
 
             if (result.url.startsWith("http")) {
+                Intent intent;
 
-                if (result.url.equals(result.uploadUrl)) {
-                    Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    } else {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
-                    intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    } else {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
-                    intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
+                switch (result.siteId) {
+                    case SITE_GOOGLE:
+                    case SITE_BAIDU:
+                    case SITE_TINEYE:
+                        intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        } else {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
+                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
 
-                    /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                        List<ActivityManager.AppTask> appTasks = activityManager.getAppTasks();
-                        ActivityManager.AppTask appTask = appTasks.get(0);
-                        appTask.startActivity(mActivity, intent, null);
-                    }
-                    else */{
                         startActivity(intent);
-                    }
+                        break;
+                    case SITE_IQDB:
+                        intent = new Intent(getApplicationContext(), ResultActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        } else {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
+                        intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
 
-                    //ActivityManager.AppTask.startActivity(mActivity, intent, null);
-                    //URLUtils.Open(result.url, mActivity);
+                        startActivity(intent);
+                        break;
+                    case SITE_SAUCENAO:
+                        intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        } else {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        intent.putExtra(WebViewActivity.EXTRA_FILE, result.html);
+                        intent.putExtra(WebViewActivity.EXTRA_SITE_ID, result.siteId);
+
+                        startActivity(intent);
+                        break;
                 }
 
-                mProgressDialog.cancel();
+                mProgressDialog.dismiss();
+                finish();
 
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.url);
-                builder.setTitle("出错了 OAO");
+                builder.setTitle(R.string.something_wrong);
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {

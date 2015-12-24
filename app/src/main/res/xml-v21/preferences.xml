@@ -96,6 +96,11 @@
                 android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
         </Preference>
 
+        <Preference
+            android:key="donate"
+            android:title="@string/donate"
+            android:summary="rikka@xing.moe"/>
+
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"

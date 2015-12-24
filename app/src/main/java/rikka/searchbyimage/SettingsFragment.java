@@ -1,8 +1,13 @@
 package rikka.searchbyimage;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
@@ -12,6 +17,9 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import java.util.List;
+
+import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
 /**
@@ -61,6 +69,9 @@ public class SettingsFragment extends PreferenceFragment implements
 
             Preference githubPref = findPreference("open_source");
             githubPref.setOnPreferenceClickListener(this);
+
+            Preference donatePref = findPreference("donate");
+            donatePref.setOnPreferenceClickListener(this);
 
             try {
                 versionPref.setSummary(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName);
@@ -113,26 +124,23 @@ public class SettingsFragment extends PreferenceFragment implements
         int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
 
         switch (siteId) {
-            case UploadActivity.SITE_GOOGLE: {
+            case UploadActivity.SITE_GOOGLE:
                 mScreen.addPreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 break;
-            }
-            case UploadActivity.SITE_BAIDU: {
-                mScreen.removePreference(mCategoryGoogle);
-                mScreen.removePreference(mCategoryIqdb);
-                break;
-            }
-            case UploadActivity.SITE_IQDB: {
+            case UploadActivity.SITE_IQDB:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.addPreference(mCategoryIqdb);
                 break;
-            }
-            case UploadActivity.SITE_TINEYE: {
+            case UploadActivity.SITE_SAUCENAO:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 break;
-            }
+            case UploadActivity.SITE_BAIDU:
+            case UploadActivity.SITE_TINEYE:
+                mScreen.removePreference(mCategoryGoogle);
+                mScreen.removePreference(mCategoryIqdb);
+                break;
         }
     }
 
@@ -140,27 +148,32 @@ public class SettingsFragment extends PreferenceFragment implements
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
 
-        if (key.equals("version"))
-        {
-            getActivity().getWindow().getDecorView().removeCallbacks(clearClickCount);
-            getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
+        switch (key) {
+            case "version":
+                getActivity().getWindow().getDecorView().removeCallbacks(clearClickCount);
+                getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
 
-            click++;
+                click++;
 
-            if (click == 5)
-                Toast.makeText(mActivity, "OAO", Toast.LENGTH_SHORT).show();
-            else if (click == 10)
-                Toast.makeText(mActivity, "><", Toast.LENGTH_SHORT).show();
-            else if (click == 15)
-                Toast.makeText(mActivity, "www", Toast.LENGTH_SHORT).show();
-            else if (click == 25) {
-                Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
+                if (click == 5)
+                    Toast.makeText(mActivity, "OAO", Toast.LENGTH_SHORT).show();
+                else if (click == 10)
+                    Toast.makeText(mActivity, "><", Toast.LENGTH_SHORT).show();
+                else if (click == 15)
+                    Toast.makeText(mActivity, "www", Toast.LENGTH_SHORT).show();
+                else if (click == 25) {
+                    Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
 
-                click = -10;
-            }
-        }
-        else {
-            URLUtils.Open("https://github.com/RikkaW/SearchByImage", mActivity);
+                    click = -10;
+                }
+                break;
+            case "open_source":
+                URLUtils.Open("https://github.com/RikkaW/SearchByImage", mActivity);
+                break;
+            case "donate":
+                ClipBoardUtils.putTextIntoClipboard(mActivity, "rikka@xing.moe");
+                Toast.makeText(mActivity, "rikka@xing.moe" + " copied to clipboard.", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         return false;

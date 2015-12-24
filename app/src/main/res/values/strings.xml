@@ -9,6 +9,7 @@
         <item>Baidu</item>
         <item>iqdb</item>
         <item>TinEye</item>
+        <item>SauceNAO</item>
     </string-array>
 
     <string name="usage">Usage</string>
@@ -55,8 +56,8 @@
     <string name="share">Share</string>
     <string name="share_url">Share via</string>
 
-    <string name="use_chrome_custom_tabs">Use Chrome Custom Tabs</string>
-    <string name="use_chrome_custom_tabs_summary">Use WebView if Chrome not installed</string>
+    <string name="use_chrome_custom_tabs">Use build-in browser</string>
+    <string name="use_chrome_custom_tabs_summary">Use WebView or Chrome custom tabs</string>
 
     <string name="search_result">%s Search Result</string>
 
@@ -68,4 +69,7 @@
     <string name="permission_require_detail">It seems the application need READ_EXTERNAL_STORAGE permission to upload file, please try again after authorize.</string>
     <string name="ok">get permission</string>
 
+    <string name="donate">Donate by Google Wallet / Alipay</string>
+
+    <string name="something_wrong">Sorry, something went wrong</string>
 </resources>
