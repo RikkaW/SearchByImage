@@ -99,7 +99,7 @@
         <Preference
             android:key="donate"
             android:title="@string/donate"
-            android:summary="rikka@xing.moe"/>
+            android:summary="@string/donate_summary"/>
 
 
         <Preference

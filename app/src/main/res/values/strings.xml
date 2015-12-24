@@ -2,7 +2,7 @@
     <string name="app_name">Search By Image</string>
     <string name="share_action_name">Image Search</string>
     <string name="hello">Select this app in share menu to upload image to selected search engine</string>
-    <string name="uploading">Uploading...</string>
+    <string name="uploading">Uploading…</string>
 
     <string-array name="search_engines">
         <item>Google</item>
@@ -69,7 +69,10 @@
     <string name="permission_require_detail">It seems the application need READ_EXTERNAL_STORAGE permission to upload file, please try again after authorize.</string>
     <string name="ok">get permission</string>
 
-    <string name="donate">Donate by Google Wallet / Alipay</string>
+    <string name="donate">Donate</string>
+    <string name="donate_summary">Google Wallet / Alipay rikka@xing.moe</string>
 
     <string name="something_wrong">Sorry, something went wrong</string>
+
+    <string name="download_finished">Download finished</string>
 </resources>

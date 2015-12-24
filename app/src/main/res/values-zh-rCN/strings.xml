@@ -2,7 +2,7 @@
     <string name="app_name">以图搜图</string>
     <string name="share_action_name">图片搜索</string>
     <string name="hello">在分享菜单选择该应用将图片上传至选择的搜索引擎</string>
-    <string name="uploading">上传中...</string>
+    <string name="uploading">上传中…</string>
 
     <string-array name="search_engines">
         <item>Google</item>
@@ -69,7 +69,11 @@
     <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能正常上传该图片，请在授予权限后重新尝试上传。</string>
     <string name="ok">获取权限</string>
 
-    <string name="donate">捐赠 (使用 Google Wallet / Alipay)</string>
+    <string name="donate">捐赠</string>
+    <string name="donate_summary">Google Wallet/支付宝 rikka@xing.moe</string>
 
     <string name="something_wrong">出错了 OAO</string>
+
+    <string name="download_finished">下载完成</string>
+
 </resources>

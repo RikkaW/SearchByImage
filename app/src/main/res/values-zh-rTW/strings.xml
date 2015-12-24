@@ -2,7 +2,7 @@
     <string name="app_name">以圖搜圖</string>
     <string name="share_action_name">圖片搜尋</string>
     <string name="hello">在分享選單選擇該應用將圖片上傳至選擇的搜尋引擎</string>
-    <string name="uploading">上傳中...</string>
+    <string name="uploading">上傳中…</string>
 
     <string-array name="search_engines">
         <item>Google</item>
@@ -65,10 +65,13 @@
     <string name="start_upload">開始上載</string>
 
     <string name="permission_require">需要权限</string>
-    <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能正常上載該圖片，請在授予權限後重新嘗試上傳。</string>
+    <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能正常上載該圖片，請在授予權限後重新嘗試上載。</string>
     <string name="ok">獲取權限</string>
 
-    <string name="donate">捐赠 (使用 Google Wallet / Alipay)</string>
+    <string name="donate">捐赠</string>
+    <string name="donate_summary">Google Wallet / Alipay rikka@xing.moe</string>
 
     <string name="something_wrong">出错了 OAO</string>
+
+    <string name="download_finished">下載完成</string>
 </resources>

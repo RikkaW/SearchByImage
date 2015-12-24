@@ -1,15 +1,23 @@
 package rikka.searchbyimage;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
@@ -23,6 +31,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -58,6 +67,7 @@ public class WebViewActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
     private ProgressBar mProgressBar;
+    private CoordinatorLayout mCoordinatorLayout;
     private String htmlFilePath;
     private String mImageUrl;
 
@@ -66,6 +76,7 @@ public class WebViewActivity extends AppCompatActivity {
     private boolean mNormalMode = true;
 
     private DownloadManager downloadManager;
+    private long downloadReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +85,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
         mAppBarLayout = (AppBarLayout) findViewById(R.id.view);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -157,7 +170,21 @@ public class WebViewActivity extends AppCompatActivity {
             handleSendUrl(intent);
         }
 
-        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if (downloadReference == reference) {
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, R.string.download_finished, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+        };
+
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
     }
 
     private void handleSendFile(Intent intent) {
@@ -169,11 +196,14 @@ public class WebViewActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+            String title = String.format(getString(R.string.search_result), siteName);
 
             setTaskDescription(new ActivityManager.TaskDescription(
-                    String.format(getString(R.string.search_result), siteName),
+                    title,
                     null,
                     getResources().getColor(R.color.colorPrimary)));
+
+            getSupportActionBar().setTitle(title);
         }
 
         loadSearchResult(intent.getStringExtra(EXTRA_FILE), baseUrl);
@@ -216,6 +246,36 @@ public class WebViewActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private static final int REQUEST_CODE = 0;
+
+    private void getPermission(String permission) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startDownload();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void startDownload() {
+        Uri uri = Uri.parse(mImageUrl);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES), uri.getLastPathSegment());
+        request.setDestinationUri(Uri.fromFile(destinationFile));
+        downloadReference = downloadManager.enqueue(request);
+    }
+
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
@@ -223,6 +283,7 @@ public class WebViewActivity extends AppCompatActivity {
         WebView.HitTestResult result = mWebView.getHitTestResult();
 
         MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
+
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case 0: {
@@ -230,13 +291,13 @@ public class WebViewActivity extends AppCompatActivity {
                         break;
                     }
                     case 1: {
-                        Uri uri = Uri.parse(mImageUrl);
-                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_DOWNLOADS), uri.getLastPathSegment());
-                        request.setDestinationUri(Uri.fromFile(destinationFile));
-                        // Add it to the manager
-                        downloadManager.enqueue(request);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            break;
+                        }
 
+                        startDownload();
                         break;
                     }
                 }
