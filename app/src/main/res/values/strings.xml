@@ -70,9 +70,9 @@
     <string name="ok">get permission</string>
 
     <string name="donate">Donate</string>
-    <string name="donate_summary">Google Wallet / Alipay rikka@xing.moe</string>
+    <string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
 
-    <string name="something_wrong">Sorry, something went wrong</string>
+    <string name="something_wrong">Something went wrong</string>
 
     <string name="download_finished">Download finished</string>
 </resources>
