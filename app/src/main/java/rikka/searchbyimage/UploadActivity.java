@@ -2,12 +2,14 @@ package rikka.searchbyimage;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import java.io.File;
@@ -27,12 +30,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import rikka.searchbyimage.utils.HttpRequestUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
 public class UploadActivity extends AppCompatActivity {
+    public final static int SITE_GOOGLE = 0;
+    public final static int SITE_BAIDU = 1;
+    public final static int SITE_IQDB = 2;
+    public final static int SITE_TINEYE = 3;
+    public final static int SITE_SAUCENAO = 4;
+
 
     private class HttpUpload {
         public String url;
@@ -54,11 +64,6 @@ public class UploadActivity extends AppCompatActivity {
 
     private class UploadTask extends AsyncTask<Uri, Void, HttpUpload> {
 
-
-        public final static int SITE_GOOGLE = 0;
-        public final static int SITE_BAIDU = 1;
-        public final static int SITE_IQDB = 2;
-
         private Activity mActivity;
 
         public UploadTask(Activity activity) {
@@ -66,6 +71,13 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected HttpUpload doInBackground(Uri... imageUrl) {
+            InputStream inputStream = null;
+            try {
+                inputStream = mActivity.getContentResolver().openInputStream(imageUrl[0]);
+            } catch (FileNotFoundException e) {
+                return new HttpUpload();
+            }
+
 
             String uploadUri = null;
             String name = null;
@@ -73,43 +85,51 @@ public class UploadActivity extends AppCompatActivity {
 
             int siteId = Integer.parseInt(sharedPref.getString("search_engine_preference", "0"));
             switch (siteId) {
-                case SITE_GOOGLE: {
+                case SITE_GOOGLE:
                     uploadUri = "http://www.google.com/searchbyimage/upload";
                     name = "encoded_image";
                     break;
-                }
-                case SITE_BAIDU: {
+                case SITE_BAIDU:
                     uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
                     name = "image";
                     break;
-                }
-                case SITE_IQDB: {
+                case SITE_IQDB:
                     uploadUri = "http://iqdb.org/";
                     name = "file";
-                }
+                    break;
+                case SITE_TINEYE:
+                    uploadUri = "http://www.tineye.com/search";
+                    name = "image";
+                    break;
+                case SITE_SAUCENAO:
+                    uploadUri = "http://saucenao.com/search.php";
+                    name = "file";
+                    break;
             }
 
-
             HttpRequestUtils httpRequest = new HttpRequestUtils(uploadUri, "POST");
-            String responseUri = "";
+            String responseUri;
 
-            if (siteId == SITE_IQDB) {
-                //httpRequest.addFormData("MAX_FILE_SIZE", "8388608");
+            switch (siteId) {
+                case SITE_IQDB:
+                    Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());
+                    String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
 
-                Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());
-                String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
+                    for (String aSelected : selected) {
+                        httpRequest.addFormData("service[]", aSelected);
+                    }
 
-                for (String aSelected : selected) {
-                    httpRequest.addFormData("service[]", aSelected);
-                }
-
-                if (sharedPref.getBoolean("iqdb_forcegray", false)) {
-                    httpRequest.addFormData("forcegray", "on");
-                }
+                    if (sharedPref.getBoolean("iqdb_forcegray", false)) {
+                        httpRequest.addFormData("forcegray", "on");
+                    }
+                    break;
+                case SITE_SAUCENAO:
+                    //httpRequest.addFormData("url", "");
+                    break;
             }
 
             try {
-                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), mActivity.getContentResolver().openInputStream(imageUrl[0]));
+                httpRequest.addFormData(name, getImageFileName(imageUrl[0]), inputStream);
                 responseUri = httpRequest.getResponseUri(mActivity);
 
                 if (!responseUri.startsWith("http")) {
@@ -128,10 +148,10 @@ public class UploadActivity extends AppCompatActivity {
                     }
 
                     int start = responseUri.indexOf("www.google.");
-                    int end =  responseUri.indexOf("/", start);
+                    int end = responseUri.indexOf("/", start);
 
-                    String googleUri =  "www.google.com";
-                    
+                    String googleUri = "www.google.com";
+
                     if (customRedirect) {
                         googleUri = sharedPref.getString("google_region", googleUri);
                     }
@@ -141,10 +161,12 @@ public class UploadActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
 
+                responseUri = "Error: " + e.toString() +"\nFile: ";
+
                 for (StackTraceElement stackTraceElement:
                         e.getStackTrace()) {
-                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil"))
-                        responseUri = "Error: " + e.toString() +"\nFile: " + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
+                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
+                        responseUri += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
                 }
             }
 
@@ -152,25 +174,73 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(HttpUpload result) {
-            mProgressDialog.cancel();
+            if (result.url == null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setMessage(result.url);
+                builder.setTitle(R.string.permission_require);
+                builder.setMessage(R.string.permission_require_detail);
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    }
+                });
+                builder.show();
+                mProgressDialog.dismiss();
+                return;
+            }
 
             if (result.url.startsWith("http")) {
+                Intent intent;
 
-                if (result.url.equals(result.uploadUrl)) {
-                    Intent intent = new Intent(getBaseContext(), ResultActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
-                    intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
-                    startActivity(intent);
-                } else {
-                    URLUtils.Open(result.url, mActivity);
+                switch (result.siteId) {
+                    case SITE_GOOGLE:
+                    case SITE_BAIDU:
+                    case SITE_TINEYE:
+                        intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        } else {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
+                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
+
+                        startActivity(intent);
+                        break;
+                    case SITE_IQDB:
+                        intent = new Intent(getApplicationContext(), ResultActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        } else {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
+                        intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
+
+                        startActivity(intent);
+                        break;
+                    case SITE_SAUCENAO:
+                        intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        } else {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        intent.putExtra(WebViewActivity.EXTRA_FILE, result.html);
+                        intent.putExtra(WebViewActivity.EXTRA_SITE_ID, result.siteId);
+
+                        startActivity(intent);
+                        break;
                 }
 
+                mProgressDialog.dismiss();
                 finish();
+
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.url);
-                builder.setTitle("出错了 OAO");
+                builder.setTitle(R.string.something_wrong);
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -186,6 +256,9 @@ public class UploadActivity extends AppCompatActivity {
     UploadTask mUploadTask;
     ProgressDialog mProgressDialog;
 
+    public static final String EXTRA_URI =
+            "rikka.searchbyimage.UploadActivity.EXTRA_URI";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,8 +270,22 @@ public class UploadActivity extends AppCompatActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                handleSendImage(intent); // Handle single image being sent
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+                if (sharedPref.getBoolean("setting_each_time", true)) {
+                    Intent newIntent = new Intent(this, PopupSettingsActivity.class);
+                    newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, intent.getParcelableExtra(Intent.EXTRA_STREAM).toString());
+                    startActivity(newIntent);
+
+                    finish();
+                } else {
+                    handleSendImage(intent);
+                }
             }
+        }
+
+        if (intent.hasExtra(EXTRA_URI)) {
+            handleSendImage(intent.getStringExtra(EXTRA_URI));
         }
     }
 
@@ -212,6 +299,7 @@ public class UploadActivity extends AppCompatActivity {
 
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(getString(R.string.uploading));
 
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -236,60 +324,9 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
-    private String getImageUrlWithAuthority(Context context, Uri uri) {
-        InputStream is = null;
-        OutputStream os = null;
-        File file = null;
-        if (uri.getAuthority() != null) {
-            try {
-                is = context.getContentResolver().openInputStream(uri);
-                String RootPath = context.getCacheDir().getAbsolutePath();
-                String FilePath = RootPath + "/image/" + getImageFileName(uri);
-                file = new File(FilePath);
-                if (!file.getParentFile().exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.getParentFile().mkdirs();
-                }
-                try {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.createNewFile();
-                } catch (IOException e) {
-                    Log.e("在保存图片时出错: ", e.toString());
-                    Toast.makeText(context, "在保存图片时出错:\n" + e.toString(), Toast.LENGTH_LONG).show();
-                }
-                os = new FileOutputStream(file);
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = is != null ? is.read(buf) : 0) > 0) {
-                    os.write(buf, 0, len);
-                }
-                os.flush();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                if (e instanceof FileNotFoundException) {
-                    //ask for permission and do it again
-                    getPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-                    Toast.makeText(context, "FileNotFoundException" + e.toString(), Toast.LENGTH_LONG).show();
-                }
-            } finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    if (os != null) {
-                        os.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return file.getAbsolutePath();
+    private void handleSendImage(String uri) {
+        mProgressDialog = showDialog();
+        mUploadTask = (UploadTask) new UploadTask(this).execute(Uri.parse(uri));
     }
 
     private static String getImageFileName(Uri uri) {

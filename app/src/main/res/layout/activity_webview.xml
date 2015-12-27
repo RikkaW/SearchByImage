@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="rikka.searchbyimage.WebViewActivity">
+    tools:context="rikka.searchbyimage.WebViewActivity"
+    android:id="@+id/coordinatorLayout">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/view"
@@ -19,8 +20,7 @@
             android:background="?attr/colorPrimary"
             android:title="@string/app_name"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/AppTheme" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <ProgressBar
             android:id="@+id/progressBar"

@@ -1,10 +1,23 @@
 package rikka.searchbyimage;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
@@ -13,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,11 +37,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 
 import rikka.searchbyimage.utils.ClipBoardUtils;
-import rikka.searchbyimage.utils.IqdbResultCollecter;
 
 public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
@@ -36,14 +49,34 @@ public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_FILE =
             "rikka.searchbyimage.WebViewActivity.EXTRA_FILE";
 
+    public static final String EXTRA_SITE_ID =
+            "rikka.searchbyimage.WebViewActivity.EXTRA_SITE_ID";
+
+    private static final String[] SITE_URL = {
+            "", // google
+            "", // baidu
+            "", // iqdb
+            "", // tineye
+            "http://saucenao.com/" //saucenao
+    };
+
     private WebView mWebView;
+    private WebSettings mWebSettings;
     private Context mContext;
     private Activity mActivity;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
     private ProgressBar mProgressBar;
+    private CoordinatorLayout mCoordinatorLayout;
     private String htmlFilePath;
     private String mImageUrl;
+
+    private String baseUrl;
+
+    private boolean mNormalMode = true;
+
+    private DownloadManager downloadManager;
+    private long downloadReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +86,8 @@ public class WebViewActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+
         mAppBarLayout = (AppBarLayout) findViewById(R.id.view);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setMax(100);
@@ -61,14 +96,17 @@ public class WebViewActivity extends AppCompatActivity {
         mActivity = this;
 
         mWebView = (WebView) findViewById(R.id.webView);
-        WebSettings webSettings = mWebView.getSettings();
+        mWebSettings = mWebView.getSettings();
 
         mWebView.clearCache(true);
-        webSettings.setJavaScriptEnabled(true);
+        mWebSettings.setJavaScriptEnabled(true);
 
         //webSettings.setSupportZoom(true);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.setDisplayZoomControls(false);
+        mWebSettings.setBuiltInZoomControls(true);
+        mWebSettings.setDisplayZoomControls(false);
+
+        //mWebSettings.setUseWideViewPort(true);
+        //mWebSettings.setLoadWithOverviewMode(true);
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
@@ -84,54 +122,202 @@ public class WebViewActivity extends AppCompatActivity {
                 view.loadUrl(url);
                 mToolbar.setTitle(url);
                 mProgressBar.setProgress(0);
-                //mToolbar.setVisibility(View.VISIBLE);
                 setMyProgressBarVisibility(true);
                 return true;
             }
 
             @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(final WebView view, String url) {
+                if (url.contains("saucenao-new.css")) {
+                    return getCssWebResourceResponseFromAsset();
+                } else {
+                    return super.shouldInterceptRequest(view, url);
+                }
+            }
+
+            private WebResourceResponse getCssWebResourceResponseFromAsset() {
+                try {
+                    return getUtf8EncodedCssWebResourceResponse(getAssets().open("saucenao-new.css"));
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+
+            private WebResourceResponse getUtf8EncodedCssWebResourceResponse(InputStream data) {
+                return new WebResourceResponse("text/css", "UTF-8", data);
+            }
+
+
+            @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 mToolbar.setTitle(url);
-                //mToolbar.setVisibility(View.INVISIBLE);
                 setMyProgressBarVisibility(false);
             }
         });
 
         registerForContextMenu(mWebView);
 
-
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_FILE)) {
-            //mWebView.loadData(intent.getStringExtra("EXTRA_INPUT"), "text/html", "UTF-8");
-            //mWebView.loadUrl("file://" + intent.getStringExtra("EXTRA_INPUT"));
-            loadSearchResult(intent.getStringExtra(EXTRA_FILE));
-
-        } else if (intent.hasExtra(EXTRA_URL)){
-            mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
-            mToolbar.setTitle(intent.getStringExtra(EXTRA_URL));
+            handleSendFile(intent);
+        } else if (intent.hasExtra(EXTRA_URL)) {
+            handleSendUrl(intent);
         }
+
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if (downloadReference == reference) {
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, R.string.download_finished, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+        };
+
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+    }
+
+    private void handleSendFile(Intent intent) {
+        mWebSettings.setSupportZoom(false);
+
+        int siteId = intent.getIntExtra(EXTRA_SITE_ID, 3);
+        baseUrl = SITE_URL[siteId];
+        mNormalMode = false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+            String title = String.format(getString(R.string.search_result), siteName);
+
+            setTaskDescription(new ActivityManager.TaskDescription(
+                    title,
+                    null,
+                    getResources().getColor(R.color.colorPrimary)));
+
+            getSupportActionBar().setTitle(title);
+        }
+
+        loadSearchResult(intent.getStringExtra(EXTRA_FILE), baseUrl);
+    }
+
+    private void handleSendUrl(Intent intent) {
+        mToolbar.setTitle(intent.getStringExtra(EXTRA_URL));
+        mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
+        mNormalMode = true;
     }
 
     private void setMyProgressBarVisibility(boolean visible) {
         if (visible) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
-            mAppBarLayout.setExpanded(visible, true);
+            mAppBarLayout.setExpanded(true, true);
         } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
-            mAppBarLayout.setExpanded(visible, true);
+            mAppBarLayout.setExpanded(false, true);
         }
     }
 
-    private void loadSearchResult(String path) {
-        mToolbar.setTitle("http://iqdb.org");
+    @Override
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+            if (mNormalMode) {
+                mWebView.goBack();
+                return true;
+            }
 
-        htmlFilePath = path;
+            WebBackForwardList webBackForwardList = mWebView.copyBackForwardList();
+            String lastUrl = webBackForwardList.getItemAtIndex(webBackForwardList.getCurrentIndex() - 1).getUrl();
+            if (lastUrl.equals(baseUrl)) {
+                loadSearchResult(htmlFilePath, baseUrl);
+            } else {
+                mWebView.goBack();
+            }
 
-        loadSearchResult();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
-    private void loadSearchResult() {
+    private static final int REQUEST_CODE = 0;
+
+    private void getPermission(String permission) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startDownload();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void startDownload() {
+        Uri uri = Uri.parse(mImageUrl);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES), uri.getLastPathSegment());
+        request.setDestinationUri(Uri.fromFile(destinationFile));
+        downloadReference = downloadManager.enqueue(request);
+    }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+
+        WebView.HitTestResult result = mWebView.getHitTestResult();
+
+        MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case 0: {
+                        ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
+                        break;
+                    }
+                    case 1: {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            break;
+                        }
+
+                        startDownload();
+                        break;
+                    }
+                }
+                return true;
+            }
+        };
+
+        if (result.getType() == WebView.HitTestResult.IMAGE_TYPE ||
+                result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+
+            mImageUrl = result.getExtra();
+            menu.setHeaderTitle(mImageUrl);
+            menu.add(0, 0, 0, R.string.save_link).setOnMenuItemClickListener(handler);
+            menu.add(0, 1, 1, R.string.save_image).setOnMenuItemClickListener(handler);
+        }
+    }
+
+    private void loadSearchResult(String path, String baseUrl) {
+        htmlFilePath = path;
+
         setMyProgressBarVisibility(true);
 
         File file = new File(htmlFilePath);
@@ -156,64 +342,31 @@ public class WebViewActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
         }
-        mWebView.getUrl();
-        mWebView.loadDataWithBaseURL("http://iqdb.org",
+
+        mWebView.loadDataWithBaseURL(baseUrl,
                 sb.toString(),
                 "text/html",
                 "utf-8",
-                "http://iqdb.org");
-
-        ArrayList<IqdbResultCollecter.IqdbItem> list = IqdbResultCollecter.getItemList(sb.toString());
-        if (list.size() > 0) {
-            Toast.makeText(this, "poi", Toast.LENGTH_LONG).show();
-        }
+                baseUrl);
     }
 
-    @Override
-    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-            WebBackForwardList webBackForwardList = mWebView.copyBackForwardList();
+    private static String INJECT_SAUCENAO_CSS(String html) {
+        StringBuilder css_sb = new StringBuilder();
+        css_sb.append("<style type=\"text/css\" media=\"screen\">");
+        css_sb.append("<!--");
+        css_sb.append("#footerarea, #headerarea, #message, #left, #randomMessage { display: none; !important }");
+        css_sb.append("#mainarea, #headerarea, #footerarea { max-width:100%; !important; min-width: 0%; !important }");
+        css_sb.append("body, #middle, #footer-middle { margin-left: 0%; !important; margin-right: 0%; !important }");
+        css_sb.append("-->");
+        css_sb.append("</style>");
 
-            String lastUrl = webBackForwardList.getItemAtIndex(webBackForwardList.getCurrentIndex() - 1).getUrl();
-            if (lastUrl.equals("http://iqdb.org/") || lastUrl.equals("https://iqdb.org/")) {
-                loadSearchResult();
-            } else {
-                mWebView.goBack();
-            }
+        StringBuilder sb = new StringBuilder();
 
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+        int head = html.indexOf("<head>");
+        sb.append(html.substring(0, head + "<head>".length()));
+        sb.append(css_sb.toString());
+        sb.append(html.substring(head + "<head>".length() + 1));
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, view, menuInfo);
-
-        WebView.HitTestResult result = mWebView.getHitTestResult();
-
-        MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case 0: {
-                        ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
-                        break;
-                    }
-                    case 1: {
-                        break;
-                    }
-                }
-                return true;
-            }
-        };
-
-        if (result.getType() == WebView.HitTestResult.IMAGE_TYPE ||
-                result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-
-            mImageUrl = result.getExtra();
-            menu.setHeaderTitle(mImageUrl);
-            menu.add(0, 0, 0, R.string.save_link).setOnMenuItemClickListener(handler);
-            //menu.add(0, 1, 1, R.string.save_image).setOnMenuItemClickListener(handler);
-        }
+        return sb.toString();
     }
 }

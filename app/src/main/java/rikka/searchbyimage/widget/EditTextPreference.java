@@ -1,28 +1,27 @@
 package rikka.searchbyimage.widget;
 
 import android.content.Context;
-import android.support.v7.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 /**
  * Created by Rikka on 2015/12/1.
  */
-public class EditTextPreference2 extends EditTextPreference {
+public class EditTextPreference extends android.support.v7.preference.EditTextPreference {
 
 
-    public EditTextPreference2(Context context) {
+    public EditTextPreference(Context context) {
         super(context);
     }
 
-    public EditTextPreference2(Context context, AttributeSet attrs) {
+    public EditTextPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EditTextPreference2(Context context, AttributeSet attrs, int defStyle) {
+    public EditTextPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public EditTextPreference2(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

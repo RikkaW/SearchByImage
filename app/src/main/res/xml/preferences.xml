@@ -24,6 +24,20 @@
             app:myEntryValues="@array/search_engines_value"
             android:layout="@layout/preference_material"/>
 
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="setting_each_time"
+            android:title="@string/setting_each_time"
+            android:layout="@layout/preference_material"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="use_chrome_custom_tabs"
+            android:title="@string/use_chrome_custom_tabs"
+            android:summary="@string/use_chrome_custom_tabs_summary"
+            android:layout="@layout/preference_material"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -47,7 +61,7 @@
             android:defaultValue="0"
             android:layout="@layout/preference_material"/>
 
-        <rikka.searchbyimage.widget.EditTextPreference2
+        <rikka.searchbyimage.widget.EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
             android:defaultValue= "www.google.com"
@@ -98,6 +112,11 @@
                 android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
         </Preference>
 
+        <Preference
+            android:key="donate"
+            android:title="@string/donate"
+            android:summary="@string/donate_summary"
+            android:layout="@layout/preference_material"/>
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"

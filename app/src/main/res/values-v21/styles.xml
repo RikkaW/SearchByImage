@@ -1,13 +1,4 @@
 <resources>
-
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="preferenceTheme">@style/AppTheme.Preference</item>
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
-        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
-    </style>
-
     <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay.v14.Material">
         <item name="preferenceCategoryStyle">@style/AppTheme.Preference.Category</item>
         <item name="preferenceFragmentListStyle">@style/AppTheme.PreferenceFragmentList</item>
@@ -21,4 +12,5 @@
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
     </style>
+
 </resources>

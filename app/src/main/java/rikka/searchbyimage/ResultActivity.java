@@ -1,8 +1,10 @@
 package rikka.searchbyimage;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,8 +47,17 @@ public class ResultActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_FILE)) {
-            //mWebView.loadData(intent.getStringExtra("EXTRA_INPUT"), "text/html", "UTF-8");
-            //mWebView.loadUrl("file://" + intent.getStringExtra("EXTRA_INPUT"));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                int siteId = intent.getIntExtra(EXTRA_SITE_ID, 2);
+                String siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+
+                setTaskDescription(new ActivityManager.TaskDescription(
+                        String.format(getString(R.string.search_result), siteName),
+                        null,
+                        getResources().getColor(R.color.colorPrimary)));
+            }
+
             list = loadSearchResult(intent.getStringExtra(EXTRA_FILE));
 
             mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -76,7 +87,11 @@ public class ResultActivity extends AppCompatActivity {
             mRecyclerView.setAdapter(mAdapter);
         }
 
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     private ArrayList<IqdbResultCollecter.IqdbItem> loadSearchResult(String htmlFilePath) {

@@ -2,12 +2,15 @@
     <string name="app_name">以图搜图</string>
     <string name="share_action_name">图片搜索</string>
     <string name="hello">在分享菜单选择该应用将图片上传至选择的搜索引擎</string>
-    <string name="uploading">上传中...</string>
+    <string name="uploading">上传中…</string>
 
     <string-array name="search_engines">
         <item>Google</item>
         <item>百度</item>
         <item>iqdb</item>
+        <item>TinEye</item>
+        <item>TinEye</item>
+
     </string-array>
 
     <string name="usage">使用方法</string>
@@ -18,7 +21,7 @@
     <string name="general">通用</string>
     <string name="safe_search_summary">阻止不合适的图片</string>
     <string name="rate">评分</string>
-    <string name="rate_summary">在 Play 商店打分</string>
+    <string name="rate_summary">能给5星就太好啦 &gt;﹏&lt;</string>
     <string name="build_version">版本号</string>
 
     <string name="google_settings">Google 设置</string>
@@ -51,7 +54,26 @@
     <string name="save_image">保存图片</string>
 
     <string name="share">分享</string>
-    <string name="share_url">分享链接</string>
+    <string name="share_url">选择分享方式</string>
 
+    <string name="use_chrome_custom_tabs">使用内置浏览器</string>
+    <string name="use_chrome_custom_tabs_summary">使用 WebView 或 Chrome custom tabs</string>
+
+    <string name="search_result">%s 搜索结果</string>
+
+    <string name="settings">设置</string>
+    <string name="setting_each_time">上传前打开设置</string>
+    <string name="start_upload">开始上传</string>
+
+    <string name="permission_require">需要权限</string>
+    <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能正常上传该图片，请在授予权限后重新尝试上传。</string>
+    <string name="ok">获取权限</string>
+
+    <string name="donate">捐赠</string>
+    <string name="donate_summary">Google Wallet/支付宝 rikka@xing.moe</string>
+
+    <string name="something_wrong">出错了 OAO</string>
+
+    <string name="download_finished">下载完成</string>
 
 </resources>
