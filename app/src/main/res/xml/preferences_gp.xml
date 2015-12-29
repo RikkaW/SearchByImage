@@ -37,13 +37,6 @@
         android:order="2"
         android:layout="@layout/preference_category_material">
 
-        <SwitchPreference
-            android:key="safe_search_preference"
-            android:summary="@string/safe_search_summary"
-            android:title="@string/safe_search"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
-
         <rikka.searchbyimage.widget.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"

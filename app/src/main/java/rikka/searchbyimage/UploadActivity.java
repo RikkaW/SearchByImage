@@ -137,7 +137,7 @@ public class UploadActivity extends AppCompatActivity {
                 }
 
                 if (siteId == SITE_GOOGLE) {
-                    boolean safeSearch = sharedPref.getBoolean("safe_search_preference", false);
+                    boolean safeSearch = sharedPref.getBoolean("safe_search_preference", true);
                     boolean noRedirect = sharedPref.getString("google_region_preference", "0").equals("1");
                     boolean customRedirect = sharedPref.getString("google_region_preference", "0").equals("2");
 

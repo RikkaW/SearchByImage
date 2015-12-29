@@ -78,5 +78,5 @@
 
     <string name="something_wrong">エラー OAO</string>
 
-    <string name="downloaded">%s downloaded</string>
+    <string name="downloaded">%s をダウンロードしました</string>
 </resources>
