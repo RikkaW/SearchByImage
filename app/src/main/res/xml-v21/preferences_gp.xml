@@ -80,7 +80,7 @@
             android:summary="@string/rate_summary">
 
             <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
+                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
         </Preference>
 
         <Preference
