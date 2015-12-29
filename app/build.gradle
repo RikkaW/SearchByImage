@@ -5,9 +5,10 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
+        applicationId "rikka.searchbyimage2"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 12001
+        versionCode 12002
         versionName "1.2"
     }
     buildTypes {
@@ -19,12 +20,11 @@ android {
 
     productFlavors {
         COOLAPK {
-            applicationId "rikka.searchbyimage2"
             buildConfigField "boolean", "hideOtherEngine", "false"
         }
 
         GOOGLE {
-            applicationId "rikka.searchbyimage2"
+            versionName "1.2-play"
             buildConfigField "boolean", "hideOtherEngine", "true"
         }
     }
@@ -35,7 +35,6 @@ android {
                 output.outputFile = file("${output.outputFile.parent}/searchbyimage" +
                         "-${variant.buildType.name.toLowerCase()}" +
                         "-${variant.versionName}" +
-                        "-${variant.flavorName.toLowerCase()}" +
                         ".apk")
             }
         }
