@@ -5,69 +5,46 @@
     android:key="screen">
 
     <PreferenceCategory
-        android:title="@string/general"
-        android:key="category_general"
-        android:order="1"
-        android:layout="@layout/preference_category_material">
-
-        <rikka.searchbyimage.widget.DropDownPreference
-            android:defaultValue="0"
-            android:key="search_engine_preference"
-            android:title="@string/search_engine"
-            app:myEntries="@array/search_engines"
-            app:myEntryValues="@array/search_engines_value"
-            android:layout="@layout/preference_material"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
-        android:order="2"
-        android:layout="@layout/preference_category_material">
+        android:order="2">
 
         <SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="false"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
             app:myEntryValues="@array/google_region_redirect_value"
-            android:defaultValue="0"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="0"/>
 
         <rikka.searchbyimage.widget.EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
-            android:defaultValue= "www.google.com"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue= "www.google.com"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/iqdb_settings"
         android:key="category_iqdb"
-        android:order="2"
-        android:layout="@layout/preference_category_material">
+        android:order="2">
 
         <MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="@array/iqdb_service_id_default"/>
 
         <SwitchPreference
             android:key="iqdb_forcegray"
             android:title="@string/iqdb_forcegray"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
 

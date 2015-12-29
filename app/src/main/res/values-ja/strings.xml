@@ -2,6 +2,7 @@
     <string name="app_name">画像で検索</string>
     <string name="share_action_name">画像で検索</string>
     <string name="hello">共有メニューで、このアプリを選択し、選択された検索エンジンに画像をアップロードします</string>
+    <string name="hello_gp">共有メニューで、このアプリを選択し、選択されたGoogle画像檢索に画像をアップロードします</string>
     <string name="uploading">アップロード中…</string>
 
     <string-array name="search_engines">
@@ -12,7 +13,7 @@
         <item>SauceNAO</item>
     </string-array>
 
-    <string name="usage">使用法</string>
+    <string name="usage">使い方</string>
     <string name="search_engine">検索エンジン</string>
     <string name="safe_search">セーフサーチ</string>
     <string name="about">アプリについて</string>
@@ -52,6 +53,9 @@
 
     <string name="save_link">リンクを保存</string>
     <string name="save_image">画像を保存</string>
+    <string name="open_with">その他アプリで開く…</string>
+    <string name="open">開く</string>
+
 
     <string name="share">共有…</string>
     <string name="share_url">共有方法</string>
@@ -73,6 +77,6 @@
 	<string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
 
     <string name="something_wrong">エラー OAO</string>
-	
-	<string name="download_finished">ダウンロード完了しました</string>
+
+    <string name="downloaded">%s downloaded</string>
 </resources>

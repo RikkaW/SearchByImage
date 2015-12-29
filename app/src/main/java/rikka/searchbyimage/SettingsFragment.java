@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
@@ -15,6 +16,7 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import java.util.List;
@@ -49,7 +51,11 @@ public class SettingsFragment extends PreferenceFragment implements
     public void onCreatePreferences(Bundle bundle, String s) {
         boolean popup = getArguments().getBoolean("popup");
 
-        setPreferencesFromResource(popup ? R.xml.preferences_mini : R.xml.preferences, s);
+        if (!BuildConfig.hideOtherEngine) {
+            setPreferencesFromResource(popup ? R.xml.preferences_mini : R.xml.preferences, s);
+        } else {
+            setPreferencesFromResource(popup ? R.xml.preferences_mini_gp : R.xml.preferences_gp, s);
+        }
 
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
@@ -58,7 +64,10 @@ public class SettingsFragment extends PreferenceFragment implements
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
         setSafeSearchHide();
-        setCustomGoogleUriHide();
+
+        if (!BuildConfig.hideOtherEngine) {
+            setCustomGoogleUriHide();
+        }
 
         mActivity = getActivity();
 
@@ -166,7 +175,14 @@ public class SettingsFragment extends PreferenceFragment implements
 
                     click = -10;
                 }
+
+                /*Intent intent = new Intent(mActivity, WebViewActivity.class);
+                intent.putExtra(WebViewActivity.EXTRA_URL, "https://www.google.com");
+                mActivity.startActivity(intent);
+
+                URLUtils.Open("https://www.google.com", mActivity);*/
                 break;
+
             case "open_source":
                 URLUtils.Open("https://github.com/RikkaW/SearchByImage", mActivity);
                 break;

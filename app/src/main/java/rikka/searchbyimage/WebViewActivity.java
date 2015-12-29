@@ -8,11 +8,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -24,6 +27,7 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
@@ -41,6 +45,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.IntentUtils;
+import rikka.searchbyimage.utils.URLUtils;
 
 public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
@@ -72,11 +78,16 @@ public class WebViewActivity extends AppCompatActivity {
     private String mImageUrl;
 
     private String baseUrl;
+    private int siteId;
 
     private boolean mNormalMode = true;
 
     private DownloadManager downloadManager;
     private long downloadReference;
+
+    private int intentActivitiesSize;
+
+    private File savedFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,11 +130,42 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                /**/
+                /*view.loadUrl(url);
                 mToolbar.setTitle(url);
                 mProgressBar.setProgress(0);
                 setMyProgressBarVisibility(true);
+
                 return true;
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+                if (sharedPref.getBoolean("use_chrome_custom_tabs", true)) {
+
+                }*/
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+                if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
+                    mActivity.startActivity(intent);
+
+                    return true;
+                } else {
+                    view.loadUrl(url);
+                    mToolbar.setTitle(url);
+                    mProgressBar.setProgress(0);
+                    setMyProgressBarVisibility(true);
+
+                    return true;
+                }
+
+                /*if (url.startsWith(SITE_URL[siteId])) {
+
+                } else {
+
+
+                    return true;
+                }*/
+
             }
 
             @Override
@@ -173,11 +215,30 @@ public class WebViewActivity extends AppCompatActivity {
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, final Intent intent) {
                 long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 if (downloadReference == reference) {
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, R.string.download_finished, Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(downloadReference);
+                    Cursor cursor = downloadManager.query(query);
+
+                    if (cursor.moveToFirst()) {
+                        final String fileName = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
+
+                        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName) , Snackbar.LENGTH_LONG);
+                        snackbar.setActionTextColor(getResources().getColor(R.color.openAction));
+
+                        snackbar.setAction(R.string.open, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                                intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
+                                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mActivity.startActivity(intent1);
+                            }
+                        });
+                        snackbar.show();
+                    }
                 }
             }
         };
@@ -185,12 +246,16 @@ public class WebViewActivity extends AppCompatActivity {
         registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+
+
+        Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+        intentActivitiesSize = IntentUtils.getSize(this, intent1);
     }
 
     private void handleSendFile(Intent intent) {
         mWebSettings.setSupportZoom(false);
 
-        int siteId = intent.getIntExtra(EXTRA_SITE_ID, 3);
+        siteId = intent.getIntExtra(EXTRA_SITE_ID, 3);
         baseUrl = SITE_URL[siteId];
         mNormalMode = false;
 
@@ -270,7 +335,8 @@ public class WebViewActivity extends AppCompatActivity {
     private void startDownload() {
         Uri uri = Uri.parse(mImageUrl);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES), uri.getLastPathSegment());
+        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES) + "/SearchByImage", uri.getLastPathSegment());
+        savedFile = destinationFile.getAbsoluteFile();
         request.setDestinationUri(Uri.fromFile(destinationFile));
         downloadReference = downloadManager.enqueue(request);
     }
@@ -300,10 +366,23 @@ public class WebViewActivity extends AppCompatActivity {
                         startDownload();
                         break;
                     }
+                    case 2: {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
+                        mActivity.startActivity(intent);
+
+                        break;
+                    }
                 }
                 return true;
             }
         };
+
+        if (result.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
+            mImageUrl = result.getExtra();
+            menu.setHeaderTitle(mImageUrl);
+            menu.add(0, 2, 0, R.string.open_with).setOnMenuItemClickListener(handler);
+            menu.add(0, 0, 1, R.string.save_link).setOnMenuItemClickListener(handler);
+        }
 
         if (result.getType() == WebView.HitTestResult.IMAGE_TYPE ||
                 result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
@@ -348,25 +427,5 @@ public class WebViewActivity extends AppCompatActivity {
                 "text/html",
                 "utf-8",
                 baseUrl);
-    }
-
-    private static String INJECT_SAUCENAO_CSS(String html) {
-        StringBuilder css_sb = new StringBuilder();
-        css_sb.append("<style type=\"text/css\" media=\"screen\">");
-        css_sb.append("<!--");
-        css_sb.append("#footerarea, #headerarea, #message, #left, #randomMessage { display: none; !important }");
-        css_sb.append("#mainarea, #headerarea, #footerarea { max-width:100%; !important; min-width: 0%; !important }");
-        css_sb.append("body, #middle, #footer-middle { margin-left: 0%; !important; margin-right: 0%; !important }");
-        css_sb.append("-->");
-        css_sb.append("</style>");
-
-        StringBuilder sb = new StringBuilder();
-
-        int head = html.indexOf("<head>");
-        sb.append(html.substring(0, head + "<head>".length()));
-        sb.append(css_sb.toString());
-        sb.append(html.substring(head + "<head>".length() + 1));
-
-        return sb.toString();
     }
 }

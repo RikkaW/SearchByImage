@@ -5,7 +5,7 @@
     android:key="screen">
 
     <Preference
-        android:summary="@string/hello"
+        android:summary="@string/hello_gp"
         android:title="@string/usage"
         android:order="0"/>
 
@@ -13,13 +13,6 @@
         android:title="@string/general"
         android:key="category_general"
         android:order="1">
-
-        <rikka.searchbyimage.widget.DropDownPreference
-            android:defaultValue="0"
-            android:key="search_engine_preference"
-            android:title="@string/search_engine"
-            app:myEntries="@array/search_engines"
-            app:myEntryValues="@array/search_engines_value"/>
 
         <SwitchPreference
             android:defaultValue="false"
@@ -93,7 +86,7 @@
             android:summary="@string/rate_summary">
 
             <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
+                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
         </Preference>
 
         <Preference

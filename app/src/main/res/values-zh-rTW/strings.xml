@@ -2,6 +2,7 @@
     <string name="app_name">以圖搜圖</string>
     <string name="share_action_name">圖片搜尋</string>
     <string name="hello">在分享選單選擇該應用將圖片上傳至選擇的搜尋引擎</string>
+    <string name="hello_gp">在分享選單選擇該應用將圖片上傳至 Google 圖片搜尋</string>
     <string name="uploading">上傳中…</string>
 
     <string-array name="search_engines">
@@ -51,6 +52,8 @@
 
     <string name="save_link">保存連接</string>
     <string name="save_image">保存圖片</string>
+    <string name="open_with">用其他应用打开…</string>
+    <string name="open">打开</string>
 
     <string name="share">分享</string>
     <string name="share_url">选择分享方式</string>
@@ -73,5 +76,5 @@
 
     <string name="something_wrong">出错了 OAO</string>
 
-    <string name="download_finished">下載完成</string>
+    <string name="downloaded">%s downloaded</string>
 </resources>

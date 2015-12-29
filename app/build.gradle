@@ -5,16 +5,27 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "rikka.searchbyimage"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 10100
-        versionName "1.1.0"
+        versionCode 12000
+        versionName "1.2"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        COOLAPK {
+            applicationId "rikka.searchbyimage2"
+            buildConfigField "boolean", "hideOtherEngine", "false"
+        }
+
+        GOOGLE {
+            applicationId "rikka.searchbyimage2"
+            buildConfigField "boolean", "hideOtherEngine", "true"
         }
     }
 
@@ -24,6 +35,7 @@ android {
                 output.outputFile = file("${output.outputFile.parent}/searchbyimage" +
                         "-${variant.buildType.name.toLowerCase()}" +
                         "-${variant.versionName}" +
+                        "-${variant.flavorName.toLowerCase()}" +
                         ".apk")
             }
         }

@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="divider">#dedede</color>
+
+    <color name="openAction">#6db6ff</color>
 </resources>

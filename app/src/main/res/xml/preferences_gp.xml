@@ -5,106 +5,114 @@
     android:key="screen">
 
     <Preference
-        android:summary="@string/hello"
+        android:summary="@string/hello_gp"
         android:title="@string/usage"
-        android:order="0"/>
+        android:order="0"
+        android:layout="@layout/preference_material"/>
 
     <PreferenceCategory
         android:title="@string/general"
         android:key="category_general"
-        android:order="1">
-
-        <rikka.searchbyimage.widget.DropDownPreference
-            android:defaultValue="0"
-            android:key="search_engine_preference"
-            android:title="@string/search_engine"
-            app:myEntries="@array/search_engines"
-            app:myEntryValues="@array/search_engines_value"/>
+        android:order="1"
+        android:layout="@layout/preference_category_material">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="setting_each_time"
-            android:title="@string/setting_each_time"/>
+            android:title="@string/setting_each_time"
+            android:layout="@layout/preference_material"/>
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="use_chrome_custom_tabs"
             android:title="@string/use_chrome_custom_tabs"
-            android:summary="@string/use_chrome_custom_tabs_summary"/>
+            android:summary="@string/use_chrome_custom_tabs_summary"
+            android:layout="@layout/preference_material"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
-        android:order="2">
+        android:order="2"
+        android:layout="@layout/preference_category_material">
 
         <SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:layout="@layout/preference_material"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
             app:myEntryValues="@array/google_region_redirect_value"
-            android:defaultValue="0"/>
+            android:defaultValue="0"
+            android:layout="@layout/preference_material"/>
 
         <rikka.searchbyimage.widget.EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
-            android:defaultValue= "www.google.com"/>
+            android:defaultValue= "www.google.com"
+            android:layout="@layout/preference_material"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/iqdb_settings"
         android:key="category_iqdb"
-        android:order="2">
+        android:order="2"
+        android:layout="@layout/preference_category_material">
 
         <MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"/>
+            android:defaultValue="@array/iqdb_service_id_default"
+            android:layout="@layout/preference_material"/>
 
         <SwitchPreference
             android:key="iqdb_forcegray"
             android:title="@string/iqdb_forcegray"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:layout="@layout/preference_material"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/about"
-        android:order="9">
+        android:order="9"
+        android:layout="@layout/preference_category_material">
 
         <Preference
             android:title="@string/build_version"
-            android:key="version">
+            android:key="version"
+            android:layout="@layout/preference_material">
 
         </Preference>
 
         <Preference
             android:title="@string/rate"
-            android:summary="@string/rate_summary">
+            android:summary="@string/rate_summary"
+            android:layout="@layout/preference_material">
 
             <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
+                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
         </Preference>
 
         <Preference
             android:key="donate"
             android:title="@string/donate"
-            android:summary="@string/donate_summary"/>
-
+            android:summary="@string/donate_summary"
+            android:layout="@layout/preference_material"/>
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"
             android:title="@string/open_source"
+            android:layout="@layout/preference_material"
             android:key="open_source">
         </Preference>
 
