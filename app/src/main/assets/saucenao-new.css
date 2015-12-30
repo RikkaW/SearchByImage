@@ -6,7 +6,7 @@ body {
 body,td,th {
 	color: #eeeeee;
 }
-#footerarea, #headerarea, #message, #left, #randomMessage, #smalllogo {
+#footerarea, #headerarea, #message, #left, #randomMessage, #smalllogo, #Search {
 	display: none; !important
 }
 a:link {

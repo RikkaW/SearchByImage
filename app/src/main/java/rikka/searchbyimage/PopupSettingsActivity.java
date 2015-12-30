@@ -1,6 +1,7 @@
 package rikka.searchbyimage;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +12,7 @@ public class PopupSettingsActivity extends AppCompatActivity {
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ResultActivity.EXTRA_URI";
 
-    private static String URI;
+    private static Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class PopupSettingsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_URI)) {
-            URI = intent.getStringExtra(EXTRA_URI);
+            uri = intent.getParcelableExtra(EXTRA_URI);
         }
     }
 
@@ -54,7 +55,7 @@ public class PopupSettingsActivity extends AppCompatActivity {
                 return true;
             case R.id.ok:
                 Intent intent = new Intent(this, UploadActivity.class);
-                intent.putExtra(UploadActivity.EXTRA_URI, URI);
+                intent.putExtra(UploadActivity.EXTRA_URI, uri);
                 startActivity(intent);
 
                 finish();

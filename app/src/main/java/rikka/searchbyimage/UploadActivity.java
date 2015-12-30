@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +44,6 @@ public class UploadActivity extends AppCompatActivity {
     public final static int SITE_IQDB = 2;
     public final static int SITE_TINEYE = 3;
     public final static int SITE_SAUCENAO = 4;
-
 
     private class HttpUpload {
         public String url;
@@ -137,7 +138,7 @@ public class UploadActivity extends AppCompatActivity {
                 }
 
                 if (siteId == SITE_GOOGLE) {
-                    boolean safeSearch = sharedPref.getBoolean("safe_search_preference", false);
+                    boolean safeSearch = sharedPref.getBoolean("safe_search_preference", true);
                     boolean noRedirect = sharedPref.getString("google_region_preference", "0").equals("1");
                     boolean customRedirect = sharedPref.getString("google_region_preference", "0").equals("2");
 
@@ -274,7 +275,7 @@ public class UploadActivity extends AppCompatActivity {
 
                 if (sharedPref.getBoolean("setting_each_time", true)) {
                     Intent newIntent = new Intent(this, PopupSettingsActivity.class);
-                    newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, intent.getParcelableExtra(Intent.EXTRA_STREAM).toString());
+                    newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, intent.getParcelableExtra(Intent.EXTRA_STREAM));
                     startActivity(newIntent);
 
                     finish();
@@ -285,7 +286,7 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         if (intent.hasExtra(EXTRA_URI)) {
-            handleSendImage(intent.getStringExtra(EXTRA_URI));
+            handleSendImage((Uri) intent.getParcelableExtra(EXTRA_URI));
         }
     }
 
@@ -324,9 +325,9 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
-    private void handleSendImage(String uri) {
+    private void handleSendImage(Uri uri) {
         mProgressDialog = showDialog();
-        mUploadTask = (UploadTask) new UploadTask(this).execute(Uri.parse(uri));
+        mUploadTask = (UploadTask) new UploadTask(this).execute(uri);
     }
 
     private static String getImageFileName(Uri uri) {

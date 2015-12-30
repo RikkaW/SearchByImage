@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage"
+    xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage2"
     android:key="screen">
 
     <Preference
@@ -109,7 +109,7 @@
             android:layout="@layout/preference_material">
 
             <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage" />
+                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
         </Preference>
 
         <Preference

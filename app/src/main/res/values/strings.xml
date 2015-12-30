@@ -2,6 +2,7 @@
     <string name="app_name">Search By Image</string>
     <string name="share_action_name">Image Search</string>
     <string name="hello">Select this app in share menu to upload image to selected search engine</string>
+    <string name="hello_gp">Select this app in share menu to upload image to Google image search</string>
     <string name="uploading">Uploading…</string>
 
     <string-array name="search_engines">
@@ -52,6 +53,9 @@
 
     <string name="save_link">Save link</string>
     <string name="save_image">Save image</string>
+    <string name="open_with">Open with…</string>
+    <string name="open">open</string>
+
 
     <string name="share">Share</string>
     <string name="share_url">Share via</string>
@@ -70,9 +74,9 @@
     <string name="ok">get permission</string>
 
     <string name="donate">Donate</string>
-    <string name="donate_summary">Google Wallet / Alipay rikka@xing.moe</string>
+    <string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
 
-    <string name="something_wrong">Sorry, something went wrong</string>
+    <string name="something_wrong">Something went wrong</string>
 
-    <string name="download_finished">Download finished</string>
+    <string name="downloaded">%s downloaded</string>
 </resources>

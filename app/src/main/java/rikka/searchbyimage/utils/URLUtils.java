@@ -66,7 +66,7 @@ public class URLUtils {
         }
     }
 
-    private static void OpenBrowser(Activity activity, Uri uri) {
+    public static void OpenBrowser(Activity activity, Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         activity.startActivity(intent);

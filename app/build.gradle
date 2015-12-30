@@ -5,16 +5,29 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "rikka.searchbyimage"
+        applicationId "rikka.searchbyimage2"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 10100
-        versionName "1.1.0"
+        versionCode 12004
+        versionName "1.2"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        COOLAPK {
+            versionCode 120000
+            buildConfigField "boolean", "hideOtherEngine", "false"
+        }
+
+        GOOGLE {
+            versionName "1.2-play"
+            versionCode 12004
+            buildConfigField "boolean", "hideOtherEngine", "true"
         }
     }
 

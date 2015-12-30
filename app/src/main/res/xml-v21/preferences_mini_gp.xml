@@ -5,29 +5,9 @@
     android:key="screen">
 
     <PreferenceCategory
-        android:title="@string/general"
-        android:key="category_general"
-        android:order="1">
-
-        <rikka.searchbyimage.widget.DropDownPreference
-            android:defaultValue="0"
-            android:key="search_engine_preference"
-            android:title="@string/search_engine"
-            app:myEntries="@array/search_engines"
-            app:myEntryValues="@array/search_engines_value"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
         android:order="2">
-
-        <SwitchPreference
-            android:key="safe_search_preference"
-            android:summary="@string/safe_search_summary"
-            android:title="@string/safe_search"
-            android:defaultValue="false"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:key="google_region_preference"

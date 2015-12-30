@@ -1,13 +1,8 @@
 package rikka.searchbyimage;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
@@ -16,8 +11,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
-
-import java.util.List;
 
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.URLUtils;
@@ -49,7 +42,11 @@ public class SettingsFragment extends PreferenceFragment implements
     public void onCreatePreferences(Bundle bundle, String s) {
         boolean popup = getArguments().getBoolean("popup");
 
-        setPreferencesFromResource(popup ? R.xml.preferences_mini : R.xml.preferences, s);
+        if (!BuildConfig.hideOtherEngine) {
+            setPreferencesFromResource(popup ? R.xml.preferences_mini : R.xml.preferences, s);
+        } else {
+            setPreferencesFromResource(popup ? R.xml.preferences_mini_gp : R.xml.preferences_gp, s);
+        }
 
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
@@ -57,8 +54,10 @@ public class SettingsFragment extends PreferenceFragment implements
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
-        setSafeSearchHide();
-        setCustomGoogleUriHide();
+        setSearchEngineHide();
+        if (!BuildConfig.hideOtherEngine) {
+            setCustomGoogleUriHide();
+        }
 
         mActivity = getActivity();
 
@@ -98,7 +97,7 @@ public class SettingsFragment extends PreferenceFragment implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("search_engine_preference")) {
-            setSafeSearchHide();
+            setSearchEngineHide();
         }
 
         if (key.equals("google_region_preference")) {
@@ -118,7 +117,7 @@ public class SettingsFragment extends PreferenceFragment implements
         }
     }
 
-    private void setSafeSearchHide() {
+    private void setSearchEngineHide() {
         SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
 
         int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
@@ -166,7 +165,14 @@ public class SettingsFragment extends PreferenceFragment implements
 
                     click = -10;
                 }
+
+                /*Intent intent = new Intent(mActivity, WebViewActivity.class);
+                intent.putExtra(WebViewActivity.EXTRA_URL, "https://www.google.com");
+                mActivity.startActivity(intent);
+
+                URLUtils.Open("https://www.google.com", mActivity);*/
                 break;
+
             case "open_source":
                 URLUtils.Open("https://github.com/RikkaW/SearchByImage", mActivity);
                 break;
