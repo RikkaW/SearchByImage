@@ -1,4 +1,4 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -44,19 +44,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import rikka.searchbyimage.R;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
 public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
-            "rikka.searchbyimage.WebViewActivity.EXTRA_URL";
+            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_URL";
 
     public static final String EXTRA_FILE =
-            "rikka.searchbyimage.WebViewActivity.EXTRA_FILE";
+            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_FILE";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.WebViewActivity.EXTRA_SITE_ID";
+            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_SITE_ID";
 
     private static final String[] SITE_URL = {
             "", // google

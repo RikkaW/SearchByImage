@@ -1,4 +1,4 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,9 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import rikka.searchbyimage.R;
+
 public class PopupSettingsActivity extends AppCompatActivity {
     public static final String EXTRA_URI =
-            "rikka.searchbyimage.ResultActivity.EXTRA_URI";
+            "rikka.searchbyimage.ui.ResultActivity.EXTRA_URI";
 
     private static Uri uri;
 

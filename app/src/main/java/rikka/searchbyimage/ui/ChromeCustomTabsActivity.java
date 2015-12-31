@@ -1,4 +1,4 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
 import android.app.ActivityManager;
 import android.content.Intent;
@@ -6,14 +6,15 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import rikka.searchbyimage.R;
 import rikka.searchbyimage.utils.URLUtils;
 
 public class ChromeCustomTabsActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
-            "rikka.searchbyimage.ChromeCustomTabsActivity.EXTRA_URL";
+            "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_URL";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ChromeCustomTabsActivity.EXTRA_SITE_ID";
+            "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_SITE_ID";
 
     boolean mIsURLOpened = false;
 

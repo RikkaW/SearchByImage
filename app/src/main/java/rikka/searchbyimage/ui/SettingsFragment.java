@@ -1,4 +1,4 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -12,6 +12,8 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import rikka.searchbyimage.BuildConfig;
+import rikka.searchbyimage.R;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
