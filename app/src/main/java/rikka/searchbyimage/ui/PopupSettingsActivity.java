@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.ui.fragment.SettingsFragment;
 
 public class PopupSettingsActivity extends AppCompatActivity {
     public static final String EXTRA_URI =

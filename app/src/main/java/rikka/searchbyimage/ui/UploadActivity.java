@@ -109,7 +109,8 @@ public class UploadActivity extends AppCompatActivity {
                     }
                     break;
                 case SITE_SAUCENAO:
-                    //httpRequest.addFormData("url", "");
+                    httpRequest.addFormData("hide", sharedPref.getString("saucenao_hide", "0"));
+                    httpRequest.addFormData("database", sharedPref.getString("saucenao_database", "999"));
                     break;
             }
 

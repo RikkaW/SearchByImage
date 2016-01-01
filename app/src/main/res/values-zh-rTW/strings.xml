@@ -68,7 +68,7 @@
     <string name="start_upload">開始上載</string>
 
     <string name="permission_require">需要权限</string>
-    <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能正常上載該圖片，請在授予權限後重新嘗試上載。</string>
+    <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能上載該圖片。</string>
     <string name="ok">獲取權限</string>
 
     <string name="donate">捐赠</string>
@@ -77,4 +77,15 @@
     <string name="something_wrong">出错了 OAO</string>
 
     <string name="downloaded">%s downloaded</string>
+
+    <string name="saucenao_settings">SauceNAO 設置</string>
+    <string name="saucenao_hide">Hide</string>
+    <string name="saucenao_database">Database</string>
+
+    <string-array name="saucenao_hide">
+        <item>None</item>
+        <item>Known Explicit</item>
+        <item>Known and Suspected Explicit</item>
+        <item>All but Known Safe</item>
+    </string-array>
 </resources>

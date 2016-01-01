@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.ui.fragment.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity {
