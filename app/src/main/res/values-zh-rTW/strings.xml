@@ -79,8 +79,8 @@
     <string name="downloaded">%s downloaded</string>
 
     <string name="saucenao_settings">SauceNAO 設置</string>
-    <string name="saucenao_hide">Hide</string>
-    <string name="saucenao_database">Database</string>
+    <string name="saucenao_hide_title">Hide</string>
+    <string name="saucenao_database_title">Database</string>
 
     <string-array name="saucenao_hide">
         <item>None</item>

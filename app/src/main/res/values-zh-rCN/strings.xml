@@ -81,8 +81,8 @@
     <string name="downloaded">%s 已下载</string>
 
     <string name="saucenao_settings">SauceNAO 设置</string>
-    <string name="saucenao_hide">隐藏结果</string>
-    <string name="saucenao_database">数据库</string>
+    <string name="saucenao_hide_title">隐藏结果</string>
+    <string name="saucenao_database_title">数据库</string>
 
     <string-array name="saucenao_hide">
         <item>不隐藏</item>
