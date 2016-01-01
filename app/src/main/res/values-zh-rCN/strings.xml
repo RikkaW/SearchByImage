@@ -70,7 +70,7 @@
     <string name="start_upload">开始上传</string>
 
     <string name="permission_require">需要权限</string>
-    <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能正常上传该图片，请在授予权限后重新尝试上传。</string>
+    <string name="permission_require_detail">由于分享应用的原因，您需要授予应用“读取外部存储权限”才能正常上传该图片。</string>
     <string name="ok">获取权限</string>
 
     <string name="donate">捐赠</string>

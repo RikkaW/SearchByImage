@@ -160,17 +160,6 @@ public class UploadActivity extends AppCompatActivity {
 
         protected void onPostExecute(HttpUpload result) {
             if (result.url == null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setMessage(result.url);
-                builder.setTitle(R.string.permission_require);
-                builder.setMessage(R.string.permission_require_detail);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-                    }
-                });
-                builder.show();
                 mProgressDialog.dismiss();
                 return;
             }
@@ -244,43 +233,93 @@ public class UploadActivity extends AppCompatActivity {
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
 
+    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 0;
+
+    private Intent mIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_upload);
 
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
+        mIntent = getIntent();
+        String action = mIntent.getAction();
+        String type = mIntent.getType();
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                SearchByImageApplication application = (SearchByImageApplication) getApplication();
+            if (type.startsWith("image/") && mIntent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
                 try {
-                    application.setImageInputStream(getContentResolver().openInputStream((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM)));
+                    getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
+
+                    handleSendImage(mIntent);
                 } catch (FileNotFoundException e) {
-                    // TODO: get permission here
-                    e.printStackTrace();
-                }
-
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-                if (sharedPref.getBoolean("setting_each_time", true)) {
-
-                    Intent newIntent = new Intent(this, PopupSettingsActivity.class);
-                    newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, intent.getParcelableExtra(Intent.EXTRA_STREAM));
-                    startActivity(newIntent);
-
-                    finish();
-                } else {
-                    handleSendImage(intent);
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.permission_require)
+                            .setMessage(R.string.permission_require_detail)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            REQUEST_CODE_READ_EXTERNAL_STORAGE);
+                                }
+                            })
+                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    finish();
+                                }
+                            })
+                            .show();
                 }
             }
         }
 
-        if (intent.hasExtra(EXTRA_URI)) {
-            handleSendImage((Uri) intent.getParcelableExtra(EXTRA_URI));
+        if (mIntent.hasExtra(EXTRA_URI)) {
+            handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI));
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    handleSendImage(mIntent);
+                } else {
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void handleSendImage(Intent intent) {
+        SearchByImageApplication application = (SearchByImageApplication) getApplication();
+        try {
+            application.setImageInputStream(getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+            finish();
+        }
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (sharedPref.getBoolean("setting_each_time", true)) {
+            Intent newIntent = new Intent(this, PopupSettingsActivity.class);
+            newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
+            startActivity(newIntent);
+
+            finish();
+        } else {
+            handleSendImageUri((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        }
+    }
+
+    private void handleSendImageUri(Uri uri) {
+        mProgressDialog = showDialog();
+        mUploadTask = (UploadTask) new UploadTask(this).execute(uri);
     }
 
     private ProgressDialog showDialog() {
@@ -309,20 +348,6 @@ public class UploadActivity extends AppCompatActivity {
         return progressDialog;
     }
 
-    private void handleSendImage(Intent intent) {
-        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            mProgressDialog = showDialog();
-            //mUploadTask.cancel(true);
-            mUploadTask = (UploadTask) new UploadTask(this).execute(imageUri);
-        }
-    }
-
-    private void handleSendImage(Uri uri) {
-        mProgressDialog = showDialog();
-        mUploadTask = (UploadTask) new UploadTask(this).execute(uri);
-    }
-
     private static String getImageFileName(Uri uri) {
         int last = uri.toString().lastIndexOf("/");
         String fileName = uri.toString().substring(last + 1);
@@ -332,10 +357,10 @@ public class UploadActivity extends AppCompatActivity {
         return fileName;
     }
 
-    private void getPermission(String permission)
+    private void getPermission(String permission, int requestCode)
     {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, 0);
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }
     }
 
