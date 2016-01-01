@@ -8,8 +8,6 @@ android {
         applicationId "rikka.searchbyimage2"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 12004
-        versionName "1.2"
     }
     buildTypes {
         release {
@@ -19,14 +17,18 @@ android {
     }
 
     productFlavors {
+        def int version = 12100;
+        def String name = "1.2.1"
+
         COOLAPK {
-            versionCode 120000
+            versionCode version * 10
+            versionName name
             buildConfigField "boolean", "hideOtherEngine", "false"
         }
 
         GOOGLE {
-            versionName "1.2-play"
-            versionCode 12004
+            versionCode version
+            versionName name + "-play"
             buildConfigField "boolean", "hideOtherEngine", "true"
         }
     }
