@@ -38,4 +38,49 @@
         <item>12</item>
         <item>13</item>
     </string-array>
+
+    <string-array name="saucenao_hide_value" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="saucenao_database" translatable="false">
+        <item>All Databases</item>
+        <item>H-Magazines</item>
+        <item>H-Anime</item>
+        <item>H-Game CG</item>
+        <item>DoujinshiDB</item>
+        <item>pixiv Images</item>
+        <item>Anime</item>
+        <item>Nico Nico Seiga</item>
+        <item>Danbooru</item>
+        <item>drawr Images</item>
+        <item>Nijie Images</item>
+        <item>yande.re</item>
+        <item>openings.moe</item>
+        <item>Shutterstock</item>
+        <item>FAKKU</item>
+        <item>H-Misc</item>
+    </string-array>
+
+    <string-array name="saucenao_database_value" translatable="false">
+        <item>999</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>15</item>
+        <item>16</item>
+        <item>18</item>
+    </string-array>
 </resources>

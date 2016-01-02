@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.WebViewActivity;
+import rikka.searchbyimage.ui.WebViewActivity;
 import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
 
 /**

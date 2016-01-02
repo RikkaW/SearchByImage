@@ -1,9 +1,11 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import rikka.searchbyimage.R;
+import rikka.searchbyimage.ui.fragment.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity {

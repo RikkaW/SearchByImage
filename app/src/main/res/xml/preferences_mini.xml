@@ -71,4 +71,28 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/saucenao_settings"
+        android:key="category_saucenao"
+        android:order="2"
+        android:layout="@layout/preference_category_material">
+
+        <rikka.searchbyimage.widget.DropDownPreference
+            android:key="saucenao_hide"
+            android:title="@string/saucenao_hide_title"
+            app:myEntries="@array/saucenao_hide"
+            app:myEntryValues="@array/saucenao_hide_value"
+            android:defaultValue="0"
+            android:layout="@layout/preference_material"/>
+
+        <rikka.searchbyimage.widget.DropDownPreference
+            android:key="saucenao_database"
+            android:title="@string/saucenao_database_title"
+            app:myEntries="@array/saucenao_database"
+            app:myEntryValues="@array/saucenao_database_value"
+            android:defaultValue="0"
+            android:layout="@layout/preference_material"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -23,29 +23,6 @@
             android:title="@string/google_region_redirect_custom"
             android:defaultValue= "www.google.com"
             android:layout="@layout/preference_material"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/iqdb_settings"
-        android:key="category_iqdb"
-        android:order="2"
-        android:layout="@layout/preference_category_material">
-
-        <MultiSelectListPreference
-            android:key="iqdb_service"
-            android:title="@string/iqdb_service_select"
-            android:entries="@array/iqdb_service_title"
-            android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"
-            android:layout="@layout/preference_material"/>
-
-        <SwitchPreference
-            android:key="iqdb_forcegray"
-            android:title="@string/iqdb_forcegray"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
-
     </PreferenceCategory>
 
 </PreferenceScreen>

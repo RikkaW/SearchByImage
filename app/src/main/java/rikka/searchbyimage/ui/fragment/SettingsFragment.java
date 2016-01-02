@@ -1,4 +1,4 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui.fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -12,6 +12,9 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import rikka.searchbyimage.BuildConfig;
+import rikka.searchbyimage.R;
+import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
@@ -29,6 +32,7 @@ public class SettingsFragment extends PreferenceFragment implements
     SwitchPreference mSafeSearch;
     PreferenceScreen mScreen;
     EditTextPreference mCustomGoogleUri;
+    PreferenceCategory mCategorySauceNAO;
 
     private int click = 0;
     private Runnable clearClickCount = new Runnable() {
@@ -50,13 +54,15 @@ public class SettingsFragment extends PreferenceFragment implements
 
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
+        mCategorySauceNAO = (PreferenceCategory) findPreference("category_saucenao");
+
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
-        setSearchEngineHide();
+        setCustomGoogleUriHide();
         if (!BuildConfig.hideOtherEngine) {
-            setCustomGoogleUriHide();
+            setSearchEngineHide();
         }
 
         mActivity = getActivity();
@@ -126,19 +132,24 @@ public class SettingsFragment extends PreferenceFragment implements
             case UploadActivity.SITE_GOOGLE:
                 mScreen.addPreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
+                mScreen.removePreference(mCategorySauceNAO);
                 break;
             case UploadActivity.SITE_IQDB:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.addPreference(mCategoryIqdb);
+                mScreen.removePreference(mCategorySauceNAO);
                 break;
             case UploadActivity.SITE_SAUCENAO:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
+                mScreen.addPreference(mCategorySauceNAO);
                 break;
             case UploadActivity.SITE_BAIDU:
             case UploadActivity.SITE_TINEYE:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
+                mScreen.removePreference(mCategorySauceNAO);
+
                 break;
         }
     }

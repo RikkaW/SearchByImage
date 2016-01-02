@@ -70,7 +70,7 @@
     <string name="start_upload">Start upload</string>
 
     <string name="permission_require">Permission require</string>
-    <string name="permission_require_detail">It seems the application need READ_EXTERNAL_STORAGE permission to upload file, please try again after authorize.</string>
+    <string name="permission_require_detail">It seems the application need READ_EXTERNAL_STORAGE permission to upload file.</string>
     <string name="ok">get permission</string>
 
     <string name="donate">Donate</string>
@@ -79,4 +79,19 @@
     <string name="something_wrong">Something went wrong</string>
 
     <string name="downloaded">%s downloaded</string>
+
+    <string name="saucenao_settings">SauceNAO settings</string>
+    <string name="saucenao_hide_title">Hide</string>
+    <string name="saucenao_database_title">Database</string>
+
+    <string-array name="saucenao_hide">
+        <item>None</item>
+        <item>Known Explicit</item>
+        <item>Known and Suspected Explicit</item>
+        <item>All but Known Safe</item>
+    </string-array>
+
+    <string name="timeout_exception">Connection timed out</string>
+    <string name="unknown_host_exception">Domain resolution error</string>
+    <string name="socket_exception">Network error</string>
 </resources>

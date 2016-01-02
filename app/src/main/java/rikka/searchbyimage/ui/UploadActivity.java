@@ -1,42 +1,34 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import rikka.searchbyimage.R;
+import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.utils.HttpRequestUtils;
-import rikka.searchbyimage.utils.URLUtils;
 
 public class UploadActivity extends AppCompatActivity {
     public final static int SITE_GOOGLE = 0;
@@ -72,13 +64,8 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected HttpUpload doInBackground(Uri... imageUrl) {
-            InputStream inputStream = null;
-            try {
-                inputStream = mActivity.getContentResolver().openInputStream(imageUrl[0]);
-            } catch (FileNotFoundException e) {
-                return new HttpUpload();
-            }
-
+            SearchByImageApplication application = (SearchByImageApplication) getApplication();
+            InputStream inputStream = application.getImageInputStream();
 
             String uploadUri = null;
             String name = null;
@@ -125,7 +112,8 @@ public class UploadActivity extends AppCompatActivity {
                     }
                     break;
                 case SITE_SAUCENAO:
-                    //httpRequest.addFormData("url", "");
+                    httpRequest.addFormData("hide", sharedPref.getString("saucenao_hide", "0"));
+                    httpRequest.addFormData("database", sharedPref.getString("saucenao_database", "999"));
                     break;
             }
 
@@ -159,7 +147,19 @@ public class UploadActivity extends AppCompatActivity {
 
                     responseUri = responseUri.substring(0, start) + googleUri + responseUri.substring(end);
                 }
-            } catch (IOException e) {
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                responseUri = getString(R.string.unknown_host_exception);
+            }
+            catch (SocketTimeoutException e) {
+                e.printStackTrace();
+                responseUri = getString(R.string.timeout_exception);
+            }
+            catch (SocketException e) {
+                e.printStackTrace();
+                responseUri = getString(R.string.socket_exception);
+            }
+            catch (IOException e) {
                 e.printStackTrace();
 
                 responseUri = "Error: " + e.toString() +"\nFile: ";
@@ -176,17 +176,6 @@ public class UploadActivity extends AppCompatActivity {
 
         protected void onPostExecute(HttpUpload result) {
             if (result.url == null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setMessage(result.url);
-                builder.setTitle(R.string.permission_require);
-                builder.setMessage(R.string.permission_require_detail);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-                    }
-                });
-                builder.show();
                 mProgressDialog.dismiss();
                 return;
             }
@@ -258,36 +247,95 @@ public class UploadActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
 
     public static final String EXTRA_URI =
-            "rikka.searchbyimage.UploadActivity.EXTRA_URI";
+            "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
+
+    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 0;
+
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_upload);
 
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
+        mIntent = getIntent();
+        String action = mIntent.getAction();
+        String type = mIntent.getType();
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            if (type.startsWith("image/") && mIntent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
+                try {
+                    getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
 
-                if (sharedPref.getBoolean("setting_each_time", true)) {
-                    Intent newIntent = new Intent(this, PopupSettingsActivity.class);
-                    newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, intent.getParcelableExtra(Intent.EXTRA_STREAM));
-                    startActivity(newIntent);
-
-                    finish();
-                } else {
-                    handleSendImage(intent);
+                    handleSendImage(mIntent);
+                } catch (FileNotFoundException e) {
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.permission_require)
+                            .setMessage(R.string.permission_require_detail)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            REQUEST_CODE_READ_EXTERNAL_STORAGE);
+                                }
+                            })
+                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    finish();
+                                }
+                            })
+                            .show();
                 }
             }
         }
 
-        if (intent.hasExtra(EXTRA_URI)) {
-            handleSendImage((Uri) intent.getParcelableExtra(EXTRA_URI));
+        if (mIntent.hasExtra(EXTRA_URI)) {
+            handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI));
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    handleSendImage(mIntent);
+                } else {
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void handleSendImage(Intent intent) {
+        SearchByImageApplication application = (SearchByImageApplication) getApplication();
+        try {
+            application.setImageInputStream(getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+            finish();
+        }
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (sharedPref.getBoolean("setting_each_time", true)) {
+            Intent newIntent = new Intent(this, PopupSettingsActivity.class);
+            newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
+            startActivity(newIntent);
+
+            finish();
+        } else {
+            handleSendImageUri((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        }
+    }
+
+    private void handleSendImageUri(Uri uri) {
+        mProgressDialog = showDialog();
+        mUploadTask = (UploadTask) new UploadTask(this).execute(uri);
     }
 
     private ProgressDialog showDialog() {
@@ -316,20 +364,6 @@ public class UploadActivity extends AppCompatActivity {
         return progressDialog;
     }
 
-    private void handleSendImage(Intent intent) {
-        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            mProgressDialog = showDialog();
-            //mUploadTask.cancel(true);
-            mUploadTask = (UploadTask) new UploadTask(this).execute(imageUri);
-        }
-    }
-
-    private void handleSendImage(Uri uri) {
-        mProgressDialog = showDialog();
-        mUploadTask = (UploadTask) new UploadTask(this).execute(uri);
-    }
-
     private static String getImageFileName(Uri uri) {
         int last = uri.toString().lastIndexOf("/");
         String fileName = uri.toString().substring(last + 1);
@@ -339,10 +373,10 @@ public class UploadActivity extends AppCompatActivity {
         return fileName;
     }
 
-    private void getPermission(String permission)
+    private void getPermission(String permission, int requestCode)
     {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, 0);
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }
     }
 

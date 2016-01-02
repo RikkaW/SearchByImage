@@ -70,7 +70,7 @@
     <string name="start_upload">开始上传</string>
 
     <string name="permission_require">需要权限</string>
-    <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能正常上传该图片，请在授予权限后重新尝试上传。</string>
+    <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能上传该图片。</string>
     <string name="ok">获取权限</string>
 
     <string name="donate">捐赠</string>
@@ -80,4 +80,17 @@
 
     <string name="downloaded">%s 已下载</string>
 
+    <string name="saucenao_settings">SauceNAO 设置</string>
+    <string name="saucenao_hide_title">隐藏结果</string>
+    <string name="saucenao_database_title">数据库</string>
+
+    <string-array name="saucenao_hide">
+        <item>不隐藏</item>
+        <item>已知的不安全图片</item>
+        <item>已知及可疑的不安全图片</item>
+        <item>已知安全之外的图片</item>
+    </string-array>
+    <string name="timeout_exception">连接超时</string>
+    <string name="unknown_host_exception">域名解析错误</string>
+    <string name="socket_exception">网络错误</string>
 </resources>

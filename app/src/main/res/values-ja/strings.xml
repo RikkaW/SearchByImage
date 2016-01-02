@@ -70,7 +70,7 @@
     <string name="start_upload">アップロード</string>
 
     <string name="permission_require">アクセスが必要</string>
-    <string name="permission_require_detail">アップロードがSDカードのコンテンツの読み取りことが必要です。アクセスを許可した後、もう一度試してください。</string>
+    <string name="permission_require_detail">アップロードがSDカードのコンテンツの読み取りことが必要です。</string>
     <string name="ok">OK</string>
 
     <string name="donate">寄付</string>
@@ -79,4 +79,18 @@
     <string name="something_wrong">エラー OAO</string>
 
     <string name="downloaded">%s をダウンロードしました</string>
+
+    <string name="saucenao_settings">SauceNAO設定</string>
+    <string name="saucenao_hide_title">Hide</string>
+    <string name="saucenao_database_title">Database</string>
+
+    <string-array name="saucenao_hide">
+        <item>None</item>
+        <item>Known Explicit</item>
+        <item>Known and Suspected Explicit</item>
+        <item>All but Known Safe</item>
+    </string-array>
+    <string name="socket_exception">Network error</string>
+    <string name="timeout_exception">Connection timed out</string>
+    <string name="unknown_host_exception">Domain resolution error</string>
 </resources>

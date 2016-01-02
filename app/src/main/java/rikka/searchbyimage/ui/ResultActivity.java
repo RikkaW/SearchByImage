@@ -1,11 +1,9 @@
-package rikka.searchbyimage;
+package rikka.searchbyimage.ui;
 
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +17,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import rikka.searchbyimage.apdater.RecyclerViewAdapter;
+import rikka.searchbyimage.R;
+import rikka.searchbyimage.ui.apdater.RecyclerViewAdapter;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
 import rikka.searchbyimage.widget.SimpleDividerItemDecoration;
@@ -27,10 +26,10 @@ import rikka.searchbyimage.widget.SimpleDividerItemDecoration;
 public class ResultActivity extends AppCompatActivity {
 
     public static final String EXTRA_FILE =
-            "rikka.searchbyimage.ResultActivity.EXTRA_FILE";
+            "rikka.searchbyimage.ui.ResultActivity.EXTRA_FILE";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ResultActivity.EXTRA_SITE_ID";
+            "rikka.searchbyimage.ui.ResultActivity.EXTRA_SITE_ID";
 
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
