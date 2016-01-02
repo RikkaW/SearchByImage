@@ -46,11 +46,18 @@ public class SettingsFragment extends PreferenceFragment implements
     public void onCreatePreferences(Bundle bundle, String s) {
         boolean popup = getArguments().getBoolean("popup");
 
-        if (!BuildConfig.hideOtherEngine) {
-            setPreferencesFromResource(popup ? R.xml.preferences_mini : R.xml.preferences, s);
+        if (popup) {
+            if (!BuildConfig.hideOtherEngine)
+                addPreferencesFromResource(R.xml.preferences_general_mini);
+
+            addPreferencesFromResource(R.xml.preferences_search_settings);
         } else {
-            setPreferencesFromResource(popup ? R.xml.preferences_mini_gp : R.xml.preferences_gp, s);
+            addPreferencesFromResource(R.xml.preferences_usage);
+            addPreferencesFromResource(BuildConfig.hideOtherEngine ? R.xml.preferences_general_gp : R.xml.preferences_general);
+            addPreferencesFromResource(R.xml.preferences_search_settings);
+            addPreferencesFromResource(R.xml.preferences_about);
         }
+
 
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
@@ -61,9 +68,8 @@ public class SettingsFragment extends PreferenceFragment implements
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
         setCustomGoogleUriHide();
-        if (!BuildConfig.hideOtherEngine) {
-            setSearchEngineHide();
-        }
+        setSearchEngineHide();
+
 
         mActivity = getActivity();
 
@@ -171,17 +177,14 @@ public class SettingsFragment extends PreferenceFragment implements
                     Toast.makeText(mActivity, "><", Toast.LENGTH_SHORT).show();
                 else if (click == 15)
                     Toast.makeText(mActivity, "www", Toast.LENGTH_SHORT).show();
-                else if (click == 25) {
+                else if (click == 25)
                     Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
+                else if (click == 40) {
+                    Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
 
                     click = -10;
                 }
 
-                /*Intent intent = new Intent(mActivity, WebViewActivity.class);
-                intent.putExtra(WebViewActivity.EXTRA_URL, "https://www.google.com");
-                mActivity.startActivity(intent);
-
-                URLUtils.Open("https://www.google.com", mActivity);*/
                 break;
 
             case "open_source":

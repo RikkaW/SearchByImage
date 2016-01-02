@@ -149,29 +149,28 @@ public class UploadActivity extends AppCompatActivity {
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.unknown_host_exception);
-            }
-            catch (SocketTimeoutException e) {
+                responseUri = getString(R.string.unknown_host_exception) + "\n" + getExceptionText(e);
+            } catch (SocketTimeoutException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.timeout_exception);
-            }
-            catch (SocketException e) {
+                responseUri = getString(R.string.timeout_exception) + "\n" + getExceptionText(e);
+            } catch (IOException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.socket_exception);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-
-                responseUri = "Error: " + e.toString() +"\nFile: ";
-
-                for (StackTraceElement stackTraceElement:
-                        e.getStackTrace()) {
-                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
-                        responseUri += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
-                }
+                responseUri = getString(R.string.socket_exception) + "\n" + getExceptionText(e);
             }
 
             return new HttpUpload(uploadUri, responseUri, httpRequest.getHtml(), siteId);
+        }
+
+        private String getExceptionText(Exception e) {
+            String result = "Error: " + e.toString() +"\nFile: ";
+
+            for (StackTraceElement stackTraceElement:
+                    e.getStackTrace()) {
+                if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
+                    result += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
+            }
+
+            return result;
         }
 
         protected void onPostExecute(HttpUpload result) {
