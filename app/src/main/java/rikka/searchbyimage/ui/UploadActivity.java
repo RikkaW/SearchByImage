@@ -37,14 +37,25 @@ public class UploadActivity extends AppCompatActivity {
     public final static int SITE_TINEYE = 3;
     public final static int SITE_SAUCENAO = 4;
 
+    private class Error {
+        public String title;
+        public String message;
+
+        Error(String title, String message) {
+            this.title = title;
+            this.message = message;
+        }
+    }
+
     private class HttpUpload {
         public String url;
         public String html;
         public String uploadUrl;
         public int siteId;
+        public Error error;
 
-        HttpUpload() {
-
+        HttpUpload(Error error) {
+            this.error = error;
         }
 
         HttpUpload(String uploadUrl, String url, String html, int siteId) {
@@ -149,13 +160,13 @@ public class UploadActivity extends AppCompatActivity {
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.unknown_host_exception) + "\n" + getExceptionText(e);
+                return new HttpUpload(new Error(getString(R.string.unknown_host_exception), getExceptionText(e)));
             } catch (SocketTimeoutException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.timeout_exception) + "\n" + getExceptionText(e);
+                return new HttpUpload(new Error(getString(R.string.timeout_exception), getExceptionText(e)));
             } catch (IOException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.socket_exception) + "\n" + getExceptionText(e);
+                return new HttpUpload(new Error(getString(R.string.socket_exception), getExceptionText(e)));
             }
 
             return new HttpUpload(uploadUri, responseUri, httpRequest.getHtml(), siteId);
@@ -175,6 +186,19 @@ public class UploadActivity extends AppCompatActivity {
 
         protected void onPostExecute(HttpUpload result) {
             if (result.url == null) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setMessage(result.error.message);
+                builder.setTitle(result.error.title);
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        finish();
+                    }
+                });
+
+                builder.show();
+
                 mProgressDialog.dismiss();
                 return;
             }
@@ -226,18 +250,6 @@ public class UploadActivity extends AppCompatActivity {
                 mProgressDialog.dismiss();
                 finish();
 
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setMessage(result.url);
-                builder.setTitle(R.string.something_wrong);
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        finish();
-                    }
-                });
-
-                builder.show();
             }
         }
     }
