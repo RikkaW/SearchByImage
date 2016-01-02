@@ -5,7 +5,6 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "rikka.searchbyimage2"
         minSdkVersion 15
         targetSdkVersion 23
     }
@@ -21,12 +20,14 @@ android {
         def String name = "1.2.2"
 
         COOLAPK {
+            applicationId "rikka.searchbyimage"
             versionCode version * 10
             versionName name
             buildConfigField "boolean", "hideOtherEngine", "false"
         }
 
         GOOGLE {
+            applicationId "rikka.searchbyimage2"
             versionCode version
             versionName name + "-play"
             buildConfigField "boolean", "hideOtherEngine", "true"

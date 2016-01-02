@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/rikka.searchbyimage2"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="screen">
 
     <Preference
+        android:order="0"
         android:summary="@string/hello"
-        android:title="@string/usage"
-        android:order="0"/>
+        android:title="@string/usage"/>
 
     <PreferenceCategory
-        android:title="@string/general"
         android:key="category_general"
-        android:order="1">
+        android:order="1"
+        android:title="@string/general">
 
         <rikka.searchbyimage.widget.DropDownPreference
             android:defaultValue="0"
@@ -29,104 +29,105 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="use_chrome_custom_tabs"
-            android:title="@string/use_chrome_custom_tabs"
-            android:summary="@string/use_chrome_custom_tabs_summary"/>
+            android:summary="@string/use_chrome_custom_tabs_summary"
+            android:title="@string/use_chrome_custom_tabs"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/google_settings"
         android:key="category_google"
-        android:order="2">
+        android:order="2"
+        android:title="@string/google_settings">
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
-            android:title="@string/safe_search"
-            android:defaultValue="false"/>
+            android:title="@string/safe_search"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
+            android:defaultValue="0"
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
-            app:myEntryValues="@array/google_region_redirect_value"
-            android:defaultValue="0"/>
+            app:myEntryValues="@array/google_region_redirect_value"/>
 
         <rikka.searchbyimage.widget.EditTextPreference
+            android:defaultValue="www.google.com"
             android:key="google_region"
-            android:title="@string/google_region_redirect_custom"
-            android:defaultValue= "www.google.com"/>
+            android:title="@string/google_region_redirect_custom"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/iqdb_settings"
         android:key="category_iqdb"
-        android:order="2">
+        android:order="2"
+        android:title="@string/iqdb_settings">
 
         <MultiSelectListPreference
-            android:key="iqdb_service"
-            android:title="@string/iqdb_service_select"
+            android:defaultValue="@array/iqdb_service_id_default"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"/>
+            android:key="iqdb_service"
+            android:title="@string/iqdb_service_select"/>
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="iqdb_forcegray"
-            android:title="@string/iqdb_forcegray"
-            android:defaultValue="false"/>
+            android:title="@string/iqdb_forcegray"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/saucenao_settings"
         android:key="category_saucenao"
-        android:order="2">
+        android:order="2"
+        android:title="@string/saucenao_settings">
 
         <rikka.searchbyimage.widget.DropDownPreference
+            android:defaultValue="0"
             android:key="saucenao_hide"
             android:title="@string/saucenao_hide_title"
             app:myEntries="@array/saucenao_hide"
-            app:myEntryValues="@array/saucenao_hide_value"
-            android:defaultValue="0"/>
+            app:myEntryValues="@array/saucenao_hide_value"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
+            android:defaultValue="0"
             android:key="saucenao_database"
             android:title="@string/saucenao_database_title"
             app:myEntries="@array/saucenao_database"
-            app:myEntryValues="@array/saucenao_database_value"
-            android:defaultValue="0"/>
+            app:myEntryValues="@array/saucenao_database_value"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/about"
-        android:order="9">
+        android:order="9"
+        android:title="@string/about">
 
         <Preference
-            android:title="@string/build_version"
-            android:key="version">
+            android:key="version"
+            android:title="@string/build_version">
 
         </Preference>
 
         <Preference
-            android:title="@string/rate"
-            android:summary="@string/rate_summary">
+            android:summary="@string/rate_summary"
+            android:title="@string/rate">
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2"/>
         </Preference>
 
         <Preference
             android:key="donate"
-            android:title="@string/donate"
-            android:summary="@string/donate_summary"/>
+            android:summary="@string/donate_summary"
+            android:title="@string/donate"/>
 
 
         <Preference
+            android:key="open_source"
             android:summary="https://github.com/RikkaW/SearchByImage"
-            android:title="@string/open_source"
-            android:key="open_source">
+            android:title="@string/open_source">
         </Preference>
 
     </PreferenceCategory>
