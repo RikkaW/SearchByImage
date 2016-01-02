@@ -80,7 +80,7 @@
 
     <string name="downloaded">%s をダウンロードしました</string>
 
-    <string name="saucenao_settings">SauceNAO settings</string>
+    <string name="saucenao_settings">SauceNAO設定</string>
     <string name="saucenao_hide_title">Hide</string>
     <string name="saucenao_database_title">Database</string>
 
@@ -90,4 +90,7 @@
         <item>Known and Suspected Explicit</item>
         <item>All but Known Safe</item>
     </string-array>
+    <string name="socket_exception">Network error</string>
+    <string name="timeout_exception">Connection timed out</string>
+    <string name="unknown_host_exception">Domain resolution error</string>
 </resources>

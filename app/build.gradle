@@ -17,8 +17,8 @@ android {
     }
 
     productFlavors {
-        def int version = 12100;
-        def String name = "1.2.1"
+        def int version = 12200;
+        def String name = "1.2.2"
 
         COOLAPK {
             versionCode version * 10

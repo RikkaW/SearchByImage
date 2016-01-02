@@ -76,7 +76,7 @@
 
     <string name="something_wrong">出错了 OAO</string>
 
-    <string name="downloaded">%s downloaded</string>
+    <string name="downloaded">%s 已下载</string>
 
     <string name="saucenao_settings">SauceNAO 設置</string>
     <string name="saucenao_hide_title">Hide</string>
@@ -88,4 +88,7 @@
         <item>Known and Suspected Explicit</item>
         <item>All but Known Safe</item>
     </string-array>
+    <string name="timeout_exception">连接超时</string>
+    <string name="socket_exception">网络错误</string>
+    <string name="unknown_host_exception">域名解析错误</string>
 </resources>

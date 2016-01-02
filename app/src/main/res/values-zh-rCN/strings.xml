@@ -86,8 +86,11 @@
 
     <string-array name="saucenao_hide">
         <item>不隐藏</item>
-        <item>已知的</item>
-        <item>已知及可疑的</item>
-        <item>已知安全之外的</item>
+        <item>已知的不安全图片</item>
+        <item>已知及可疑的不安全图片</item>
+        <item>已知安全之外的图片</item>
     </string-array>
+    <string name="timeout_exception">连接超时</string>
+    <string name="unknown_host_exception">域名解析错误</string>
+    <string name="socket_exception">网络错误</string>
 </resources>

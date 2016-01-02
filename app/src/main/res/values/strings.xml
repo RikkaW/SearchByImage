@@ -90,4 +90,8 @@
         <item>Known and Suspected Explicit</item>
         <item>All but Known Safe</item>
     </string-array>
+
+    <string name="timeout_exception">Connection timed out</string>
+    <string name="unknown_host_exception">Domain resolution error</string>
+    <string name="socket_exception">Network error</string>
 </resources>

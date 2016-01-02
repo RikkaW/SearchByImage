@@ -23,23 +23,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/iqdb_settings"
-        android:key="category_iqdb"
-        android:order="2">
-
-        <MultiSelectListPreference
-            android:key="iqdb_service"
-            android:title="@string/iqdb_service_select"
-            android:entries="@array/iqdb_service_title"
-            android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"/>
-
-        <SwitchPreference
-            android:key="iqdb_forcegray"
-            android:title="@string/iqdb_forcegray"
-            android:defaultValue="false"/>
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

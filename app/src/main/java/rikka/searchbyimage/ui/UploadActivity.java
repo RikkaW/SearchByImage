@@ -20,6 +20,9 @@ import android.support.v7.app.AppCompatActivity;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -144,7 +147,19 @@ public class UploadActivity extends AppCompatActivity {
 
                     responseUri = responseUri.substring(0, start) + googleUri + responseUri.substring(end);
                 }
-            } catch (IOException e) {
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                responseUri = getString(R.string.unknown_host_exception);
+            }
+            catch (SocketTimeoutException e) {
+                e.printStackTrace();
+                responseUri = getString(R.string.timeout_exception);
+            }
+            catch (SocketException e) {
+                e.printStackTrace();
+                responseUri = getString(R.string.socket_exception);
+            }
+            catch (IOException e) {
                 e.printStackTrace();
 
                 responseUri = "Error: " + e.toString() +"\nFile: ";

@@ -60,9 +60,9 @@ public class SettingsFragment extends PreferenceFragment implements
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
-        setSearchEngineHide();
+        setCustomGoogleUriHide();
         if (!BuildConfig.hideOtherEngine) {
-            setCustomGoogleUriHide();
+            setSearchEngineHide();
         }
 
         mActivity = getActivity();
