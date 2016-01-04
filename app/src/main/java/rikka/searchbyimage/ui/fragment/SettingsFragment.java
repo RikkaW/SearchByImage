@@ -10,6 +10,10 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import rikka.searchbyimage.BuildConfig;
@@ -17,6 +21,7 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.widget.SettingsFragmentDividerItemDecoration;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -41,6 +46,18 @@ public class SettingsFragment extends PreferenceFragment implements
             click = 0;
         }
     };
+
+    private RecyclerView mList;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        mList = getListView();
+        mList.addItemDecoration(new SettingsFragmentDividerItemDecoration(mActivity.getApplicationContext()));
+
+        return view;
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
