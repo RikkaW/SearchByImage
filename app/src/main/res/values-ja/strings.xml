@@ -55,7 +55,7 @@
 
     <string name="settings">設定</string>
     <string name="setting_each_time">アップロード前に設定を開く</string>
-    <string name="resize_image">Compress upload image</string>
+    <string name="resize_image">アップロード画像を圧縮</string>
     <string name="start_upload">アップロード</string>
 
     <string name="permission_require">アクセスが必要</string>
@@ -80,12 +80,12 @@
         <item>既知の安全な画像を除き</item>
     </string-array>
 
-    <string name="socket_exception">Network error</string>
-    <string name="timeout_exception">Connection timed out</string>
-    <string name="unknown_host_exception">Domain resolution error</string>
+    <string name="socket_exception">ネットワークエラー</string>
+    <string name="timeout_exception">接続タイムアウト</string>
+    <string name="unknown_host_exception">ドメイン解決エラー</string>
 
-    <string name="show_result_in">Show result in</string>
-    <string name="build_in_browser">Build-in browser</string>
+    <string name="show_result_in">検索結果を表示</string>
+    <string name="build_in_browser">アプリ内ブラウザ</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
-    <string name="browser_app">Browser app</string>
+    <string name="browser_app">ブラウザアプリ</string>
 </resources>
