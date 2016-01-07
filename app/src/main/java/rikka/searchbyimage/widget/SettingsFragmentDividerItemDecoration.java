@@ -2,9 +2,13 @@ package rikka.searchbyimage.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ListView;
 
 import rikka.searchbyimage.R;
 
@@ -19,9 +23,19 @@ public class SettingsFragmentDividerItemDecoration extends RecyclerView.ItemDeco
         mDivider = context.getResources().getDrawable(R.drawable.line_divider);
     }
 
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        super.getItemOffsets(outRect, view, parent, state);
+
+        if (parent.getChildLayoutPosition(view) < 1) {
+            return;
+        }
+
+        outRect.top = mDivider.getIntrinsicHeight();
+    }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 
@@ -43,6 +57,7 @@ public class SettingsFragmentDividerItemDecoration extends RecyclerView.ItemDeco
             int top = child.getBottom() + params.bottomMargin;
             int bottom = top + mDivider.getIntrinsicHeight();
 
+            mDivider.setColorFilter(0, PorterDuff.Mode.DST);
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
         }
