@@ -6,4 +6,5 @@
     <color name="divider">#dedede</color>
 
     <color name="openAction">#6db6ff</color>
+    <color name="contextMenuTitle">#000000</color>
 </resources>

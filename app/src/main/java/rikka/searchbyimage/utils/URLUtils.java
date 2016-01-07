@@ -17,22 +17,38 @@ import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
  * Created by Rikka on 2015/12/21.
  */
 public class URLUtils {
+    private static final String SHOW_IN_WEBVIEW = "0";
+    private static final String SHOW_IN_BROWSER = "1";
+    private static final String SHOW_IN_CHROME = "2";
+
     public static void Open(String uri, Activity activity) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
-        if (sharedPref.getBoolean("use_chrome_custom_tabs", true)) {
+        switch (sharedPref.getString("show_result_in", SHOW_IN_WEBVIEW)) {
+            case SHOW_IN_WEBVIEW:
+                OpenWebView(activity, Uri.parse(uri), false);
+                break;
+            case SHOW_IN_CHROME:
+                OpenChrome(activity, Uri.parse(uri));
+                break;
+            case SHOW_IN_BROWSER:
+                OpenBrowser(activity, Uri.parse(uri));
+                break;
+        }
+
+        /*if (sharedPref.getBoolean("use_chrome_custom_tabs", true)) {
             Open(Uri.parse(uri), activity);
         }
         else {
             OpenBrowser(activity, Uri.parse(uri));
-        }
+        }*/
     }
 
-    public static void Open(Uri uri, Activity activity) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+    private static void OpenChrome(Activity activity, Uri uri) {
+        /*SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
         if (!sharedPref.getBoolean("use_chrome_custom_tabs", true)) {
             OpenBrowser(activity, uri);
             return;
-        }
+        }*/
 
         CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
 
@@ -55,15 +71,25 @@ public class URLUtils {
     public static class WebViewFallback implements CustomTabActivityHelper.CustomTabFallback {
         @Override
         public void openUri(Activity activity, Uri uri) {
-            Intent intent = new Intent(activity, WebViewActivity.class);
+            OpenWebView(activity, uri);
+        }
+    }
+
+    public static void OpenWebView(Activity activity, Uri uri) {
+        OpenWebView(activity, uri, true);
+    }
+
+    public static void OpenWebView(Activity activity, Uri uri, boolean newTask) {
+        Intent intent = new Intent(activity, WebViewActivity.class);
+        if (newTask) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             } else {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
-            intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
-            activity.startActivity(intent);
         }
+        intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
+        activity.startActivity(intent);
     }
 
     public static void OpenBrowser(Activity activity, Uri uri) {

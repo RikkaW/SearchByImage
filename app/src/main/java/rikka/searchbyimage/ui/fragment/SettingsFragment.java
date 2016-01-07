@@ -20,7 +20,9 @@ import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.widget.DropDownPreference;
 import rikka.searchbyimage.widget.SettingsFragmentDividerItemDecoration;
 
 /**
@@ -105,6 +107,11 @@ public class SettingsFragment extends PreferenceFragment implements
                 versionPref.setSummary(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
+            }
+
+            if (CustomTabsHelper.getPackageNameToUse(mActivity) == null) {
+                DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
+                showResultInPreference.removeItem(1);
             }
         }
     }

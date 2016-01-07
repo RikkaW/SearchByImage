@@ -36,18 +36,6 @@
 
     <string name="iqdb_settings">iqdb 設置</string>
     <string name="iqdb_service_select">搜尋網站</string>
-    <string-array name="iqdb_service_title">
-        <item>Danbooru (anime artwork)</item>
-        <item>Konachan (anime wallpapers)</item>
-        <item>yande.re (high-res scans)</item>
-        <item>Gelbooru (anime artwork)</item>
-        <item>Sankaku Channel (anime/manga/game images)</item>
-        <item>e-shuushuu (anime/manga/game images)</item>
-        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
-        <item>Zerochan (anime images &amp; wallpapers)</item>
-        <item>Manga Drawing (anime/manga/game images)</item>
-        <item>Anime-Pictures (anime pictures and wallpapers)</item>
-    </string-array>
     <string name="iqdb_forcegray">忽略顏色</string>
 
     <string name="save_link">保存連接</string>
@@ -92,4 +80,9 @@
     <string name="timeout_exception">连接超时</string>
     <string name="socket_exception">网络错误</string>
     <string name="unknown_host_exception">域名解析错误</string>
+
+    <string name="show_result_in">结果打开方式</string>
+    <string name="build_in_browser">內建瀏覽器</string>
+    <string name="chrome_custom_tabs">Chrome custom tabs</string>
+    <string name="browser_app">瀏覽器应用</string>
 </resources>

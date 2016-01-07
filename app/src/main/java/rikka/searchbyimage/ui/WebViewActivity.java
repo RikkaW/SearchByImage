@@ -27,6 +27,7 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
@@ -48,6 +49,7 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.view.ContextMenuTitleView;
 
 public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
@@ -131,19 +133,6 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                /**/
-                /*view.loadUrl(url);
-                mToolbar.setTitle(url);
-                mProgressBar.setProgress(0);
-                setMyProgressBarVisibility(true);
-
-                return true;
-
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
-                if (sharedPref.getBoolean("use_chrome_custom_tabs", true)) {
-
-                }*/
-
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
                 if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
@@ -158,15 +147,6 @@ public class WebViewActivity extends AppCompatActivity {
 
                     return true;
                 }
-
-                /*if (url.startsWith(SITE_URL[siteId])) {
-
-                } else {
-
-
-                    return true;
-                }*/
-
             }
 
             @Override
@@ -347,10 +327,7 @@ public class WebViewActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
 
-        WebView.HitTestResult result = mWebView.getHitTestResult();
-
         MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
-
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case 0: {
@@ -378,9 +355,12 @@ public class WebViewActivity extends AppCompatActivity {
             }
         };
 
+        WebView.HitTestResult result = mWebView.getHitTestResult();
+
         if (result.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
             mImageUrl = result.getExtra();
-            menu.setHeaderTitle(mImageUrl);
+            menu.setHeaderView(new ContextMenuTitleView(this, mImageUrl));
+            //menu.setHeaderTitle(mImageUrl);
             menu.add(0, 2, 0, R.string.open_with).setOnMenuItemClickListener(handler);
             menu.add(0, 0, 1, R.string.save_link).setOnMenuItemClickListener(handler);
         }
@@ -389,7 +369,8 @@ public class WebViewActivity extends AppCompatActivity {
                 result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
 
             mImageUrl = result.getExtra();
-            menu.setHeaderTitle(mImageUrl);
+            //menu.setHeaderTitle(mImageUrl);
+            menu.setHeaderView(new ContextMenuTitleView(this, mImageUrl));
             menu.add(0, 0, 0, R.string.save_link).setOnMenuItemClickListener(handler);
             menu.add(0, 1, 1, R.string.save_image).setOnMenuItemClickListener(handler);
         }
