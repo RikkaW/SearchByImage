@@ -18,6 +18,12 @@
             app:myEntryValues="@array/search_engines_value"
             android:layout="@layout/preference_material"/>
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="resize_image"
+            android:title="@string/resize_image"
+            android:layout="@layout/preference_material"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

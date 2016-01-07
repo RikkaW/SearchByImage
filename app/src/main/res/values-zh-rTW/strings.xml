@@ -65,6 +65,7 @@
 
     <string name="settings">設置</string>
     <string name="setting_each_time">上載前打開設置</string>
+    <string name="resize_image">压缩上載圖片</string>
     <string name="start_upload">開始上載</string>
 
     <string name="permission_require">需要权限</string>

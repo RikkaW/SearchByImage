@@ -67,6 +67,7 @@
 
     <string name="settings">设置</string>
     <string name="setting_each_time">上传前打开设置</string>
+    <string name="resize_image">压缩上传图片</string>
     <string name="start_upload">开始上传</string>
 
     <string name="permission_require">需要权限</string>

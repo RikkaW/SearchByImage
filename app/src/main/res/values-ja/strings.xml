@@ -67,6 +67,7 @@
 
     <string name="settings">設定</string>
     <string name="setting_each_time">アップロード前に設定を開く</string>
+    <string name="resize_image">Compress upload image</string>
     <string name="start_upload">アップロード</string>
 
     <string name="permission_require">アクセスが必要</string>
@@ -81,14 +82,14 @@
     <string name="downloaded">%s をダウンロードしました</string>
 
     <string name="saucenao_settings">SauceNAO設定</string>
-    <string name="saucenao_hide_title">Hide</string>
-    <string name="saucenao_database_title">Database</string>
+    <string name="saucenao_hide_title">検索結果を非表示</string>
+    <string name="saucenao_database_title">データベース</string>
 
     <string-array name="saucenao_hide">
-        <item>None</item>
-        <item>Known Explicit</item>
-        <item>Known and Suspected Explicit</item>
-        <item>All but Known Safe</item>
+        <item>なし</item>
+        <item>既知の不適切な画像</item>
+        <item>既知と疑いのある不適切な画像</item>
+        <item>既知の安全な画像を除き</item>
     </string-array>
     <string name="socket_exception">Network error</string>
     <string name="timeout_exception">Connection timed out</string>

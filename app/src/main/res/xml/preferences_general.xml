@@ -25,6 +25,12 @@
             android:layout="@layout/preference_material"/>
 
         <SwitchPreference
+            android:defaultValue="false"
+            android:key="resize_image"
+            android:title="@string/resize_image"
+            android:layout="@layout/preference_material"/>
+
+        <SwitchPreference
             android:defaultValue="true"
             android:key="use_chrome_custom_tabs"
             android:title="@string/use_chrome_custom_tabs"

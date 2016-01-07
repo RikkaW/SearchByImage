@@ -16,10 +16,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.JsonReader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -29,6 +36,7 @@ import java.util.Set;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.utils.HttpRequestUtils;
+import rikka.searchbyimage.utils.ImageUtils;
 
 public class UploadActivity extends AppCompatActivity {
     public final static int SITE_GOOGLE = 0;
@@ -75,12 +83,17 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected HttpUpload doInBackground(Uri... imageUrl) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
             SearchByImageApplication application = (SearchByImageApplication) getApplication();
             InputStream inputStream = application.getImageInputStream();
 
+            if (sharedPref.getBoolean("resize_image", false)) {
+                inputStream = ImageUtils.ResizeImage(inputStream);
+            }
+
             String uploadUri = null;
             String name = null;
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
             int siteId = Integer.parseInt(sharedPref.getString("search_engine_preference", "0"));
             switch (siteId) {
@@ -89,8 +102,8 @@ public class UploadActivity extends AppCompatActivity {
                     name = "encoded_image";
                     break;
                 case SITE_BAIDU:
-                    uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
-                    name = "image";
+                    uploadUri = "http://image.baidu.com/pictureup/uploadwise";
+                    name = "upload";
                     break;
                 case SITE_IQDB:
                     uploadUri = "http://iqdb.org/";
@@ -207,8 +220,62 @@ public class UploadActivity extends AppCompatActivity {
                 Intent intent;
 
                 switch (result.siteId) {
-                    case SITE_GOOGLE:
                     case SITE_BAIDU:
+                        int errno = 0;
+                        String contsign = "";
+                        String obj_url = "";
+                        String simid = "";
+
+                        JsonReader reader = null;
+                        try {
+                            reader= new JsonReader(new InputStreamReader(new FileInputStream(new File(result.html))));
+                            reader.beginObject();
+                            while (reader.hasNext()) {
+                                String keyName = reader.nextName();
+                                switch (keyName) {
+                                    case "errno":
+                                        errno = reader.nextInt();
+                                        break;
+                                    case "json_data":
+                                        reader.beginObject();
+                                        break;
+                                    case "contsign":
+                                        contsign = reader.nextString();
+                                        break;
+                                    case "obj_url":
+                                        obj_url = reader.nextString();
+                                        break;
+                                    case "simid":
+                                        simid = reader.nextString();
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                            }
+                            reader.endObject();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (reader != null) {
+                                    reader.close();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("http://image.baidu.com/n/mo_search?guess=1&rn=30&appid=0&tag=1&isMobile=0");
+                        sb.append("&queryImageUrl=");
+                        sb.append(obj_url);
+                        sb.append("&querySign=");
+                        sb.append(contsign);
+                        sb.append("&simid=");
+                        sb.append(simid);
+                        result.url = sb.toString();
+                    case SITE_GOOGLE:
                     case SITE_TINEYE:
                         intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

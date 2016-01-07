@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 12200
+        versionCode 12300
     }
     buildTypes {
         release {
@@ -17,7 +17,7 @@ android {
     }
 
     productFlavors {
-        def String name = "1.2.2"
+        def String name = "1.2.3"
 
         COOLAPK {
             applicationId "rikka.searchbyimage"
