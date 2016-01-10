@@ -88,7 +88,7 @@
     <string name="build_in_browser">アプリ内ブラウザ</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
     <string name="browser_app">ブラウザアプリ</string>
-    <string name="search_this_image_by_google">Search Google for this image</string>
+    <string name="search_this_image_by_google">この画像をGoogleで検索</string>
     <string name="refresh">Refresh</string>
     <string name="copy_link">Copy link</string>
     <string name="open_in_browser">Open in browser app</string>

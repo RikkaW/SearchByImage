@@ -217,7 +217,13 @@ public class HttpRequestUtils {
 
         connection.connect();
 
-        InputStream inputStream = connection.getInputStream();
+        BufferedInputStream inputStream;
+        if (connection.getResponseCode() >= 400 ) {
+            inputStream = new BufferedInputStream(connection.getErrorStream());
+        } else {
+            inputStream = new BufferedInputStream(connection.getInputStream());
+        }
+
         String RootPath = context.getCacheDir().getAbsolutePath();
         String FilePath = RootPath + "/html/result.html";
 
