@@ -85,4 +85,9 @@
     <string name="build_in_browser">內建瀏覽器</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
     <string name="browser_app">瀏覽器应用</string>
+    <string name="search_this_image_by_google">使用 Google 搜尋此圖片</string>
+    <string name="refresh">刷新</string>
+    <string name="copy_link">拷貝鏈接</string>
+    <string name="open_in_browser">在瀏覽器中打开</string>
+    <string name="copy_to_clipboard">%s 已拷貝到剪貼板</string>
 </resources>

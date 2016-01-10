@@ -4,6 +4,7 @@
     android:key="screen">
 
     <PreferenceCategory
+        android:id="@+id/about"
         android:title="@string/about"
         android:order="9"
         android:layout="@layout/preference_category_material">

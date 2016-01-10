@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_item_refresh"
+        android:title="@string/refresh" />
+
+    <item
+        android:id="@+id/menu_item_share"
+        android:title="@string/share"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider" />
+
+    <item
+        android:id="@+id/menu_item_copy_link"
+        android:title="@string/copy_link" />
+
+    <item
+        android:id="@+id/menu_item_open_in"
+        android:title="@string/open_in_browser" />
+</menu>

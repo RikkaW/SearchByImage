@@ -37,6 +37,7 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.utils.HttpRequestUtils;
 import rikka.searchbyimage.utils.ImageUtils;
+import rikka.searchbyimage.utils.URLUtils;
 
 public class UploadActivity extends AppCompatActivity {
     public final static int SITE_GOOGLE = 0;
@@ -277,16 +278,26 @@ public class UploadActivity extends AppCompatActivity {
                         result.url = sb.toString();
                     case SITE_GOOGLE:
                     case SITE_TINEYE:
-                        intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                        } else {
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        }
-                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
-                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+                        switch (sharedPref.getString("show_result_in", URLUtils.SHOW_IN_WEBVIEW)) {
+                            case URLUtils.SHOW_IN_WEBVIEW:
+                            case URLUtils.SHOW_IN_CHROME:
+                                intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                } else {
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
+                                intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
 
-                        startActivity(intent);
+                                startActivity(intent);
+                                break;
+                            case URLUtils.SHOW_IN_BROWSER:
+                                URLUtils.OpenBrowser(mActivity, Uri.parse(result.url));
+                                break;
+                        }
+
                         break;
                     case SITE_IQDB:
                         intent = new Intent(getApplicationContext(), ResultActivity.class);

@@ -89,6 +89,11 @@ public class SettingsFragment extends PreferenceFragment implements
         setCustomGoogleUriHide();
         setSearchEngineHide();
 
+        if (BuildConfig.hideOtherEngine) {
+            mSafeSearch.setEnabled(false);
+            mSafeSearch.setChecked(true);
+        }
+
 
         mActivity = getActivity();
 
@@ -101,7 +106,11 @@ public class SettingsFragment extends PreferenceFragment implements
             githubPref.setOnPreferenceClickListener(this);
 
             Preference donatePref = findPreference("donate");
-            donatePref.setOnPreferenceClickListener(this);
+            if (BuildConfig.hideOtherEngine) {
+                ((PreferenceCategory) findPreference("about")).removePreference(donatePref);
+            } else {
+                donatePref.setOnPreferenceClickListener(this);
+            }
 
             try {
                 versionPref.setSummary(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName);
@@ -216,7 +225,8 @@ public class SettingsFragment extends PreferenceFragment implements
                 break;
             case "donate":
                 ClipBoardUtils.putTextIntoClipboard(mActivity, "rikka@xing.moe");
-                Toast.makeText(mActivity, "rikka@xing.moe" + " copied to clipboard.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, String.format(getString(R.string.copy_to_clipboard), "rikka@xing.moe"), Toast.LENGTH_SHORT).show();
+
                 break;
         }
 

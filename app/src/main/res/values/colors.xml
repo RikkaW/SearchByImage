@@ -7,4 +7,7 @@
 
     <color name="openAction">#6db6ff</color>
     <color name="contextMenuTitle">#000000</color>
+
+    <color name="progressBar">#FF4081</color>
+    <color name="progressBarDark">#85ff4081</color>
 </resources>

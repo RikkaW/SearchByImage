@@ -17,9 +17,9 @@ import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
  * Created by Rikka on 2015/12/21.
  */
 public class URLUtils {
-    private static final String SHOW_IN_WEBVIEW = "0";
-    private static final String SHOW_IN_BROWSER = "1";
-    private static final String SHOW_IN_CHROME = "2";
+    public static final String SHOW_IN_WEBVIEW = "0";
+    public static final String SHOW_IN_BROWSER = "1";
+    public static final String SHOW_IN_CHROME = "2";
 
     public static void Open(String uri, Activity activity) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -95,6 +95,7 @@ public class URLUtils {
     public static void OpenBrowser(Activity activity, Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
     }
 }
