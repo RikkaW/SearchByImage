@@ -273,9 +273,12 @@ public class WebViewActivity extends AppCompatActivity {
 
     private void startDownload() {
         Uri uri = Uri.parse(mImageUrl);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
         File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES) + "/SearchByImage", uri.getLastPathSegment());
         savedFile = destinationFile.getAbsoluteFile();
+
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle("poi");
+        request.setDescription("aaaa00");
         request.setDestinationUri(Uri.fromFile(destinationFile));
         downloadReference = downloadManager.enqueue(request);
     }

@@ -27,8 +27,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
@@ -454,8 +456,14 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private static String getImageFileName(Uri uri) {
-        int last = uri.toString().lastIndexOf("/");
-        String fileName = uri.toString().substring(last + 1);
+        String decodeUri = "/image";
+        try {
+            decodeUri = URLDecoder.decode(uri.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        int last = decodeUri.lastIndexOf("/");
+        String fileName = decodeUri.substring(last + 1);
         if (!fileName.contains(".")) {
             fileName += ".jpg";
         }

@@ -24,7 +24,7 @@
     <string name="rate_summary">能给5星就太好啦 &gt;﹏&lt;</string>
     <string name="build_version">版本</string>
 
-    <string name="google_settings">Google 設置</string>
+    <string name="google_settings">Google 設定</string>
     <string name="google_region_redirect">區域重定向</string>
     <string name="google_region_redirect_custom">自定義 Google URL</string>
 
@@ -34,7 +34,7 @@
         <item>自定義</item>
     </string-array>
 
-    <string name="iqdb_settings">iqdb 設置</string>
+    <string name="iqdb_settings">iqdb 設定</string>
     <string name="iqdb_service_select">搜尋網站</string>
     <string name="iqdb_forcegray">忽略顏色</string>
 
@@ -51,7 +51,7 @@
 
     <string name="search_result">%s 搜尋結果</string>
 
-    <string name="settings">設置</string>
+    <string name="settings">設定</string>
     <string name="setting_each_time">上載前打開設置</string>
     <string name="resize_image">压缩上載圖片</string>
     <string name="start_upload">開始上載</string>
@@ -67,15 +67,15 @@
 
     <string name="downloaded">%s 已下载</string>
 
-    <string name="saucenao_settings">SauceNAO 設置</string>
-    <string name="saucenao_hide_title">Hide</string>
-    <string name="saucenao_database_title">Database</string>
+    <string name="saucenao_settings">SauceNAO 設定</string>
+    <string name="saucenao_hide_title">隱藏</string>
+    <string name="saucenao_database_title">資料庫</string>
 
     <string-array name="saucenao_hide">
-        <item>None</item>
-        <item>Known Explicit</item>
-        <item>Known and Suspected Explicit</item>
-        <item>All but Known Safe</item>
+        <item>無</item>
+        <item>已知危險來源</item>
+        <item>已知和預估危險來源</item>
+        <item>除了已知安全來源</item>
     </string-array>
     <string name="timeout_exception">连接超时</string>
     <string name="socket_exception">网络错误</string>

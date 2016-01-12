@@ -89,8 +89,8 @@
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
     <string name="browser_app">ブラウザアプリ</string>
     <string name="search_this_image_by_google">この画像をGoogleで検索</string>
-    <string name="refresh">Refresh</string>
-    <string name="copy_link">Copy link</string>
-    <string name="open_in_browser">Open in browser app</string>
-    <string name="copy_to_clipboard">%s copied to clipboard.</string>
+    <string name="refresh">再読み込み</string>
+    <string name="copy_link">リンクをコピー</string>
+    <string name="open_in_browser">ブラウザアプリで開く</string>
+    <string name="copy_to_clipboard">%sはクリップボードにコピーしました。</string>
 </resources>
