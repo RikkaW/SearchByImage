@@ -93,4 +93,9 @@
     <string name="copy_link">リンクをコピー</string>
     <string name="open_in_browser">ブラウザアプリで開く</string>
     <string name="copy_to_clipboard">%sはクリップボードにコピーしました。</string>
+
+    <string name="replace_file">replace file</string>
+    <string name="create_new_file">create new file</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[Do you want to replace the existing file <b>%1$s</b> in <b>%2$s</b>?]]></string>
+
 </resources>

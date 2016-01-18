@@ -37,6 +37,9 @@ public class WebViewToolBar extends Toolbar {
 
         mContext = context;
         mPaint = new Paint();
+
+        setTitleTextAppearance(mContext, R.style.WebView_Title);
+        setSubtitleTextAppearance(mContext, R.style.WebView_Uri);
     }
 
     @Override

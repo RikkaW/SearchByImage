@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -35,7 +35,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ShareActionProvider;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -45,12 +44,12 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.Utils;
 import rikka.searchbyimage.view.ContextMenuTitleView;
 import rikka.searchbyimage.view.WebViewToolBar;
+import rikka.searchbyimage.widget.InfoBar;
 
 public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
@@ -78,6 +77,7 @@ public class WebViewActivity extends AppCompatActivity {
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private InfoBar mInfoBar;
 
     private String htmlFilePath;
     private String mImageUrl;
@@ -99,6 +99,9 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
 
+        mContext = this;
+        mActivity = this;
+
         mToolbar = (WebViewToolBar) findViewById(R.id.toolbar);
         //mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
@@ -119,9 +122,6 @@ public class WebViewActivity extends AppCompatActivity {
         });
 
         mAppBarLayout = (AppBarLayout) findViewById(R.id.view);
-
-        mContext = this;
-        mActivity = this;
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebSettings = mWebView.getSettings();
@@ -177,16 +177,24 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void handleSendUrl(Intent intent) {
-        mToolbar.setTitle(intent.getStringExtra(EXTRA_URL));
+        mToolbar.setTitle(" ");
+        mToolbar.setSubtitle(intent.getStringExtra(EXTRA_URL));
         mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
         mNormalMode = true;
     }
 
+
+    private boolean toolBarVisibility = true;
     private void setToolBarVisibility(boolean visible) {
+        if (visible == toolBarVisibility)
+            return;
+
         if (visible) {
             //mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            toolBarVisibility = true;
             mAppBarLayout.setExpanded(true, true);
         } else {
+            toolBarVisibility = false;
             //mProgressBar.setVisibility(ProgressBar.GONE);
             mAppBarLayout.setExpanded(false, true);
         }
@@ -272,14 +280,46 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void startDownload() {
-        Uri uri = Uri.parse(mImageUrl);
-        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES) + "/SearchByImage", uri.getLastPathSegment());
-        savedFile = destinationFile.getAbsoluteFile();
+        final Uri uri = Uri.parse(mImageUrl);
+        final File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES) + "/SearchByImage", uri.getLastPathSegment());
+
+        if (destinationFile.exists()) {
+            if (mInfoBar != null) {
+                mInfoBar.hide();
+            }
+            mInfoBar = new InfoBar(mCoordinatorLayout);
+            mInfoBar.setMessage(Html.fromHtml(String.format(
+                    mContext.getString(R.string.file_overwrite),
+                    uri.getLastPathSegment(),
+                    "Pictures/SearchByImage")));
+            mInfoBar.setNegativeButton(R.string.create_new_file, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mInfoBar.hide();
+                    downloadFile(uri, destinationFile);
+                }
+            });
+            mInfoBar.setPositiveButton(R.string.replace_file, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mInfoBar.hide();
+                    destinationFile.delete();
+                    downloadFile(uri, destinationFile);
+                }
+            });
+            mInfoBar.show();
+        } else {
+            downloadFile(uri, destinationFile);
+        }
+    }
+
+    private void downloadFile(Uri uri, File file) {
+        savedFile = file.getAbsoluteFile();
 
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle("poi");
-        request.setDescription("aaaa00");
-        request.setDestinationUri(Uri.fromFile(destinationFile));
+        //request.setTitle("poi");
+        //request.setDescription("aaaa00");
+        request.setDestinationUri(Uri.fromFile(file));
         downloadReference = downloadManager.enqueue(request);
     }
 
@@ -293,6 +333,7 @@ public class WebViewActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case 0: {
                         ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
+                        Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
                         break;
                     }
                     case 1: {
@@ -386,12 +427,20 @@ public class WebViewActivity extends AppCompatActivity {
             super.onProgressChanged(view, newProgress);
             mToolbar.setProgress(newProgress);
             mToolbar.setCanDrawProgress(true);
+
+            if (view.getTitle() != mToolbar.getSubtitle()) {
+                mToolbar.setTitle(view.getTitle());
+            }
         }
     }
 
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (mInfoBar != null) {
+                mInfoBar.hide();
+            }
+
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
             if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
@@ -400,7 +449,8 @@ public class WebViewActivity extends AppCompatActivity {
                 return true;
             } else {
                 view.loadUrl(url);
-                mToolbar.setTitle(url);
+                mToolbar.setTitle(" ");
+                mToolbar.setSubtitle(url);
                 setToolBarVisibility(true);
 
                 return true;
@@ -438,40 +488,64 @@ public class WebViewActivity extends AppCompatActivity {
         public void onPageFinished(WebView webView, String url) {
             super.onPageFinished(webView, url);
 
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    setToolBarVisibility(false);
-                }
-            }, 1500);
+            if (!toolBarVisibility) {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        setToolBarVisibility(false);
+                    }
+                }, 1500);
+            }
+
             mToolbar.setTitle(webView.getTitle());
+            mToolbar.setSubtitle(webView.getUrl());
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
     private class MyOnTouchListener implements View.OnTouchListener {
-        int SHOULD_EXPAND_TOOLBAR = Utils.dpToPx(60);
+        int SHOULD_EXPAND_TOOLBAR = Utils.dpToPx(32);
 
         float mLocation;
         float mStart;
+        int mState = 0;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             int action = event.getAction();
-            float y = event.getY();
+            float y = event.getRawY();
 
-            if (action == MotionEvent.ACTION_DOWN) {
-                mStart = y;
-            }
 
-            if (action == MotionEvent.ACTION_MOVE) {
-                mLocation = y;
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    mStart = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    mLocation = y;
 
-                float distance = (mStart - mLocation);
-                if (distance > SHOULD_EXPAND_TOOLBAR) {
-                    mAppBarLayout.setExpanded(false, true);
-                } else if (distance < -SHOULD_EXPAND_TOOLBAR) {
-                    mAppBarLayout.setExpanded(true, true);
-                }
+                    float distance = (mStart - mLocation);
+                    if (distance > SHOULD_EXPAND_TOOLBAR) {
+                        setToolBarVisibility(false);
+                    } else if (distance < -SHOULD_EXPAND_TOOLBAR) {
+                        setToolBarVisibility(true);
+                    }
+
+                    if (mInfoBar != null) {
+                        if (distance > 0 && mInfoBar.getView().getTranslationY() < mInfoBar.getView().getHeight()) {
+                            mInfoBar.getView().setTranslationY(distance);
+                            mState = 0;
+                        }
+
+                        if (distance < 0 && mInfoBar.getView().getTranslationY() > 0) {
+                            mInfoBar.getView().setTranslationY(mInfoBar.getView().getHeight() + distance);
+                            mState = 1;
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (mInfoBar != null) {
+                        mInfoBar.animateView(mState);
+                    }
+                    break;
             }
 
             return false;

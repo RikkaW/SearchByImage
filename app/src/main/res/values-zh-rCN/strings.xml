@@ -92,4 +92,9 @@
     <string name="copy_link">复制链接</string>
     <string name="open_in_browser">在浏览器应用中打开</string>
     <string name="copy_to_clipboard">%s 已复制到剪贴板</string>
+
+    <string name="replace_file">替换文件</string>
+    <string name="create_new_file">创建新文件</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[是否要替换 <b>%2$s</b> 中已存在的文件 <b>%1$s</b>？]]></string>
+
 </resources>

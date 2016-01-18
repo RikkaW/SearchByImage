@@ -90,4 +90,9 @@
     <string name="copy_link">拷貝鏈接</string>
     <string name="open_in_browser">在瀏覽器中打开</string>
     <string name="copy_to_clipboard">%s 已拷貝到剪貼板</string>
+
+    <string name="replace_file">replace file</string>
+    <string name="create_new_file">create new file</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[Do you want to replace the existing file <b>%1$s</b> in <b>%2$s</b>?]]></string>
+
 </resources>

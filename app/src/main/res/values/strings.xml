@@ -93,4 +93,8 @@
     <string name="copy_link">Copy link</string>
     <string name="open_in_browser">Open in browser app</string>
     <string name="copy_to_clipboard">%s copied to clipboard.</string>
+
+    <string name="replace_file">replace file</string>
+    <string name="create_new_file">create new file</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[Do you want to replace the existing file <b>%1$s</b> in <b>%2$s</b>?]]></string>
 </resources>
