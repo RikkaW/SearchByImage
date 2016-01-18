@@ -281,7 +281,15 @@ public class WebViewActivity extends AppCompatActivity {
 
     private void startDownload() {
         final Uri uri = Uri.parse(mImageUrl);
-        final File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES) + "/SearchByImage", uri.getLastPathSegment());
+        final File destinationFile = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + "/SearchByImage", uri.getLastPathSegment());
+
+        if (!destinationFile.getParentFile().exists()) {
+            if (!destinationFile.getParentFile().mkdirs()) {
+                Snackbar.make(mCoordinatorLayout, "Download failed.", Snackbar.LENGTH_INDEFINITE);
+                return;
+            }
+        }
 
         if (destinationFile.exists()) {
             if (mInfoBar != null) {
@@ -497,7 +505,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
 
             mToolbar.setTitle(webView.getTitle());
-            mToolbar.setSubtitle(webView.getUrl());
+            //mToolbar.setSubtitle(webView.getUrl());
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
