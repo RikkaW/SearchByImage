@@ -37,18 +37,6 @@
 
     <string name="iqdb_settings">iqdb設定</string>
     <string name="iqdb_service_select">検索サイト</string>
-    <string-array name="iqdb_service_title">
-        <item>Danbooru (anime artwork)</item>
-        <item>Konachan (anime wallpapers)</item>
-        <item>yande.re (high-res scans)</item>
-        <item>Gelbooru (anime artwork)</item>
-        <item>Sankaku Channel (anime/manga/game images)</item>
-        <item>e-shuushuu (anime/manga/game images)</item>
-        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
-        <item>Zerochan (anime images &amp; wallpapers)</item>
-        <item>Manga Drawing (anime/manga/game images)</item>
-        <item>Anime-Pictures (anime pictures and wallpapers)</item>
-    </string-array>
     <string name="iqdb_forcegray">色を無視</string>
 
     <string name="save_link">リンクを保存</string>
@@ -67,6 +55,7 @@
 
     <string name="settings">設定</string>
     <string name="setting_each_time">アップロード前に設定を開く</string>
+    <string name="resize_image">アップロード画像を圧縮</string>
     <string name="start_upload">アップロード</string>
 
     <string name="permission_require">アクセスが必要</string>
@@ -81,16 +70,32 @@
     <string name="downloaded">%s をダウンロードしました</string>
 
     <string name="saucenao_settings">SauceNAO設定</string>
-    <string name="saucenao_hide_title">Hide</string>
-    <string name="saucenao_database_title">Database</string>
+    <string name="saucenao_hide_title">検索結果を非表示</string>
+    <string name="saucenao_database_title">データベース</string>
 
     <string-array name="saucenao_hide">
-        <item>None</item>
-        <item>Known Explicit</item>
-        <item>Known and Suspected Explicit</item>
-        <item>All but Known Safe</item>
+        <item>なし</item>
+        <item>既知の不適切な画像</item>
+        <item>既知と疑いのある不適切な画像</item>
+        <item>既知の安全な画像を除き</item>
     </string-array>
-    <string name="socket_exception">Network error</string>
-    <string name="timeout_exception">Connection timed out</string>
-    <string name="unknown_host_exception">Domain resolution error</string>
+
+    <string name="socket_exception">ネットワークエラー</string>
+    <string name="timeout_exception">接続タイムアウト</string>
+    <string name="unknown_host_exception">ドメイン解決エラー</string>
+
+    <string name="show_result_in">検索結果を表示</string>
+    <string name="build_in_browser">アプリ内ブラウザ</string>
+    <string name="chrome_custom_tabs">Chrome custom tabs</string>
+    <string name="browser_app">ブラウザアプリ</string>
+    <string name="search_this_image_by_google">この画像をGoogleで検索</string>
+    <string name="refresh">再読み込み</string>
+    <string name="copy_link">リンクをコピー</string>
+    <string name="open_in_browser">ブラウザアプリで開く</string>
+    <string name="copy_to_clipboard">%sはクリップボードにコピーしました。</string>
+
+    <string name="replace_file">replace file</string>
+    <string name="create_new_file">create new file</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[Do you want to replace the existing file <b>%1$s</b> in <b>%2$s</b>?]]></string>
+
 </resources>

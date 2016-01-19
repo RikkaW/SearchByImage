@@ -163,6 +163,11 @@ public class DropDownPreference extends Preference {
         mValues.add(value);
     }
 
+    public void removeItem(int index) {
+        mAdapter.remove(mAdapter.getItem(index));
+        mValues.remove(index);
+    }
+
     public int getItemCount() {
         return mAdapter.getCount();
     }

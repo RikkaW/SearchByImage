@@ -16,12 +16,21 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.JsonReader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +38,8 @@ import java.util.Set;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.utils.HttpRequestUtils;
+import rikka.searchbyimage.utils.ImageUtils;
+import rikka.searchbyimage.utils.URLUtils;
 
 public class UploadActivity extends AppCompatActivity {
     public final static int SITE_GOOGLE = 0;
@@ -37,14 +48,25 @@ public class UploadActivity extends AppCompatActivity {
     public final static int SITE_TINEYE = 3;
     public final static int SITE_SAUCENAO = 4;
 
+    private class Error {
+        public String title;
+        public String message;
+
+        Error(String title, String message) {
+            this.title = title;
+            this.message = message;
+        }
+    }
+
     private class HttpUpload {
         public String url;
         public String html;
         public String uploadUrl;
         public int siteId;
+        public Error error;
 
-        HttpUpload() {
-
+        HttpUpload(Error error) {
+            this.error = error;
         }
 
         HttpUpload(String uploadUrl, String url, String html, int siteId) {
@@ -64,12 +86,17 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         protected HttpUpload doInBackground(Uri... imageUrl) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+
             SearchByImageApplication application = (SearchByImageApplication) getApplication();
             InputStream inputStream = application.getImageInputStream();
 
+            if (sharedPref.getBoolean("resize_image", false)) {
+                inputStream = ImageUtils.ResizeImage(inputStream);
+            }
+
             String uploadUri = null;
             String name = null;
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
             int siteId = Integer.parseInt(sharedPref.getString("search_engine_preference", "0"));
             switch (siteId) {
@@ -78,8 +105,8 @@ public class UploadActivity extends AppCompatActivity {
                     name = "encoded_image";
                     break;
                 case SITE_BAIDU:
-                    uploadUri = "http://image.baidu.com/pictureup/uploadshitu";
-                    name = "image";
+                    uploadUri = "http://image.baidu.com/pictureup/uploadwise";
+                    name = "upload";
                     break;
                 case SITE_IQDB:
                     uploadUri = "http://iqdb.org/";
@@ -149,33 +176,45 @@ public class UploadActivity extends AppCompatActivity {
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.unknown_host_exception);
-            }
-            catch (SocketTimeoutException e) {
+                return new HttpUpload(new Error(getString(R.string.unknown_host_exception), getExceptionText(e)));
+            } catch (SocketTimeoutException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.timeout_exception);
-            }
-            catch (SocketException e) {
+                return new HttpUpload(new Error(getString(R.string.timeout_exception), getExceptionText(e)));
+            } catch (IOException e) {
                 e.printStackTrace();
-                responseUri = getString(R.string.socket_exception);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-
-                responseUri = "Error: " + e.toString() +"\nFile: ";
-
-                for (StackTraceElement stackTraceElement:
-                        e.getStackTrace()) {
-                    if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
-                        responseUri += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
-                }
+                return new HttpUpload(new Error(getString(R.string.socket_exception), getExceptionText(e)));
             }
 
             return new HttpUpload(uploadUri, responseUri, httpRequest.getHtml(), siteId);
         }
 
+        private String getExceptionText(Exception e) {
+            String result = "Error: " + e.toString() +"\nFile: ";
+
+            for (StackTraceElement stackTraceElement:
+                    e.getStackTrace()) {
+                if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
+                    result += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
+            }
+
+            return result;
+        }
+
         protected void onPostExecute(HttpUpload result) {
             if (result.url == null) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setMessage(result.error.message);
+                builder.setTitle(result.error.title);
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        finish();
+                    }
+                });
+
+                builder.show();
+
                 mProgressDialog.dismiss();
                 return;
             }
@@ -184,19 +223,83 @@ public class UploadActivity extends AppCompatActivity {
                 Intent intent;
 
                 switch (result.siteId) {
-                    case SITE_GOOGLE:
                     case SITE_BAIDU:
-                    case SITE_TINEYE:
-                        intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                        } else {
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        }
-                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
-                        intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
+                        int errno = 0;
+                        String contsign = "";
+                        String obj_url = "";
+                        String simid = "";
 
-                        startActivity(intent);
+                        JsonReader reader = null;
+                        try {
+                            reader= new JsonReader(new InputStreamReader(new FileInputStream(new File(result.html))));
+                            reader.beginObject();
+                            while (reader.hasNext()) {
+                                String keyName = reader.nextName();
+                                switch (keyName) {
+                                    case "errno":
+                                        errno = reader.nextInt();
+                                        break;
+                                    case "json_data":
+                                        reader.beginObject();
+                                        break;
+                                    case "contsign":
+                                        contsign = reader.nextString();
+                                        break;
+                                    case "obj_url":
+                                        obj_url = reader.nextString();
+                                        break;
+                                    case "simid":
+                                        simid = reader.nextString();
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                            }
+                            reader.endObject();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (reader != null) {
+                                    reader.close();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("http://image.baidu.com/n/mo_search?guess=1&rn=30&appid=0&tag=1&isMobile=0");
+                        sb.append("&queryImageUrl=");
+                        sb.append(obj_url);
+                        sb.append("&querySign=");
+                        sb.append(contsign);
+                        sb.append("&simid=");
+                        sb.append(simid);
+                        result.url = sb.toString();
+                    case SITE_GOOGLE:
+                    case SITE_TINEYE:
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+                        switch (sharedPref.getString("show_result_in", URLUtils.SHOW_IN_WEBVIEW)) {
+                            case URLUtils.SHOW_IN_WEBVIEW:
+                            case URLUtils.SHOW_IN_CHROME:
+                                intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                } else {
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                }
+                                intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
+                                intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
+
+                                startActivity(intent);
+                                break;
+                            case URLUtils.SHOW_IN_BROWSER:
+                                URLUtils.OpenBrowser(mActivity, Uri.parse(result.url));
+                                break;
+                        }
+
                         break;
                     case SITE_IQDB:
                         intent = new Intent(getApplicationContext(), ResultActivity.class);
@@ -227,18 +330,6 @@ public class UploadActivity extends AppCompatActivity {
                 mProgressDialog.dismiss();
                 finish();
 
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setMessage(result.url);
-                builder.setTitle(R.string.something_wrong);
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        finish();
-                    }
-                });
-
-                builder.show();
             }
         }
     }
@@ -365,8 +456,14 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private static String getImageFileName(Uri uri) {
-        int last = uri.toString().lastIndexOf("/");
-        String fileName = uri.toString().substring(last + 1);
+        String decodeUri = "/image";
+        try {
+            decodeUri = URLDecoder.decode(uri.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        int last = decodeUri.lastIndexOf("/");
+        String fileName = decodeUri.substring(last + 1);
         if (!fileName.contains(".")) {
             fileName += ".jpg";
         }

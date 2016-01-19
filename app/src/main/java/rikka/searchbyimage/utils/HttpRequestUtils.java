@@ -187,8 +187,8 @@ public class HttpRequestUtils {
         connection.setRequestProperty("user-agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36");
                 //"Mozilla / 5.0 (Linux; Android 5.1 .1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.20 Mobile Safari/537.36");
-        connection.setConnectTimeout(2 * 1000);
-
+        connection.setConnectTimeout(10 * 1000);
+        connection.setReadTimeout(10 * 1000);
         //connection.setRequestProperty("connection", "close");
 
 
@@ -217,7 +217,13 @@ public class HttpRequestUtils {
 
         connection.connect();
 
-        InputStream inputStream = connection.getInputStream();
+        BufferedInputStream inputStream;
+        if (connection.getResponseCode() >= 400) {
+            inputStream = new BufferedInputStream(connection.getErrorStream());
+        } else {
+            inputStream = new BufferedInputStream(connection.getInputStream());
+        }
+
         String RootPath = context.getCacheDir().getAbsolutePath();
         String FilePath = RootPath + "/html/result.html";
 

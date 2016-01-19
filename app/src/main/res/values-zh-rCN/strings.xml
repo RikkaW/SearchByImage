@@ -37,18 +37,6 @@
 
     <string name="iqdb_settings">iqdb 设置</string>
     <string name="iqdb_service_select">搜索网站</string>
-    <string-array name="iqdb_service_title">
-        <item>Danbooru (anime artwork)</item>
-        <item>Konachan (anime wallpapers)</item>
-        <item>yande.re (high-res scans)</item>
-        <item>Gelbooru (anime artwork)</item>
-        <item>Sankaku Channel (anime/manga/game images)</item>
-        <item>e-shuushuu (anime/manga/game images)</item>
-        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
-        <item>Zerochan (anime images &amp; wallpapers)</item>
-        <item>Manga Drawing (anime/manga/game images)</item>
-        <item>Anime-Pictures (anime pictures and wallpapers)</item>
-    </string-array>
     <string name="iqdb_forcegray">忽略颜色</string>
 
     <string name="save_link">保存链接</string>
@@ -67,6 +55,7 @@
 
     <string name="settings">设置</string>
     <string name="setting_each_time">上传前打开设置</string>
+    <string name="resize_image">压缩上传图片</string>
     <string name="start_upload">开始上传</string>
 
     <string name="permission_require">需要权限</string>
@@ -93,4 +82,19 @@
     <string name="timeout_exception">连接超时</string>
     <string name="unknown_host_exception">域名解析错误</string>
     <string name="socket_exception">网络错误</string>
+
+    <string name="show_result_in">结果打开方式</string>
+    <string name="build_in_browser">内置浏览器</string>
+    <string name="chrome_custom_tabs">Chrome custom tabs</string>
+    <string name="browser_app">浏览器应用</string>
+    <string name="search_this_image_by_google">用 Google 搜索这张图片</string>
+    <string name="refresh">刷新</string>
+    <string name="copy_link">复制链接</string>
+    <string name="open_in_browser">在浏览器应用中打开</string>
+    <string name="copy_to_clipboard">%s 已复制到剪贴板</string>
+
+    <string name="replace_file">替换文件</string>
+    <string name="create_new_file">创建新文件</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[是否要替换 <b>%2$s</b> 中已存在的文件 <b>%1$s</b>？]]></string>
+
 </resources>

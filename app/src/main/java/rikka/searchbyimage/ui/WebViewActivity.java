@@ -8,34 +8,33 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -47,7 +46,10 @@ import java.nio.charset.Charset;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IntentUtils;
-import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.utils.Utils;
+import rikka.searchbyimage.view.ContextMenuTitleView;
+import rikka.searchbyimage.view.WebViewToolBar;
+import rikka.searchbyimage.widget.InfoBar;
 
 public class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL =
@@ -71,10 +73,12 @@ public class WebViewActivity extends AppCompatActivity {
     private WebSettings mWebSettings;
     private Context mContext;
     private Activity mActivity;
-    private Toolbar mToolbar;
+    private WebViewToolBar mToolbar;
     private AppBarLayout mAppBarLayout;
-    private ProgressBar mProgressBar;
     private CoordinatorLayout mCoordinatorLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private InfoBar mInfoBar;
+
     private String htmlFilePath;
     private String mImageUrl;
 
@@ -95,114 +99,43 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mContext = this;
+        mActivity = this;
+
+        mToolbar = (WebViewToolBar) findViewById(R.id.toolbar);
+        //mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mToolbar.setProgress(0);
+                mToolbar.setCanDrawProgress(true);
+                mWebView.reload();
+                //mProgressBar.setVisibility(View.VISIBLE);
+                //mProgressBar.setProgress(0);
+            }
+        });
 
         mAppBarLayout = (AppBarLayout) findViewById(R.id.view);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mProgressBar.setMax(100);
-
-        mContext = this;
-        mActivity = this;
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebSettings = mWebView.getSettings();
 
         mWebView.clearCache(true);
         mWebSettings.setJavaScriptEnabled(true);
-
         //webSettings.setSupportZoom(true);
         mWebSettings.setBuiltInZoomControls(true);
         mWebSettings.setDisplayZoomControls(false);
-
         //mWebSettings.setUseWideViewPort(true);
         //mWebSettings.setLoadWithOverviewMode(true);
-
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
-                super.onProgressChanged(view, progress);
-
-                mProgressBar.setProgress(progress);
-            }
-        });
-
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                /**/
-                /*view.loadUrl(url);
-                mToolbar.setTitle(url);
-                mProgressBar.setProgress(0);
-                setMyProgressBarVisibility(true);
-
-                return true;
-
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
-                if (sharedPref.getBoolean("use_chrome_custom_tabs", true)) {
-
-                }*/
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-
-                if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
-                    mActivity.startActivity(intent);
-
-                    return true;
-                } else {
-                    view.loadUrl(url);
-                    mToolbar.setTitle(url);
-                    mProgressBar.setProgress(0);
-                    setMyProgressBarVisibility(true);
-
-                    return true;
-                }
-
-                /*if (url.startsWith(SITE_URL[siteId])) {
-
-                } else {
-
-
-                    return true;
-                }*/
-
-            }
-
-            @Override
-            public void onLoadResource(WebView view, String url) {
-                super.onLoadResource(view, url);
-            }
-
-            @Override
-            public WebResourceResponse shouldInterceptRequest(final WebView view, String url) {
-                if (url.contains("saucenao-new.css")) {
-                    return getCssWebResourceResponseFromAsset();
-                } else {
-                    return super.shouldInterceptRequest(view, url);
-                }
-            }
-
-            private WebResourceResponse getCssWebResourceResponseFromAsset() {
-                try {
-                    return getUtf8EncodedCssWebResourceResponse(getAssets().open("saucenao-new.css"));
-                } catch (IOException e) {
-                    return null;
-                }
-            }
-
-            private WebResourceResponse getUtf8EncodedCssWebResourceResponse(InputStream data) {
-                return new WebResourceResponse("text/css", "UTF-8", data);
-            }
-
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                mToolbar.setTitle(url);
-                setMyProgressBarVisibility(false);
-            }
-        });
+        mWebView.setWebChromeClient(new MyWebChromeClient());
+        mWebView.setWebViewClient(new MyWebViewClient());
+        mWebView.setOnTouchListener(new MyOnTouchListener());
 
         registerForContextMenu(mWebView);
 
@@ -214,40 +147,8 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
 
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, final Intent intent) {
-                long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                if (downloadReference == reference) {
-                    DownloadManager.Query query = new DownloadManager.Query();
-                    query.setFilterById(downloadReference);
-                    Cursor cursor = downloadManager.query(query);
-
-                    if (cursor.moveToFirst()) {
-                        final String fileName = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
-
-                        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName) , Snackbar.LENGTH_LONG);
-                        snackbar.setActionTextColor(getResources().getColor(R.color.openAction));
-
-                        snackbar.setAction(R.string.open, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                                intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
-                                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                mActivity.startActivity(intent1);
-                            }
-                        });
-                        snackbar.show();
-                    }
-                }
-            }
-        };
-
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
+        registerReceiver(new DownloadBroadcastReceiver(), new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-
 
         Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
         intentActivitiesSize = IntentUtils.getSize(this, intent1);
@@ -267,7 +168,7 @@ public class WebViewActivity extends AppCompatActivity {
             setTaskDescription(new ActivityManager.TaskDescription(
                     title,
                     null,
-                    getResources().getColor(R.color.colorPrimary)));
+                    ContextCompat.getColor(mContext, R.color.colorPrimary)));
 
             getSupportActionBar().setTitle(title);
         }
@@ -276,18 +177,63 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void handleSendUrl(Intent intent) {
-        mToolbar.setTitle(intent.getStringExtra(EXTRA_URL));
+        mToolbar.setTitle(" ");
+        mToolbar.setSubtitle(intent.getStringExtra(EXTRA_URL));
         mWebView.loadUrl(intent.getStringExtra(EXTRA_URL));
         mNormalMode = true;
     }
 
-    private void setMyProgressBarVisibility(boolean visible) {
+
+    private boolean toolBarVisibility = true;
+    private void setToolBarVisibility(boolean visible) {
+        if (visible == toolBarVisibility)
+            return;
+
         if (visible) {
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            toolBarVisibility = true;
             mAppBarLayout.setExpanded(true, true);
         } else {
-            mProgressBar.setVisibility(ProgressBar.GONE);
+            toolBarVisibility = false;
+            //mProgressBar.setVisibility(ProgressBar.GONE);
             mAppBarLayout.setExpanded(false, true);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.webview, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_refresh:
+                mToolbar.setProgress(0);
+                mToolbar.setCanDrawProgress(true);
+                mWebView.reload();
+                return true;
+            case R.id.menu_item_share:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+
+                Intent chooserIntent = Intent.createChooser(shareIntent, mContext.getString(R.string.share_url));
+                chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                mContext.startActivity(chooserIntent);
+                return true;
+            case R.id.menu_item_copy_link:
+                ClipBoardUtils.putTextIntoClipboard(mContext, mWebView.getUrl());
+                Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_item_open_in:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mWebView.getUrl()));
+                mActivity.startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -334,11 +280,54 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void startDownload() {
-        Uri uri = Uri.parse(mImageUrl);
+        final Uri uri = Uri.parse(mImageUrl);
+        final File destinationFile = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + "/SearchByImage", uri.getLastPathSegment());
+
+        if (!destinationFile.getParentFile().exists()) {
+            if (!destinationFile.getParentFile().mkdirs()) {
+                Snackbar.make(mCoordinatorLayout, "Download failed.", Snackbar.LENGTH_INDEFINITE);
+                return;
+            }
+        }
+
+        if (destinationFile.exists()) {
+            if (mInfoBar != null) {
+                mInfoBar.hide();
+            }
+            mInfoBar = new InfoBar(mCoordinatorLayout);
+            mInfoBar.setMessage(Html.fromHtml(String.format(
+                    mContext.getString(R.string.file_overwrite),
+                    uri.getLastPathSegment(),
+                    "Pictures/SearchByImage")));
+            mInfoBar.setNegativeButton(R.string.create_new_file, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mInfoBar.hide();
+                    downloadFile(uri, destinationFile);
+                }
+            });
+            mInfoBar.setPositiveButton(R.string.replace_file, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mInfoBar.hide();
+                    destinationFile.delete();
+                    downloadFile(uri, destinationFile);
+                }
+            });
+            mInfoBar.show();
+        } else {
+            downloadFile(uri, destinationFile);
+        }
+    }
+
+    private void downloadFile(Uri uri, File file) {
+        savedFile = file.getAbsoluteFile();
+
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        File destinationFile = new File (new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Environment.DIRECTORY_PICTURES) + "/SearchByImage", uri.getLastPathSegment());
-        savedFile = destinationFile.getAbsoluteFile();
-        request.setDestinationUri(Uri.fromFile(destinationFile));
+        //request.setTitle("poi");
+        //request.setDescription("aaaa00");
+        request.setDestinationUri(Uri.fromFile(file));
         downloadReference = downloadManager.enqueue(request);
     }
 
@@ -347,14 +336,12 @@ public class WebViewActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
 
-        WebView.HitTestResult result = mWebView.getHitTestResult();
-
         MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
-
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case 0: {
                         ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
+                        Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
                         break;
                     }
                     case 1: {
@@ -373,32 +360,44 @@ public class WebViewActivity extends AppCompatActivity {
 
                         break;
                     }
+                    case 3: {
+                        mWebView.loadUrl("https://www.google.com/searchbyimage?image_url=" + mImageUrl);
+
+                        break;
+                    }
                 }
                 return true;
             }
         };
 
+        WebView.HitTestResult result = mWebView.getHitTestResult();
+
         if (result.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE) {
             mImageUrl = result.getExtra();
-            menu.setHeaderTitle(mImageUrl);
-            menu.add(0, 2, 0, R.string.open_with).setOnMenuItemClickListener(handler);
-            menu.add(0, 0, 1, R.string.save_link).setOnMenuItemClickListener(handler);
+            menu.setHeaderView(new ContextMenuTitleView(this, mImageUrl));
+            //menu.setHeaderTitle(mImageUrl);
+            menu.add(Menu.NONE, 2, 0, R.string.open_with).setOnMenuItemClickListener(handler);
+            menu.add(Menu.NONE, 0, 1, R.string.save_link).setOnMenuItemClickListener(handler);
         }
 
         if (result.getType() == WebView.HitTestResult.IMAGE_TYPE ||
                 result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
 
             mImageUrl = result.getExtra();
-            menu.setHeaderTitle(mImageUrl);
-            menu.add(0, 0, 0, R.string.save_link).setOnMenuItemClickListener(handler);
-            menu.add(0, 1, 1, R.string.save_image).setOnMenuItemClickListener(handler);
+            //menu.setHeaderTitle(mImageUrl);
+            menu.setHeaderView(new ContextMenuTitleView(this, mImageUrl));
+            menu.add(Menu.NONE, 0, 0, R.string.save_link).setOnMenuItemClickListener(handler);
+            menu.add(Menu.NONE, 1, 1, R.string.save_image).setOnMenuItemClickListener(handler);
+            menu.add(Menu.NONE, 3, 2, R.string.search_this_image_by_google).setOnMenuItemClickListener(handler);
+
         }
     }
 
     private void loadSearchResult(String path, String baseUrl) {
         htmlFilePath = path;
-
-        setMyProgressBarVisibility(true);
+        //mToolbar.setCanDrawProgress(false);
+        //mAppBarLayout.setExpanded(false, false);
+        //setToolBarVisibility(true);
 
         File file = new File(htmlFilePath);
 
@@ -428,5 +427,166 @@ public class WebViewActivity extends AppCompatActivity {
                 "text/html",
                 "utf-8",
                 baseUrl);
+    }
+
+    private class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+            mToolbar.setProgress(newProgress);
+            mToolbar.setCanDrawProgress(true);
+
+            if (view.getTitle() != mToolbar.getSubtitle()) {
+                mToolbar.setTitle(view.getTitle());
+            }
+        }
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (mInfoBar != null) {
+                mInfoBar.hide();
+            }
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+            if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
+                mActivity.startActivity(intent);
+
+                return true;
+            } else {
+                view.loadUrl(url);
+                mToolbar.setTitle(" ");
+                mToolbar.setSubtitle(url);
+                setToolBarVisibility(true);
+
+                return true;
+            }
+        }
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+            super.onLoadResource(view, url);
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(final WebView view, String url) {
+            if (url.contains("saucenao-new.css")) {
+                return getCssWebResourceResponseFromAsset();
+            } else {
+                return super.shouldInterceptRequest(view, url);
+            }
+        }
+
+        private WebResourceResponse getCssWebResourceResponseFromAsset() {
+            try {
+                return getUtf8EncodedCssWebResourceResponse(getAssets().open("saucenao-new.css"));
+            } catch (IOException e) {
+                return null;
+            }
+        }
+
+        private WebResourceResponse getUtf8EncodedCssWebResourceResponse(InputStream data) {
+            return new WebResourceResponse("text/css", "UTF-8", data);
+        }
+
+
+        @Override
+        public void onPageFinished(WebView webView, String url) {
+            super.onPageFinished(webView, url);
+
+            if (!toolBarVisibility) {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        setToolBarVisibility(false);
+                    }
+                }, 1500);
+            }
+
+            mToolbar.setTitle(webView.getTitle());
+            //mToolbar.setSubtitle(webView.getUrl());
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private class MyOnTouchListener implements View.OnTouchListener {
+        int SHOULD_EXPAND_TOOLBAR = Utils.dpToPx(32);
+
+        float mLocation;
+        float mStart;
+        int mState = 0;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getAction();
+            float y = event.getRawY();
+
+
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    mStart = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    mLocation = y;
+
+                    float distance = (mStart - mLocation);
+                    if (distance > SHOULD_EXPAND_TOOLBAR) {
+                        setToolBarVisibility(false);
+                    } else if (distance < -SHOULD_EXPAND_TOOLBAR) {
+                        setToolBarVisibility(true);
+                    }
+
+                    if (mInfoBar != null) {
+                        if (distance > 0 && mInfoBar.getView().getTranslationY() < mInfoBar.getView().getHeight()) {
+                            mInfoBar.getView().setTranslationY(distance);
+                            mState = 0;
+                        }
+
+                        if (distance < 0 && mInfoBar.getView().getTranslationY() > 0) {
+                            mInfoBar.getView().setTranslationY(mInfoBar.getView().getHeight() + distance);
+                            mState = 1;
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (mInfoBar != null) {
+                        mInfoBar.animateView(mState);
+                    }
+                    break;
+            }
+
+            return false;
+        }
+    }
+
+    private class DownloadBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            if (downloadReference == reference) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(downloadReference);
+                Cursor cursor = downloadManager.query(query);
+
+                if (cursor.moveToFirst()) {
+                    final String fileName = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
+
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName) , Snackbar.LENGTH_LONG);
+                    snackbar.setActionTextColor(getResources().getColor(R.color.openAction));
+
+                    snackbar.setAction(R.string.open, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                            intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
+                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mActivity.startActivity(intent1);
+                        }
+                    });
+                    snackbar.show();
+                }
+            }
+        }
     }
 }

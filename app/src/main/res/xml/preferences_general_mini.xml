@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="screen">
+
+    <PreferenceCategory
+        android:title="@string/general"
+        android:key="category_general"
+        android:order="1"
+        android:layout="@layout/preference_category_material">
+
+        <rikka.searchbyimage.widget.DropDownPreference
+            android:defaultValue="0"
+            android:key="search_engine_preference"
+            android:title="@string/search_engine"
+            app:myEntries="@array/search_engines"
+            app:myEntryValues="@array/search_engines_value"
+            android:layout="@layout/preference_material"/>
+
+        <rikka.searchbyimage.widget.DropDownPreference
+            android:defaultValue="0"
+            android:key="show_result_in"
+            android:title="@string/show_result_in"
+            app:myEntries="@array/open_with"
+            app:myEntryValues="@array/open_with_value"
+            android:layout="@layout/preference_material"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

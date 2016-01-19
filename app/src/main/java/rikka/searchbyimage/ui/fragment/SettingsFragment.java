@@ -10,13 +10,20 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.widget.DropDownPreference;
+import rikka.searchbyimage.widget.SettingsFragmentDividerItemDecoration;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -42,15 +49,34 @@ public class SettingsFragment extends PreferenceFragment implements
         }
     };
 
+    private RecyclerView mList;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        mList = getListView();
+        mList.addItemDecoration(new SettingsFragmentDividerItemDecoration(mActivity.getApplicationContext()));
+
+        return view;
+    }
+
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         boolean popup = getArguments().getBoolean("popup");
 
-        if (!BuildConfig.hideOtherEngine) {
-            setPreferencesFromResource(popup ? R.xml.preferences_mini : R.xml.preferences, s);
+        if (popup) {
+            if (!BuildConfig.hideOtherEngine)
+                addPreferencesFromResource(R.xml.preferences_general_mini);
+
+            addPreferencesFromResource(R.xml.preferences_search_settings);
         } else {
-            setPreferencesFromResource(popup ? R.xml.preferences_mini_gp : R.xml.preferences_gp, s);
+            addPreferencesFromResource(R.xml.preferences_usage);
+            addPreferencesFromResource(BuildConfig.hideOtherEngine ? R.xml.preferences_general_gp : R.xml.preferences_general);
+            addPreferencesFromResource(R.xml.preferences_search_settings);
+            addPreferencesFromResource(R.xml.preferences_about);
         }
+
 
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
@@ -61,9 +87,13 @@ public class SettingsFragment extends PreferenceFragment implements
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
 
         setCustomGoogleUriHide();
-        if (!BuildConfig.hideOtherEngine) {
-            setSearchEngineHide();
+        setSearchEngineHide();
+
+        if (BuildConfig.hideOtherEngine) {
+            mSafeSearch.setEnabled(false);
+            mSafeSearch.setChecked(true);
         }
+
 
         mActivity = getActivity();
 
@@ -76,12 +106,21 @@ public class SettingsFragment extends PreferenceFragment implements
             githubPref.setOnPreferenceClickListener(this);
 
             Preference donatePref = findPreference("donate");
-            donatePref.setOnPreferenceClickListener(this);
+            if (BuildConfig.hideOtherEngine) {
+                ((PreferenceCategory) findPreference("about")).removePreference(donatePref);
+            } else {
+                donatePref.setOnPreferenceClickListener(this);
+            }
 
             try {
                 versionPref.setSummary(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
+            }
+
+            if (CustomTabsHelper.getPackageNameToUse(mActivity) == null) {
+                DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
+                showResultInPreference.removeItem(1);
             }
         }
     }
@@ -171,17 +210,14 @@ public class SettingsFragment extends PreferenceFragment implements
                     Toast.makeText(mActivity, "><", Toast.LENGTH_SHORT).show();
                 else if (click == 15)
                     Toast.makeText(mActivity, "www", Toast.LENGTH_SHORT).show();
-                else if (click == 25) {
+                else if (click == 25)
                     Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
+                else if (click == 40) {
+                    Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
 
                     click = -10;
                 }
 
-                /*Intent intent = new Intent(mActivity, WebViewActivity.class);
-                intent.putExtra(WebViewActivity.EXTRA_URL, "https://www.google.com");
-                mActivity.startActivity(intent);
-
-                URLUtils.Open("https://www.google.com", mActivity);*/
                 break;
 
             case "open_source":
@@ -189,7 +225,8 @@ public class SettingsFragment extends PreferenceFragment implements
                 break;
             case "donate":
                 ClipBoardUtils.putTextIntoClipboard(mActivity, "rikka@xing.moe");
-                Toast.makeText(mActivity, "rikka@xing.moe" + " copied to clipboard.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, String.format(getString(R.string.copy_to_clipboard), "rikka@xing.moe"), Toast.LENGTH_SHORT).show();
+
                 break;
         }
 

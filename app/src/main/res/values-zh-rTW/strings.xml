@@ -24,7 +24,7 @@
     <string name="rate_summary">能给5星就太好啦 &gt;﹏&lt;</string>
     <string name="build_version">版本</string>
 
-    <string name="google_settings">Google 設置</string>
+    <string name="google_settings">Google 設定</string>
     <string name="google_region_redirect">區域重定向</string>
     <string name="google_region_redirect_custom">自定義 Google URL</string>
 
@@ -34,20 +34,8 @@
         <item>自定義</item>
     </string-array>
 
-    <string name="iqdb_settings">iqdb 設置</string>
+    <string name="iqdb_settings">iqdb 設定</string>
     <string name="iqdb_service_select">搜尋網站</string>
-    <string-array name="iqdb_service_title">
-        <item>Danbooru (anime artwork)</item>
-        <item>Konachan (anime wallpapers)</item>
-        <item>yande.re (high-res scans)</item>
-        <item>Gelbooru (anime artwork)</item>
-        <item>Sankaku Channel (anime/manga/game images)</item>
-        <item>e-shuushuu (anime/manga/game images)</item>
-        <item>The Anime Gallery (anime images &amp; wallpapers)</item>
-        <item>Zerochan (anime images &amp; wallpapers)</item>
-        <item>Manga Drawing (anime/manga/game images)</item>
-        <item>Anime-Pictures (anime pictures and wallpapers)</item>
-    </string-array>
     <string name="iqdb_forcegray">忽略顏色</string>
 
     <string name="save_link">保存連接</string>
@@ -63,8 +51,9 @@
 
     <string name="search_result">%s 搜尋結果</string>
 
-    <string name="settings">設置</string>
+    <string name="settings">設定</string>
     <string name="setting_each_time">上載前打開設置</string>
+    <string name="resize_image">压缩上載圖片</string>
     <string name="start_upload">開始上載</string>
 
     <string name="permission_require">需要权限</string>
@@ -78,17 +67,32 @@
 
     <string name="downloaded">%s 已下载</string>
 
-    <string name="saucenao_settings">SauceNAO 設置</string>
-    <string name="saucenao_hide_title">Hide</string>
-    <string name="saucenao_database_title">Database</string>
+    <string name="saucenao_settings">SauceNAO 設定</string>
+    <string name="saucenao_hide_title">隱藏</string>
+    <string name="saucenao_database_title">資料庫</string>
 
     <string-array name="saucenao_hide">
-        <item>None</item>
-        <item>Known Explicit</item>
-        <item>Known and Suspected Explicit</item>
-        <item>All but Known Safe</item>
+        <item>無</item>
+        <item>已知危險來源</item>
+        <item>已知和預估危險來源</item>
+        <item>除了已知安全來源</item>
     </string-array>
     <string name="timeout_exception">连接超时</string>
     <string name="socket_exception">网络错误</string>
     <string name="unknown_host_exception">域名解析错误</string>
+
+    <string name="show_result_in">结果打开方式</string>
+    <string name="build_in_browser">內建瀏覽器</string>
+    <string name="chrome_custom_tabs">Chrome custom tabs</string>
+    <string name="browser_app">瀏覽器应用</string>
+    <string name="search_this_image_by_google">使用 Google 搜尋此圖片</string>
+    <string name="refresh">刷新</string>
+    <string name="copy_link">拷貝鏈接</string>
+    <string name="open_in_browser">在瀏覽器中打开</string>
+    <string name="copy_to_clipboard">%s 已拷貝到剪貼板</string>
+
+    <string name="replace_file">replace file</string>
+    <string name="create_new_file">create new file</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[Do you want to replace the existing file <b>%1$s</b> in <b>%2$s</b>?]]></string>
+
 </resources>
