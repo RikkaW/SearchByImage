@@ -4,6 +4,8 @@ import android.app.Application;
 
 import java.io.InputStream;
 
+import rikka.searchbyimage.support.CrashHandler;
+
 /**
  * Created by Rikka on 2015/12/31.
  */
@@ -21,5 +23,10 @@ public class SearchByImageApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (!BuildConfig.hideOtherEngine) {
+            CrashHandler.init(getApplicationContext());
+            CrashHandler.register();
+        }
     }
 }

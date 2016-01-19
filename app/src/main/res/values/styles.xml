@@ -56,6 +56,7 @@
     <style name="WebView.Uri" parent="TextAppearance.AppCompat">
         <item name="android:textColor">#bdbdbd</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:minWidth">24dp</item>
     </style>
 
 </resources>

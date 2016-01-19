@@ -67,8 +67,6 @@
 
     <string name="something_wrong">エラー OAO</string>
 
-    <string name="downloaded">%s をダウンロードしました</string>
-
     <string name="saucenao_settings">SauceNAO設定</string>
     <string name="saucenao_hide_title">検索結果を非表示</string>
     <string name="saucenao_database_title">データベース</string>
@@ -94,8 +92,17 @@
     <string name="open_in_browser">ブラウザアプリで開く</string>
     <string name="copy_to_clipboard">%sはクリップボードにコピーしました。</string>
 
-    <string name="replace_file">replace file</string>
-    <string name="create_new_file">create new file</string>
-    <string name="file_overwrite" formatted="false"><![CDATA[Do you want to replace the existing file <b>%1$s</b> in <b>%2$s</b>?]]></string>
+    <string name="save_failed">Save failed.</string>
+    <string name="downloaded">%s をダウンロードしました</string>
+    <string name="download_failed">ダウンロードできませんでした。</string>
 
+    <string name="replace_file">ファイルを交換</string>
+    <string name="create_new_file">新しいファイルを作成</string>
+    <string name="file_overwrite" formatted="false"><![CDATA[<b>%2$s</b> 内に既にある <b>%1$s</b> を置き換えてもよろしいですか？]]></string>
+
+    <string name="app_crash_title">App crashed…</string>
+    <string name="app_crash_message">You can use your Email client to send crash log to developer to help solve the problem.</string>
+    <string name="app_crash_send_email">send email</string>
+    <string name="app_crash_send_cancel">cancel</string>
+    <string name="app_crash_no_email_client">No Email client installed.</string>
 </resources>
