@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,20 +64,18 @@ public class HttpRequestUtils {
                     break;
                 }
                 case FORM_DATA_FILE: {
-                    BufferedInputStream fileStream = null;
-
+                    DataInputStream dataInputStream = null;
                     try {
                         byte[] buffer = new byte[4096];
-
-                        fileStream = new BufferedInputStream(inputStream);
-                        while ((fileStream.read(buffer)) != -1) {
+                        dataInputStream = new DataInputStream(inputStream);
+                        while ((dataInputStream.read(buffer)) != -1) {
                             os.write(buffer);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
-                        if (fileStream != null)
-                            fileStream.close();
+                        if (dataInputStream != null)
+                            dataInputStream.close();
                     }
 
                     break;
