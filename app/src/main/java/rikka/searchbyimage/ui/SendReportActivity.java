@@ -23,6 +23,8 @@ public class SendReportActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_EMAIL_BODY)) {
             handleSendEmail(intent);
+        } else {
+            throw new RuntimeException("Crash test!");
         }
     }
 
