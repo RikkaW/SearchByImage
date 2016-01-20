@@ -286,7 +286,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         if (!destinationFile.getParentFile().exists()) {
             if (!destinationFile.getParentFile().mkdirs()) {
-                Snackbar.make(mCoordinatorLayout, "Save failed.", Snackbar.LENGTH_INDEFINITE);
+                Snackbar.make(mCoordinatorLayout, R.string.save_failed, Snackbar.LENGTH_INDEFINITE);
                 return;
             }
         }

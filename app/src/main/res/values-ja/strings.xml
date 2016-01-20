@@ -92,17 +92,20 @@
     <string name="open_in_browser">ブラウザアプリで開く</string>
     <string name="copy_to_clipboard">%sはクリップボードにコピーしました。</string>
 
-    <string name="save_failed">Save failed.</string>
+    <string name="save_failed">ファイルを保存できませんでした</string>
     <string name="downloaded">%s をダウンロードしました</string>
-    <string name="download_failed">ダウンロードできませんでした。</string>
+    <string name="download_failed">ダウンロードできませんでした</string>
 
     <string name="replace_file">ファイルを交換</string>
     <string name="create_new_file">新しいファイルを作成</string>
     <string name="file_overwrite" formatted="false"><![CDATA[<b>%2$s</b> 内に既にある <b>%1$s</b> を置き換えてもよろしいですか？]]></string>
 
-    <string name="app_crash_title">App crashed…</string>
-    <string name="app_crash_message">You can use your Email client to send crash log to developer to help solve the problem.</string>
-    <string name="app_crash_send_email">send email</string>
-    <string name="app_crash_send_cancel">cancel</string>
-    <string name="app_crash_no_email_client">No Email client installed.</string>
+    <string name="send_via">送信方法</string>
+
+    <string name="app_crash_title">アプリを終了します</string>
+    <string name="app_crash_message">バグを修正するために役立つ、開発者にクラッシュログを送信します。</string>
+    <string name="app_crash_send_email">送信</string>
+    <string name="app_crash_send_cancel">キャンセル</string>
+    <string name="app_crash_no_email_client">メールアプリ見つかりません。</string>
+
 </resources>
