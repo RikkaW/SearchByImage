@@ -1,11 +1,13 @@
 package rikka.searchbyimage.ui.fragment;
 
+import android.animation.TimeInterpolator;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
@@ -216,6 +218,13 @@ public class SettingsFragment extends PreferenceFragment implements
                     Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
 
                     click = -10;
+
+                    View view = mActivity.findViewById(R.id.settings_container);
+                    view.animate()
+                            .rotation(view.getRotation() + 180 + 360)
+                            .setDuration(3000)
+                            .setInterpolator(new FastOutSlowInInterpolator())
+                            .start();
                 }
 
                 break;

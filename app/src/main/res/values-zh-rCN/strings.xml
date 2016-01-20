@@ -46,7 +46,7 @@
 
 
     <string name="share">分享</string>
-    <string name="share_url">选择分享方式</string>
+    <string name="share_url">分享方式</string>
 
     <string name="use_chrome_custom_tabs">使用内置浏览器</string>
     <string name="use_chrome_custom_tabs_summary">使用 WebView 或 Chrome custom tabs</string>
@@ -92,17 +92,19 @@
     <string name="open_in_browser">在浏览器应用中打开</string>
     <string name="copy_to_clipboard">%s 已复制到剪贴板</string>
 
-    <string name="save_failed">Save failed.</string>
+    <string name="save_failed">保存失败</string>
     <string name="downloaded">%s 已下载完毕</string>
-    <string name="download_failed">下载失败。</string>
+    <string name="download_failed">下载失败</string>
 
     <string name="replace_file">替换文件</string>
     <string name="create_new_file">创建新文件</string>
     <string name="file_overwrite" formatted="false"><![CDATA[要替换“<b>%2$s</b>”目录中现有的 <b>%1$s</b> 吗？]]></string>
 
+    <string name="send_via">发送方式</string>
+
     <string name="app_crash_title">坏掉了 QAQ</string>
-    <string name="app_crash_message">你可以使用邮件客户端发送错误报告给开发者以帮助开发者解决问题。</string>
-    <string name="app_crash_send_email">发送邮件</string>
+    <string name="app_crash_message">使用邮件客户端发送错误报告给开发者以帮助解决问题。</string>
+    <string name="app_crash_send_email">确定</string>
     <string name="app_crash_send_cancel">取消</string>
     <string name="app_crash_no_email_client">唉..没有邮件客户端的样子..</string>
 </resources>
