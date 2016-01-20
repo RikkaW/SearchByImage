@@ -1,25 +1,25 @@
 package rikka.searchbyimage.utils;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okio.BufferedSink;
 
 
 /**
@@ -50,7 +50,7 @@ public class HttpRequestUtils {
             this.inputStream = inputStream;
         }
 
-        public void writeForm(OutputStream os, String boundary) throws IOException {
+        public void writeForm(BufferedSink os, String boundary) throws IOException {
             os.write(getFormByteHead(boundary));
 
             switch (type) {
@@ -72,11 +72,9 @@ public class HttpRequestUtils {
                         while ((fileStream.read(buffer)) != -1) {
                             os.write(buffer);
                         }
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    }
-                    finally {
+                    } finally {
                         if (fileStream != null)
                             fileStream.close();
                     }
@@ -138,11 +136,10 @@ public class HttpRequestUtils {
     private String boundary;
     private String uri;
     private String method;
-    private int timeout;
-    private HttpURLConnection connection;
+    private OkHttpClient okHttpClient;
     private String html;
 
-    private String responseUri;
+    private final static String TAG = HttpRequestUtils.class.getSimpleName();
 
     private ArrayList<HttpFormData> formDataList = new ArrayList<>();
 
@@ -174,55 +171,58 @@ public class HttpRequestUtils {
         formDataList.add(new HttpFormData(name, filename, inputStream));
     }
 
-    public HttpURLConnection openConnection() throws IOException {
-        connection = (HttpURLConnection) new URL(uri).openConnection();
+    public Request initRequest(RequestBody requestBody) throws IOException {
+        okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS).build();
 
-        connection.setRequestMethod(method);
-        connection.setRequestProperty("accept", "*/*");
-        connection.setRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
-        connection.setRequestProperty("accept-encoding", "deflate");
-        connection.setRequestProperty("cache-control", "no-cache");
-        connection.setUseCaches(false);
-        connection.setRequestProperty("connection", "Keep-Alive");
-        connection.setRequestProperty("user-agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36");
-                //"Mozilla / 5.0 (Linux; Android 5.1 .1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.20 Mobile Safari/537.36");
-        connection.setConnectTimeout(10 * 1000);
-        connection.setReadTimeout(10 * 1000);
-        //connection.setRequestProperty("connection", "close");
-
-
-        return connection;
+        Request request = new Request.Builder()
+                .url(uri)
+                .header("accept", "*/*")
+                .addHeader("content-type", "multipart/form-data; boundary=" + boundary)
+                .addHeader("accept-encoding", "deflate")
+                .addHeader("cache-control", "no-cache")
+                .addHeader("connection", "Keep-Alive")
+                .addHeader("user-agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36")
+                .post(requestBody)
+                .build();
+        return request;
     }
 
-    private void writeForm() throws IOException {
-        connection.setDoOutput(true);
+    private RequestBody writeForm() throws IOException {
+        RequestBody requestBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return null;
+            }
 
-        OutputStream os = connection.getOutputStream();
-
-        for (int i = 0; i < formDataList.size(); i++) {
-            formDataList.get(i).writeForm(os, boundary);
-            os.write(HttpFormData.getFormByteNewLine());
-        }
-
-        os.write(HttpFormData.getFormByteEnd(boundary));
-
-        os.flush();
-        os.close();
+            @Override
+            public void writeTo(BufferedSink os) throws IOException {
+                for (int i = 0; i < formDataList.size(); i++) {
+                    formDataList.get(i).writeForm(os, boundary);
+                    os.write(HttpFormData.getFormByteNewLine());
+                    os.write(HttpFormData.getFormByteEnd(boundary));
+                }
+            }
+        };
+        return requestBody;
     }
 
-    public void connect(Context context) throws IOException {
+    public String connect(Request request, Context context) throws IOException {
         if (formDataList.size() > 0)
             writeForm();
 
-        connection.connect();
+        Response response = okHttpClient.newCall(request).execute();
 
         BufferedInputStream inputStream;
-        if (connection.getResponseCode() >= 400) {
-            inputStream = new BufferedInputStream(connection.getErrorStream());
-        } else {
-            inputStream = new BufferedInputStream(connection.getInputStream());
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
         }
+
+
+        inputStream = new BufferedInputStream(response.body().byteStream());
+
 
         String RootPath = context.getCacheDir().getAbsolutePath();
         String FilePath = RootPath + "/html/result.html";
@@ -249,15 +249,15 @@ public class HttpRequestUtils {
 
         html = FilePath;
 
-        responseUri = connection.getURL().toString();
+        String responseUri = response.request().url().toString();
+        Log.i(TAG, "responseUri: " + responseUri);
 
-        connection.disconnect();
+        return responseUri;
     }
 
     public String getResponseUri(Context context) throws IOException {
-        openConnection();
-        connect(context);
-        return responseUri;
+        Request request = initRequest(writeForm());
+        return connect(request, context);
     }
 
     public String getHtml() {
