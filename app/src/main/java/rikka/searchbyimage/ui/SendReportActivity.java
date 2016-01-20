@@ -61,7 +61,7 @@ public class SendReportActivity extends AppCompatActivity {
 
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setData(Uri.parse("mailto:?subject=" + "SearchByImage crash log" + "&body=" + body + "&to=" + "rikka@xing.moe"));
-        intent = Intent.createChooser(intent, "Send crash log by Email");
+        intent = Intent.createChooser(intent, getString(R.string.send_via));
         if (IntentUtils.canOpenWith(this, intent)) {
             startActivity(intent);
         } else {
