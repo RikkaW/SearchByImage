@@ -126,7 +126,7 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView = (WebView) findViewById(R.id.webView);
         mWebSettings = mWebView.getSettings();
 
-        mWebView.clearCache(true);
+        //mWebView.clearCache(true);
         mWebSettings.setJavaScriptEnabled(true);
         //webSettings.setSupportZoom(true);
         mWebSettings.setBuiltInZoomControls(true);
@@ -286,7 +286,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         if (!destinationFile.getParentFile().exists()) {
             if (!destinationFile.getParentFile().mkdirs()) {
-                Snackbar.make(mCoordinatorLayout, "Download failed.", Snackbar.LENGTH_INDEFINITE);
+                Snackbar.make(mCoordinatorLayout, "Save failed.", Snackbar.LENGTH_INDEFINITE);
                 return;
             }
         }
