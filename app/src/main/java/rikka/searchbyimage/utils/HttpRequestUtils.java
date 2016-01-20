@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -177,6 +178,8 @@ public class HttpRequestUtils {
     public HttpURLConnection openConnection() throws IOException {
         connection = (HttpURLConnection) new URL(uri).openConnection();
 
+        connection.setChunkedStreamingMode(0);
+        connection.setRequestProperty("transfer-rncoding", "chunked");
         connection.setRequestMethod(method);
         connection.setRequestProperty("accept", "*/*");
         connection.setRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
@@ -187,8 +190,8 @@ public class HttpRequestUtils {
         connection.setRequestProperty("user-agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36");
                 //"Mozilla / 5.0 (Linux; Android 5.1 .1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.20 Mobile Safari/537.36");
-        connection.setConnectTimeout(10 * 1000);
-        connection.setReadTimeout(10 * 1000);
+        connection.setConnectTimeout(60 * 1000);
+        connection.setReadTimeout(60 * 1000);
         //connection.setRequestProperty("connection", "close");
 
 

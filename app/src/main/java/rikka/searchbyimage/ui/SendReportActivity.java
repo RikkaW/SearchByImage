@@ -23,6 +23,8 @@ public class SendReportActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_EMAIL_BODY)) {
             handleSendEmail(intent);
+        } else {
+            throw new RuntimeException("Crash test!");
         }
     }
 
@@ -37,7 +39,7 @@ public class SendReportActivity extends AppCompatActivity {
                         finish();
                     }
                 })
-                .setPositiveButton(R.string.app_crash_send_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.app_crash_send_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -62,7 +64,7 @@ public class SendReportActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("mailto:?subject=" + "SearchByImage crash log" + "&body=" + body + "&to=" + "rikka@xing.moe"));
-        intent = Intent.createChooser(intent, "Send crash log by Email");
+        intent = Intent.createChooser(intent, getString(R.string.send_via));
         if (IntentUtils.canOpenWith(this, intent)) {
             startActivity(intent);
         } else {
