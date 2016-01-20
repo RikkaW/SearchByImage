@@ -178,8 +178,8 @@ public class HttpRequestUtils {
     public HttpURLConnection openConnection() throws IOException {
         connection = (HttpURLConnection) new URL(uri).openConnection();
 
-        connection.setChunkedStreamingMode(0);
-        connection.setRequestProperty("transfer-rncoding", "chunked");
+        //connection.setChunkedStreamingMode(0);
+        //connection.setRequestProperty("transfer-rncoding", "chunked");
         connection.setRequestMethod(method);
         connection.setRequestProperty("accept", "*/*");
         connection.setRequestProperty("content-type", "multipart/form-data; boundary=" + boundary);
