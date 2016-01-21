@@ -3,9 +3,9 @@ package rikka.searchbyimage.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import rikka.searchbyimage.R;
@@ -55,15 +55,14 @@ public class SendReportActivity extends AppCompatActivity {
     }
 
     private void sendEmail(String body) {
-        /*Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"rikka@xing.moe"});
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikka@xing.moe", null));
+        intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchBugReport@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage crash log");
         intent.putExtra(Intent.EXTRA_TEXT, body);
-        startActivity(Intent.createChooser(intent, "Send crash log by Email"));*/
+        startActivity(Intent.createChooser(intent, "Send crash log by Email"));
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("mailto:?subject=" + "SearchByImage crash log" + "&body=" + body + "&to=" + "rikka@xing.moe"));
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(Uri.parse("mailto:?subject=" + "SearchByImage crash log" + "&body=" + body + "&to=" + "rikka@xing.moe"));
         intent = Intent.createChooser(intent, getString(R.string.send_via));
         if (IntentUtils.canOpenWith(this, intent)) {
             startActivity(intent);

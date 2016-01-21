@@ -18,9 +18,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
@@ -189,9 +185,9 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         private String getExceptionText(Exception e) {
-            String result = "Error: " + e.toString() +"\nFile: ";
+            String result = "Error: " + e.toString() + "\nFile: ";
 
-            for (StackTraceElement stackTraceElement:
+            for (StackTraceElement stackTraceElement :
                     e.getStackTrace()) {
                 if (stackTraceElement.getFileName().startsWith("HttpRequestUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
                     result += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
@@ -231,7 +227,7 @@ public class UploadActivity extends AppCompatActivity {
 
                         JsonReader reader = null;
                         try {
-                            reader= new JsonReader(new InputStreamReader(new FileInputStream(new File(result.html))));
+                            reader = new JsonReader(new InputStreamReader(new FileInputStream(new File(result.html))));
                             reader.beginObject();
                             while (reader.hasNext()) {
                                 String keyName = reader.nextName();
