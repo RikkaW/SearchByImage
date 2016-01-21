@@ -11,6 +11,7 @@
         <item>iqdb</item>
         <item>TinEye</item>
         <item>SauceNAO</item>
+        <item>ascii2d</item>
     </string-array>
 
     <string name="usage">Usage</string>
@@ -56,6 +57,7 @@
     <string name="settings">Settings</string>
     <string name="setting_each_time">Open settings before upload</string>
     <string name="resize_image">Compress upload image</string>
+    <string name="try_resize_image_if_error">Try this if upload error</string>
     <string name="start_upload">Start upload</string>
 
     <string name="permission_require">Permission require</string>
@@ -81,6 +83,9 @@
     <string name="timeout_exception">Connection timed out</string>
     <string name="unknown_host_exception">Domain resolution error</string>
     <string name="socket_exception">Network error</string>
+
+    <string name="notice">Notice</string>
+    <string name="notice_baidu">WEBP image or large size image is not supported.</string>
 
     <string name="show_result_in">Show result in</string>
     <string name="build_in_browser">Build-in browser</string>

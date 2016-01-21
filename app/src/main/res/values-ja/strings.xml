@@ -11,6 +11,7 @@
         <item>iqdb</item>
 		<item>TinEye</item>
         <item>SauceNAO</item>
+        <item>ascii2d</item>
     </string-array>
 
     <string name="usage">使い方</string>
@@ -56,6 +57,7 @@
     <string name="settings">設定</string>
     <string name="setting_each_time">アップロード前に設定を開く</string>
     <string name="resize_image">アップロード画像を圧縮</string>
+    <string name="try_resize_image_if_error">Try this if upload error</string>
     <string name="start_upload">アップロード</string>
 
     <string name="permission_require">アクセスが必要</string>
@@ -81,6 +83,9 @@
     <string name="socket_exception">ネットワークエラー</string>
     <string name="timeout_exception">接続タイムアウト</string>
     <string name="unknown_host_exception">ドメイン解決エラー</string>
+
+    <string name="notice">Notice</string>
+    <string name="notice_baidu">WEBP image or large size image is not supported.</string>
 
     <string name="show_result_in">検索結果を表示</string>
     <string name="build_in_browser">アプリ内ブラウザ</string>

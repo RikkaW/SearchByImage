@@ -69,7 +69,8 @@ public class WebViewActivity extends AppCompatActivity {
             "", // baidu
             "", // iqdb
             "", // tineye
-            "http://saucenao.com/" //saucenao
+            "http://saucenao.com/", //saucenao
+            ""
     };
 
     private WebView mWebView;

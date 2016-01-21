@@ -43,6 +43,9 @@ public class SettingsFragment extends PreferenceFragment implements
     EditTextPreference mCustomGoogleUri;
     PreferenceCategory mCategorySauceNAO;
 
+    PreferenceCategory mCategoryNotice;
+    Preference mNotice;
+
     private int click = 0;
     private Runnable clearClickCount = new Runnable() {
         @Override
@@ -83,10 +86,12 @@ public class SettingsFragment extends PreferenceFragment implements
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
         mCategorySauceNAO = (PreferenceCategory) findPreference("category_saucenao");
+        mCategoryNotice = (PreferenceCategory) findPreference("category_notice");
 
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
+        mNotice = (Preference) findPreference("preference_notice");
 
         setCustomGoogleUriHide();
         setSearchEngineHide();
@@ -185,12 +190,27 @@ public class SettingsFragment extends PreferenceFragment implements
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.addPreference(mCategorySauceNAO);
                 break;
+            case UploadActivity.SITE_ASCII2D:
             case UploadActivity.SITE_BAIDU:
             case UploadActivity.SITE_TINEYE:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
 
+                break;
+        }
+
+        switch (siteId) {
+            case UploadActivity.SITE_BAIDU:
+                mScreen.addPreference(mCategoryNotice);
+                mNotice.setSummary(R.string.notice_baidu);
+                break;
+            case UploadActivity.SITE_GOOGLE:
+            case UploadActivity.SITE_IQDB:
+            case UploadActivity.SITE_SAUCENAO:
+            case UploadActivity.SITE_ASCII2D:
+            case UploadActivity.SITE_TINEYE:
+                mScreen.removePreference(mCategoryNotice);
                 break;
         }
     }

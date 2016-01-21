@@ -10,6 +10,7 @@ import rikka.searchbyimage.support.CrashHandler;
  * Created by Rikka on 2015/12/31.
  */
 public class SearchByImageApplication extends Application {
+    // TODO: change this to save to file
     private InputStream imageInputStream;
 
     public InputStream getImageInputStream() {

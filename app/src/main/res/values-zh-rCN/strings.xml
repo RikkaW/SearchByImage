@@ -11,7 +11,7 @@
         <item>iqdb</item>
         <item>TinEye</item>
         <item>SauceNAO</item>
-
+        <item>ascii2d</item>
     </string-array>
 
     <string name="usage">使用方法</string>
@@ -56,6 +56,7 @@
     <string name="settings">设置</string>
     <string name="setting_each_time">上传前打开设置</string>
     <string name="resize_image">压缩上传图片</string>
+    <string name="try_resize_image_if_error">当图片不能正常上传时可尝试此选项</string>
     <string name="start_upload">开始上传</string>
 
     <string name="permission_require">需要权限</string>
@@ -81,6 +82,9 @@
     <string name="timeout_exception">连接超时</string>
     <string name="unknown_host_exception">域名解析错误</string>
     <string name="socket_exception">网络错误</string>
+
+    <string name="notice">注意</string>
+    <string name="notice_baidu">不支持WebP格式和较大图片</string>
 
     <string name="show_result_in">结果打开方式</string>
     <string name="build_in_browser">内置浏览器</string>

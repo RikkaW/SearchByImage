@@ -182,7 +182,6 @@ public class HttpRequestUtils {
                 .addHeader("accept-encoding", "deflate")
                 .addHeader("cache-control", "no-cache")
                 .addHeader("connection", "Keep-Alive")
-                .addHeader("transfer-rncoding", "chunked")
                 .addHeader("user-agent",
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36")
                 .post(requestBody)

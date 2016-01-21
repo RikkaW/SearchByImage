@@ -17,7 +17,7 @@
             android:layout="@layout/preference_material"/>
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="resize_image"
             android:title="@string/resize_image"
             android:layout="@layout/preference_material"/>
