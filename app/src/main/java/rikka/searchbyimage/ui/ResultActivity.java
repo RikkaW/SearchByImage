@@ -2,13 +2,20 @@ package rikka.searchbyimage.ui;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -19,6 +26,7 @@ import java.util.ArrayList;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.apdater.RecyclerViewAdapter;
+import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
 import rikka.searchbyimage.widget.SimpleDividerItemDecoration;
@@ -79,13 +87,32 @@ public class ResultActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onItemLongClick(View view, int position, IqdbResultCollecter.IqdbItem item) {
+                public void onItemLongClick(View view, int position, final IqdbResultCollecter.IqdbItem item) {
+                    new AlertDialog.Builder(mActivity)
+                            .setItems(
+                                    new CharSequence[] {getString(R.string.open_with), getString(R.string.copy_link)},
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which) {
+                                                case 0:
+                                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.imageURL));
+                                                    mActivity.startActivity(intent);
+                                                    break;
+                                                case 1:
+                                                    ClipBoardUtils.putTextIntoClipboard(mActivity, item.imageURL);
+                                                    Toast.makeText(mActivity, String.format(getString(R.string.copy_to_clipboard), item.imageURL), Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
+                                        }
+                                    })
+                            .show();
                 }
             });
 
             mRecyclerView.setAdapter(mAdapter);
         }
-
     }
 
     @Override

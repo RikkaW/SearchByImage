@@ -24,7 +24,7 @@ public class SearchByImageApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (!BuildConfig.hideOtherEngine) {
+        if (!BuildConfig.hideOtherEngine && !BuildConfig.DEBUG) {
             CrashHandler.init(getApplicationContext());
             CrashHandler.register();
         }
