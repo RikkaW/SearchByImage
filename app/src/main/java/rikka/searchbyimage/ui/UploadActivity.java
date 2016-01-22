@@ -17,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
-import android.widget.PopupWindow;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -126,7 +125,6 @@ public class UploadActivity extends AppCompatActivity {
 
             HttpRequestUtils httpRequest = new HttpRequestUtils(uploadUri, "POST");
             String responseUri;
-
             switch (siteId) {
                 case SITE_IQDB:
                     Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());

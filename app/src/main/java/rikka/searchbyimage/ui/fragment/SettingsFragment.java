@@ -38,6 +38,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
     PreferenceCategory mCategoryGoogle;
     PreferenceCategory mCategoryIqdb;
+    PreferenceCategory mCategoryBaidu;
     SwitchPreference mSafeSearch;
     PreferenceScreen mScreen;
     EditTextPreference mCustomGoogleUri;
@@ -86,7 +87,7 @@ public class SettingsFragment extends PreferenceFragment implements
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
         mCategorySauceNAO = (PreferenceCategory) findPreference("category_saucenao");
-        mCategoryNotice = (PreferenceCategory) findPreference("category_notice");
+        mCategoryBaidu = (PreferenceCategory) findPreference("category_baidu");
 
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
@@ -125,7 +126,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 e.printStackTrace();
             }
 
-            if (CustomTabsHelper.getPackageNameToUse(mActivity) == null) {
+            if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
                 DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
                 showResultInPreference.removeItem(1);
             }
@@ -179,28 +180,37 @@ public class SettingsFragment extends PreferenceFragment implements
                 mScreen.addPreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
+                mScreen.removePreference(mCategoryBaidu);
                 break;
             case UploadActivity.SITE_IQDB:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.addPreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
+                mScreen.removePreference(mCategoryBaidu);
                 break;
             case UploadActivity.SITE_SAUCENAO:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.addPreference(mCategorySauceNAO);
+                mScreen.removePreference(mCategoryBaidu);
+                break;
+            case UploadActivity.SITE_BAIDU:
+                mScreen.removePreference(mCategoryGoogle);
+                mScreen.removePreference(mCategoryIqdb);
+                mScreen.removePreference(mCategorySauceNAO);
+                mScreen.addPreference(mCategoryBaidu);
                 break;
             case UploadActivity.SITE_ASCII2D:
-            case UploadActivity.SITE_BAIDU:
             case UploadActivity.SITE_TINEYE:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
+                mScreen.removePreference(mCategoryBaidu);
 
                 break;
         }
 
-        switch (siteId) {
+        /*switch (siteId) {
             case UploadActivity.SITE_BAIDU:
                 mScreen.addPreference(mCategoryNotice);
                 mNotice.setSummary(R.string.notice_baidu);
@@ -212,7 +222,7 @@ public class SettingsFragment extends PreferenceFragment implements
             case UploadActivity.SITE_TINEYE:
                 mScreen.removePreference(mCategoryNotice);
                 break;
-        }
+        }*/
     }
 
     @Override

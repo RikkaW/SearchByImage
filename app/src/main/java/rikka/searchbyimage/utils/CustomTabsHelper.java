@@ -91,6 +91,11 @@ public class CustomTabsHelper {
         } else if (packagesSupportingCustomTabs.contains(LOCAL_PACKAGE)) {
             sPackageNameToUse = LOCAL_PACKAGE;
         }
+
+        List<String> list = getInstalledChromePackgeName(context);
+        if (sPackageNameToUse == null && !list.isEmpty()) {
+            sPackageNameToUse = list.get(0);
+        }
         return sPackageNameToUse;
     }
 
@@ -135,5 +140,29 @@ public class CustomTabsHelper {
         public IBinder onBind(Intent intent) {
             return sBinder;
         }
+    }
+
+    public static boolean getIsChromeInstalled(Context context) {
+
+        return !getInstalledChromePackgeName(context).isEmpty();
+    }
+
+    public static List<String> getInstalledChromePackgeName(Context context) {
+        PackageManager pm = context.getPackageManager();
+        ArrayList<String> list = new ArrayList<>();
+
+        for (String name : getPackages()) {
+            if (name.isEmpty()) {
+                continue;
+            }
+
+            try {
+                pm.getPackageInfo(name, PackageManager.GET_ACTIVITIES);
+                list.add(name);
+            } catch (PackageManager.NameNotFoundException ignored) {
+            }
+        }
+
+        return list;
     }
 }

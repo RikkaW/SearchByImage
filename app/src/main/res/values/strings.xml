@@ -84,7 +84,7 @@
     <string name="unknown_host_exception">Domain resolution error</string>
     <string name="socket_exception">Network error</string>
 
-    <string name="notice">Notice</string>
+    <string name="notice">Note</string>
     <string name="notice_baidu">WEBP image or large size image is not supported.</string>
 
     <string name="show_result_in">Show result in</string>
@@ -112,4 +112,5 @@
     <string name="app_crash_send_email">OK</string>
     <string name="app_crash_send_cancel">Cancel</string>
     <string name="app_crash_no_email_client">No mail app installed</string>
+    <string name="baidu_settings">Baidu settings</string>
 </resources>

@@ -111,4 +111,5 @@
     <string name="app_crash_send_email">确定</string>
     <string name="app_crash_send_cancel">取消</string>
     <string name="app_crash_no_email_client">唉..没有邮件客户端的样子..</string>
+    <string name="baidu_settings">百度设置</string>
 </resources>

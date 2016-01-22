@@ -5,13 +5,14 @@
     android:key="screen">
 
     <PreferenceCategory
-        android:title="@string/notice"
-        android:key="category_notice"
-        android:order="2"
+        android:title="@string/baidu_settings"
+        android:key="category_baidu"
+        android:order="3"
         android:layout="@layout/preference_category_material">
         <Preference
             android:key="preference_notice"
-            android:summary=""
+            android:title="@string/notice"
+            android:summary="@string/notice_baidu"
             android:layout="@layout/preference_material"/>
     </PreferenceCategory>
 
