@@ -33,9 +33,11 @@ import java.util.Set;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
+import rikka.searchbyimage.utils.HttpUtils;
 import rikka.searchbyimage.utils.HttpRequestUtils;
 import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.utils.Utils;
 
 public class UploadActivity extends AppCompatActivity {
     public final static int SITE_GOOGLE = 0;
@@ -143,6 +145,29 @@ public class UploadActivity extends AppCompatActivity {
                     httpRequest.addFormData("database", sharedPref.getString("saucenao_database", "999"));
                     break;
             }
+
+
+            try {
+                HttpUtils.postForm(uploadUri,
+                        new HttpUtils.Header(),
+                        new HttpUtils.Body()
+                                .add(name, getImageFileName(imageUrl[0]), Utils.streamToCacheFile(mActivity, inputStream, "image.png")),
+                        new HttpUtils.Callback() {
+                            @Override
+                            public void onSuccess(String url, int code, InputStream stream) {
+                                Utils.streamToCacheFile(mActivity, stream, "html", "result.html");
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+
+                            }
+                        }
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             try {
                 httpRequest.addFormData(name, getImageFileName(imageUrl[0]), inputStream);

@@ -595,12 +595,12 @@ public class WebViewActivity extends AppCompatActivity {
                     int old = mBehavior.getTopAndBottomOffset();
                     if (old != 0) {
                         //setToolBarVisibility(-mNewOffset < mAppBarLayout.getHeight() / 2);
-                        int target = -mNewOffset < mAppBarLayout.getHeight() / 2 ? 0 : -mAppBarLayout.getHeight();
-
+                        //int target = -mNewOffset < mAppBarLayout.getHeight() / 2 ? 0 : -mAppBarLayout.getHeight();
+                        int target = (mOldOffset - mNewOffset < 0) ? 0 : -mAppBarLayout.getHeight();
 
                         mAnimator = ValueAnimator.ofInt(old, target);
                         mAnimator.setInterpolator(new LinearOutSlowInInterpolator());
-                        mAnimator.setDuration(300 * Math.round((float) (mAppBarLayout.getHeight() - Math.abs(target - old)) / mAppBarLayout.getHeight()));
+                        mAnimator.setDuration(Math.round((float) Math.abs(target - old) / mAppBarLayout.getHeight() * 300));
                         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
