@@ -11,6 +11,7 @@
         <item>iqdb</item>
 		<item>TinEye</item>
         <item>SauceNAO</item>
+        <item>ascii2d</item>
     </string-array>
 
     <string name="usage">使い方</string>
@@ -56,6 +57,7 @@
     <string name="settings">設定</string>
     <string name="setting_each_time">アップロード前に設定を開く</string>
     <string name="resize_image">アップロード画像を圧縮</string>
+    <string name="try_resize_image_if_error">画像がアップロードに失敗した場合、このオプションを試してみてください。</string>
     <string name="start_upload">アップロード</string>
 
     <string name="permission_require">アクセスが必要</string>
@@ -82,6 +84,9 @@
     <string name="timeout_exception">接続タイムアウト</string>
     <string name="unknown_host_exception">ドメイン解決エラー</string>
 
+    <string name="notice">注意</string>
+    <string name="notice_baidu">WebP画像と大きな画像がサポートされていません</string>
+
     <string name="show_result_in">検索結果を表示</string>
     <string name="build_in_browser">アプリ内ブラウザ</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
@@ -107,5 +112,6 @@
     <string name="app_crash_send_email">送信</string>
     <string name="app_crash_send_cancel">キャンセル</string>
     <string name="app_crash_no_email_client">メールアプリ見つかりません。</string>
+    <string name="baidu_settings">Baidu設定</string>
 
 </resources>

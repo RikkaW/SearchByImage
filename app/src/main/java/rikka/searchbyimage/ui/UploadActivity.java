@@ -33,9 +33,11 @@ import java.util.Set;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
+import rikka.searchbyimage.utils.HttpUtils;
 import rikka.searchbyimage.utils.HttpRequestUtils;
 import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.utils.Utils;
 
 public class UploadActivity extends AppCompatActivity {
     public final static int SITE_GOOGLE = 0;
@@ -43,6 +45,7 @@ public class UploadActivity extends AppCompatActivity {
     public final static int SITE_IQDB = 2;
     public final static int SITE_TINEYE = 3;
     public final static int SITE_SAUCENAO = 4;
+    public final static int SITE_ASCII2D = 5;
 
     private class Error {
         public String title;
@@ -116,11 +119,14 @@ public class UploadActivity extends AppCompatActivity {
                     uploadUri = "http://saucenao.com/search.php";
                     name = "file";
                     break;
+                case SITE_ASCII2D:
+                    uploadUri = "http://www.ascii2d.net/search/file";
+                    name = "file";
+                    break;
             }
 
             HttpRequestUtils httpRequest = new HttpRequestUtils(uploadUri, "POST");
             String responseUri;
-
             switch (siteId) {
                 case SITE_IQDB:
                     Set<String> iqdb_service = sharedPref.getStringSet("iqdb_service", new HashSet<String>());
@@ -139,6 +145,29 @@ public class UploadActivity extends AppCompatActivity {
                     httpRequest.addFormData("database", sharedPref.getString("saucenao_database", "999"));
                     break;
             }
+
+
+            try {
+                HttpUtils.postForm(uploadUri,
+                        new HttpUtils.Header(),
+                        new HttpUtils.Body()
+                                .add(name, getImageFileName(imageUrl[0]), Utils.streamToCacheFile(mActivity, inputStream, "image.png")),
+                        new HttpUtils.Callback() {
+                            @Override
+                            public void onSuccess(String url, int code, InputStream stream) {
+                                Utils.streamToCacheFile(mActivity, stream, "html", "result.html");
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+
+                            }
+                        }
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             try {
                 httpRequest.addFormData(name, getImageFileName(imageUrl[0]), inputStream);
@@ -220,20 +249,25 @@ public class UploadActivity extends AppCompatActivity {
 
                 switch (result.siteId) {
                     case SITE_BAIDU:
-                        int errno = 0;
+                        int err_no = 0;
                         String contsign = "";
                         String obj_url = "";
                         String simid = "";
+                        String error_msg = "";
 
                         JsonReader reader = null;
                         try {
                             reader = new JsonReader(new InputStreamReader(new FileInputStream(new File(result.html))));
                             reader.beginObject();
+
                             while (reader.hasNext()) {
                                 String keyName = reader.nextName();
                                 switch (keyName) {
                                     case "errno":
-                                        errno = reader.nextInt();
+                                        err_no = reader.nextInt();
+                                        break;
+                                    case "msg":
+                                        error_msg = reader.nextString();
                                         break;
                                     case "json_data":
                                         reader.beginObject();
@@ -253,7 +287,7 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             }
                             reader.endObject();
-                        } catch (IOException e) {
+                        } catch (IllegalStateException | IOException e) {
                             e.printStackTrace();
                         } finally {
                             try {
@@ -263,6 +297,29 @@ public class UploadActivity extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                        }
+
+                        if (err_no != 0) {
+                            new AlertDialog.Builder(mActivity)
+                                    .setTitle("baidu.com")
+                                    .setMessage(error_msg)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    })
+                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            finish();
+                                        }
+                                    })
+                                    .show();
+
+                            mProgressDialog.dismiss();
+
+                            return;
                         }
 
                         StringBuilder sb = new StringBuilder();
@@ -276,6 +333,7 @@ public class UploadActivity extends AppCompatActivity {
                         result.url = sb.toString();
                     case SITE_GOOGLE:
                     case SITE_TINEYE:
+                    case SITE_ASCII2D:
                         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
                         switch (sharedPref.getString("show_result_in", URLUtils.SHOW_IN_WEBVIEW)) {
                             case URLUtils.SHOW_IN_WEBVIEW:

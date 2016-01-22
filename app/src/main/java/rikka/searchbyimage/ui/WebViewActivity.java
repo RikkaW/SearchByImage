@@ -1,6 +1,7 @@
 package rikka.searchbyimage.ui;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
@@ -20,6 +21,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -66,7 +69,8 @@ public class WebViewActivity extends AppCompatActivity {
             "", // baidu
             "", // iqdb
             "", // tineye
-            "http://saucenao.com/" //saucenao
+            "http://saucenao.com/", //saucenao
+            ""
     };
 
     private WebView mWebView;
@@ -78,6 +82,8 @@ public class WebViewActivity extends AppCompatActivity {
     private CoordinatorLayout mCoordinatorLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private InfoBar mInfoBar;
+
+    private AppBarLayout.Behavior mBehavior;
 
     private String htmlFilePath;
     private String mImageUrl;
@@ -107,8 +113,8 @@ public class WebViewActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -511,31 +517,59 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private class MyOnTouchListener implements View.OnTouchListener {
-        int SHOULD_EXPAND_TOOLBAR = Utils.dpToPx(32);
+        int DIRECTION_CHANGE = Utils.dpToPx(10);
 
         float mLocation;
         float mStart;
         int mState = 0;
+        int mOldOffset = 0;
+        int mNewOffset = 0;
+
+        float mOldDistance;
+        boolean mIsDown = false;
+
+        ValueAnimator mAnimator;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             int action = event.getAction();
             float y = event.getRawY();
 
+            if (mBehavior == null) {
+                mBehavior = (AppBarLayout.Behavior) ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).getBehavior();
+            }
 
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
+                    mOldDistance = 0;
                     mStart = y;
+                    mOldOffset = mBehavior.getTopAndBottomOffset();
+
+                    if (mAnimator != null && mAnimator.isRunning()) {
+                        mAnimator.cancel();
+                    }
+
                     break;
                 case MotionEvent.ACTION_MOVE:
                     mLocation = y;
 
                     float distance = (mStart - mLocation);
-                    if (distance > SHOULD_EXPAND_TOOLBAR) {
-                        setToolBarVisibility(false);
-                    } else if (distance < -SHOULD_EXPAND_TOOLBAR) {
-                        setToolBarVisibility(true);
+                    if (distance - mOldDistance > DIRECTION_CHANGE && !mIsDown) {
+                        mStart = y + DIRECTION_CHANGE;
+                        mIsDown = true;
                     }
+
+                    if (distance - mOldDistance < -DIRECTION_CHANGE && mIsDown) {
+                        mStart = y - DIRECTION_CHANGE;
+                        mIsDown = false;
+                    }
+
+                    mNewOffset = mOldOffset - (int) distance;
+                    if (mNewOffset <= 0 && mNewOffset >= -mAppBarLayout.getHeight()) {
+                        mBehavior.setTopAndBottomOffset(mNewOffset);
+                    }
+
+                    mSwipeRefreshLayout.setEnabled(mNewOffset >= 0);
 
                     if (mInfoBar != null) {
                         if (distance > 0 && mInfoBar.getView().getTranslationY() < mInfoBar.getView().getHeight()) {
@@ -553,6 +587,29 @@ public class WebViewActivity extends AppCompatActivity {
                     if (mInfoBar != null) {
                         mInfoBar.animateView(mState);
                     }
+
+                    if (mAnimator != null && mAnimator.isRunning()) {
+                        mAnimator.cancel();
+                    }
+
+                    int old = mBehavior.getTopAndBottomOffset();
+                    if (old != 0) {
+                        //setToolBarVisibility(-mNewOffset < mAppBarLayout.getHeight() / 2);
+                        //int target = -mNewOffset < mAppBarLayout.getHeight() / 2 ? 0 : -mAppBarLayout.getHeight();
+                        int target = (mOldOffset - mNewOffset < 0) ? 0 : -mAppBarLayout.getHeight();
+
+                        mAnimator = ValueAnimator.ofInt(old, target);
+                        mAnimator.setInterpolator(new LinearOutSlowInInterpolator());
+                        mAnimator.setDuration(Math.round((float) Math.abs(target - old) / mAppBarLayout.getHeight() * 300));
+                        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                mBehavior.setTopAndBottomOffset((int) animation.getAnimatedValue());
+                            }
+                        });
+                        mAnimator.start();
+                    }
+
                     break;
             }
 

@@ -5,9 +5,21 @@
     android:key="screen">
 
     <PreferenceCategory
+        android:title="@string/baidu_settings"
+        android:key="category_baidu"
+        android:order="3"
+        android:layout="@layout/preference_category_material">
+        <Preference
+            android:key="preference_notice"
+            android:title="@string/notice"
+            android:summary="@string/notice_baidu"
+            android:layout="@layout/preference_material"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
-        android:order="2"
+        android:order="3"
         android:layout="@layout/preference_category_material">
 
         <SwitchPreference
@@ -36,7 +48,7 @@
     <PreferenceCategory
         android:title="@string/iqdb_settings"
         android:key="category_iqdb"
-        android:order="2"
+        android:order="3"
         android:layout="@layout/preference_category_material">
 
         <MultiSelectListPreference
@@ -58,7 +70,7 @@
     <PreferenceCategory
         android:title="@string/saucenao_settings"
         android:key="category_saucenao"
-        android:order="2"
+        android:order="3"
         android:layout="@layout/preference_category_material">
 
         <rikka.searchbyimage.widget.DropDownPreference

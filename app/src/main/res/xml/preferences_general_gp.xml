@@ -17,9 +17,10 @@
             android:layout="@layout/preference_material"/>
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="resize_image"
             android:title="@string/resize_image"
+            android:summary="@string/try_resize_image_if_error"
             android:layout="@layout/preference_material"/>
 
         <rikka.searchbyimage.widget.DropDownPreference
