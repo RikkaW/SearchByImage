@@ -1,7 +1,5 @@
 package rikka.searchbyimage.utils;
 
-import android.view.View;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +15,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
 /**
  * Created by Rikka on 2016/1/22.
@@ -26,13 +23,14 @@ public class HttpUtils {
     public interface Callback {
         void onSuccess(String url, int code, InputStream stream);
         void onFail(int code);
+        void onRetry(int retry);
     }
 
     private static OkHttpClient init() {
         return new OkHttpClient.Builder()
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(600, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
                 .build();
     }
 
@@ -60,7 +58,20 @@ public class HttpUtils {
 
         builder.post(bodyBuilder.build());
 
-        Response response = okHttpClient.newCall(builder.build()).execute();
+        int retry = 0;
+        Response response = null;
+        while (response == null) {
+            try {
+                response = okHttpClient.newCall(builder.build()).execute();
+            } catch (IOException e) {
+                retry ++;
+                callback.onRetry(retry);
+            } catch (Throwable e) {
+                callback.onFail(-1);
+                return;
+            }
+        }
+
         if (response.isSuccessful()) {
             callback.onSuccess(
                     response.request().url().toString(),

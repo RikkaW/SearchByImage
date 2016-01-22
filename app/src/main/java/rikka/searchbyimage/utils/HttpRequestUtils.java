@@ -172,7 +172,7 @@ public class HttpRequestUtils {
 
     public Request initRequest(RequestBody requestBody) throws IOException {
         okHttpClient = new OkHttpClient.Builder()
-                .writeTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(600, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS).build();
 
