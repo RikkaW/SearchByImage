@@ -249,12 +249,12 @@ public class SettingsFragment extends PreferenceFragment implements
 
                     click = -10;
 
-                    View view = mActivity.findViewById(R.id.settings_container);
+                    /*View view = mActivity.findViewById(R.id.settings_container);
                     view.animate()
                             .rotation(view.getRotation() + 180 + 360)
                             .setDuration(3000)
                             .setInterpolator(new FastOutSlowInInterpolator())
-                            .start();
+                            .start();*/
                 }
 
                 break;

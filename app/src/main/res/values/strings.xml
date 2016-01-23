@@ -62,7 +62,7 @@
 
     <string name="permission_require">Permission require</string>
     <string name="permission_require_detail">It seems the application need READ_EXTERNAL_STORAGE permission to upload file.</string>
-    <string name="ok">get permission</string>
+    <string name="get_permission">get permission</string>
 
     <string name="donate">Donate</string>
     <string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
@@ -85,7 +85,7 @@
     <string name="socket_exception">Network error</string>
 
     <string name="notice">Note</string>
-    <string name="notice_baidu">WEBP image or large size image is not supported.</string>
+    <string name="notice_baidu">WEBP image or large image is not supported by Baidu</string>
 
     <string name="show_result_in">Show result in</string>
     <string name="build_in_browser">Build-in browser</string>

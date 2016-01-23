@@ -60,7 +60,7 @@
 
     <string name="permission_require">需要权限</string>
     <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能上載該圖片。</string>
-    <string name="ok">獲取權限</string>
+    <string name="get_permission">獲取權限</string>
 
     <string name="donate">捐赠</string>
     <string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
@@ -82,7 +82,7 @@
     <string name="unknown_host_exception">域名解析错误</string>
 
     <string name="notice">注意</string>
-    <string name="notice_baidu">不支持WebP格式和较大图片</string>
+    <string name="notice_baidu">Baidu不支持WebP格式和较大图片</string>
 
     <string name="show_result_in">结果打开方式</string>
     <string name="build_in_browser">內建瀏覽器</string>

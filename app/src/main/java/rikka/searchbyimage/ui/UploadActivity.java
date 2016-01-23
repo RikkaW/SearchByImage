@@ -19,8 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +34,6 @@ import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.utils.HttpUtils;
-import rikka.searchbyimage.utils.HttpRequestUtils;
 import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.URLUtils;
 import rikka.searchbyimage.utils.Utils;
@@ -169,9 +166,6 @@ public class UploadActivity extends AppCompatActivity {
                                         break;
                                     case SITE_BAIDU:
                                         url = getUrlFromBaiduJSON(stream);
-                                        if (!url.startsWith("http")) {
-                                            mHttpUpload.error = new Error("Message from image.baidu.com:", url);
-                                        }
                                         break;
                                     case SITE_IQDB:
                                     case SITE_SAUCENAO:
@@ -194,16 +188,26 @@ public class UploadActivity extends AppCompatActivity {
                             }
                         }
                 );
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                mHttpUpload.error = getError(R.string.unknown_host_exception, e);
+            } catch (SocketTimeoutException e) {
+                e.printStackTrace();
+                mHttpUpload.error = getError(R.string.timeout_exception, e);
             } catch (IOException e) {
-                if (BuildConfig.DEBUG) {
-                    mHttpUpload.error = new Error(getString(R.string.socket_exception), getExceptionText(e));
-                } else {
-                    mHttpUpload.error = new Error(getString(R.string.socket_exception), "");
-                }
-
+                e.printStackTrace();
+                mHttpUpload.error = getError(R.string.socket_exception, e);
             }
 
             return mHttpUpload;
+        }
+
+        private Error getError(int resId, Exception e) {
+            if (BuildConfig.DEBUG) {
+                return new Error(getString(resId), getExceptionText(e));
+            } else {
+                return new Error(null, getString(resId));
+            }
         }
 
         private String getModifiedGoogleUrl(String url) {
@@ -270,12 +274,8 @@ public class UploadActivity extends AppCompatActivity {
                 reader.endObject();
             } catch (IllegalStateException | IOException e) {
                 e.printStackTrace();
-                if (BuildConfig.DEBUG) {
-                    return error_msg + "\n\n" + getExceptionText(e);
-                } else {
-                    return error_msg;
-                }
-
+                mHttpUpload.error = new Error("Message from image.baidu.com:", error_msg + "\n\n" + getString(R.string.notice_baidu) + (BuildConfig.DEBUG ? "\n\n" + getExceptionText(e) : ""));
+                return "";
             } finally {
                 try {
                     if (reader != null) {
@@ -287,7 +287,8 @@ public class UploadActivity extends AppCompatActivity {
             }
 
             if (err_no != 0) {
-                return error_msg;
+                mHttpUpload.error = new Error("Message from image.baidu.com:", error_msg + "\n\n" + getString(R.string.notice_baidu));
+                return "";
             }
 
             return "http://image.baidu.com/n/mo_search?guess=1&rn=30&appid=0&tag=1&isMobile=0" + "&queryImageUrl=" + obj_url + "&querySign=" + contsign + "&simid=" + simid;
@@ -316,6 +317,12 @@ public class UploadActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.error.message);
                 builder.setTitle(result.error.title);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -418,7 +425,7 @@ public class UploadActivity extends AppCompatActivity {
                     new AlertDialog.Builder(this)
                             .setTitle(R.string.permission_require)
                             .setMessage(R.string.permission_require_detail)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.get_permission, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     getPermission(Manifest.permission.READ_EXTERNAL_STORAGE,

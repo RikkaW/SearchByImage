@@ -62,7 +62,7 @@
 
     <string name="permission_require">アクセスが必要</string>
     <string name="permission_require_detail">アップロードがSDカードのコンテンツの読み取りことが必要です。</string>
-    <string name="ok">OK</string>
+    <string name="get_permission">OK</string>
 
     <string name="donate">寄付</string>
 	<string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>

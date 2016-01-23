@@ -3,6 +3,9 @@ package rikka.searchbyimage.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.SocketException;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +32,19 @@ public class HttpUtils {
     private static OkHttpClient init() {
         return new OkHttpClient.Builder()
                 .writeTimeout(600, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(4, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
+    }
+
+    private static String guessMimeType(String path)
+    {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentTypeFor = fileNameMap.getContentTypeFor(path);
+        if (contentTypeFor == null) {
+            contentTypeFor = "application/octet-stream";
+        }
+        return contentTypeFor;
     }
 
     public static void postForm(String url, Header header, Body body, Callback callback) throws IOException {
@@ -52,25 +65,27 @@ public class HttpUtils {
                 bodyBuilder.addFormDataPart(data.key, data.value);
             } else {
                 bodyBuilder.addFormDataPart(data.key, data.filename,
-                        RequestBody.create(MediaType.parse("image/png"), data.file));
+                        RequestBody.create(MediaType.parse(guessMimeType(data.filename)), data.file));
             }
         }
 
         builder.post(bodyBuilder.build());
 
-        int retry = 0;
+        //int retry = 0;
         Response response = null;
-        while (response == null) {
+        response = okHttpClient.newCall(builder.build()).execute();
+        /*while (response == null) {
             try {
                 response = okHttpClient.newCall(builder.build()).execute();
             } catch (IOException e) {
                 retry ++;
                 callback.onRetry(retry);
-            } catch (Throwable e) {
+                throw new IOException();
+            } catch (Exception e) {
                 callback.onFail(-1);
                 return;
             }
-        }
+        }*/
 
         if (response.isSuccessful()) {
             callback.onSuccess(
