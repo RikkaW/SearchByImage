@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.utils.URLUtils;
 
 public class ChromeCustomTabsActivity extends AppCompatActivity {
@@ -14,7 +15,7 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
             "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_URL";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_SITE_ID";
+            "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_EDIT_LOCATION";
 
     boolean mIsURLOpened = false;
 
@@ -27,7 +28,15 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int siteId = intent.getIntExtra(EXTRA_SITE_ID, 2);
-            String siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+
+            String siteName;
+            if (siteId <= 5) {
+                siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+            } else {
+                CustomEngine item = CustomEngine.getItemById(siteId);
+                siteName = item.name;
+            }
+
             String label = String.format(getString(R.string.search_result), siteName);
 
             setTaskDescription(new ActivityManager.TaskDescription(

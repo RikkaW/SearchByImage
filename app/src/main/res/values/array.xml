@@ -109,4 +109,15 @@
         <item>2</item>
         <item>1</item>
     </string-array>
+
+    <string-array name="custom_open_with" translatable="false">
+        <item>Open URL</item>
+        <item>Open saved HTML file in WebView</item>
+    </string-array>
+
+    <string-array name="custom_open_with_in_app" translatable="false">
+        <item>Open URL</item>
+        <item>Open saved HTML file in WebView</item>
+        <item>Build-in viewer for iqdb.org</item>
+    </string-array>
 </resources>

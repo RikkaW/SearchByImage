@@ -1,13 +1,12 @@
 package rikka.searchbyimage.ui.fragment;
 
-import android.animation.TimeInterpolator;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
@@ -18,14 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.ui.EditSitesActivity;
 import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.widget.BaseRecyclerViewItemDecoration;
 import rikka.searchbyimage.widget.DropDownPreference;
-import rikka.searchbyimage.widget.SettingsFragmentDividerItemDecoration;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -43,9 +46,12 @@ public class SettingsFragment extends PreferenceFragment implements
     PreferenceScreen mScreen;
     EditTextPreference mCustomGoogleUri;
     PreferenceCategory mCategorySauceNAO;
+    DropDownPreference mSearchEngine;
 
     PreferenceCategory mCategoryNotice;
     Preference mNotice;
+
+    List<CustomEngine> mData;
 
     private int click = 0;
     private Runnable clearClickCount = new Runnable() {
@@ -62,13 +68,22 @@ public class SettingsFragment extends PreferenceFragment implements
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         mList = getListView();
-        mList.addItemDecoration(new SettingsFragmentDividerItemDecoration(mActivity.getApplicationContext()));
+        mList.addItemDecoration(new BaseRecyclerViewItemDecoration(mActivity) {
+            @Override
+            public boolean canDraw(RecyclerView parent, View child, int childCount, int position) {
+                return ((position < childCount - 1)
+                        && parent.getChildAt(position + 1).findViewById(android.R.id.summary) != null
+                        && child.findViewById(android.R.id.summary) != null);
+            }
+        });
 
         return view;
     }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
+        mActivity = getActivity();
+
         boolean popup = getArguments().getBoolean("popup");
 
         if (popup) {
@@ -89,6 +104,9 @@ public class SettingsFragment extends PreferenceFragment implements
         mCategorySauceNAO = (PreferenceCategory) findPreference("category_saucenao");
         mCategoryBaidu = (PreferenceCategory) findPreference("category_baidu");
 
+        mData = CustomEngine.getList(mActivity);
+        mSearchEngine = (DropDownPreference) findPreference("search_engine_preference");
+
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
@@ -101,9 +119,6 @@ public class SettingsFragment extends PreferenceFragment implements
             mSafeSearch.setEnabled(false);
             mSafeSearch.setChecked(true);
         }
-
-
-        mActivity = getActivity();
 
         if (!popup)
         {
@@ -138,6 +153,38 @@ public class SettingsFragment extends PreferenceFragment implements
         super.onResume();
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+
+        addCustomEngines();
+
+        mSearchEngine.setCallback(new DropDownPreference.Callback() {
+            @Override
+            public boolean onItemSelected(int pos, Object value) {
+                SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+
+                sharedPreferences.edit()
+                        .putString("search_engine_id", (String) value)
+                        .apply();
+
+                return true;
+            }
+        });
+    }
+
+    private void addCustomEngines() {
+        int count = mSearchEngine.getItemCount();
+        for (int i = 6; i < count; i++) {
+            mSearchEngine.removeItem(6);
+        }
+
+        for (CustomEngine item : mData) {
+            if (item.id > 5) {
+                mSearchEngine.addItem(item.name, Integer.toString(item.id));
+            }
+        }
+
+        SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+
+        mSearchEngine.setSelectedValue(sharedPreferences.getString("search_engine_id", "0"));
     }
 
     @Override
@@ -145,6 +192,8 @@ public class SettingsFragment extends PreferenceFragment implements
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+
+        mSearchEngine.setCallback(null);
     }
 
     @Override
@@ -202,11 +251,11 @@ public class SettingsFragment extends PreferenceFragment implements
                 break;
             case UploadActivity.SITE_ASCII2D:
             case UploadActivity.SITE_TINEYE:
+            default:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
                 mScreen.removePreference(mCategoryBaidu);
-
                 break;
         }
 
@@ -235,6 +284,8 @@ public class SettingsFragment extends PreferenceFragment implements
                 getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
 
                 click++;
+
+                startActivity(new Intent(mActivity, EditSitesActivity.class));
 
                 if (click == 5)
                     Toast.makeText(mActivity, "OAO", Toast.LENGTH_SHORT).show();

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:paddingLeft="16dp"
+    android:orientation="horizontal"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:id="@+id/view"
+    android:background="@android:color/white"
+    android:elevation="1dp">
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:id="@+id/item_icon"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_open_in_new_24dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/item_icon"
+        android:layout_toEndOf="@+id/item_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp">
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:singleLine="true"
+            android:text="New Text"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp"
+            android:textAppearance="@style/Preference_TextAppearanceMaterialBody2" />
+
+        <TextView
+            android:id="@+id/item_url"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:singleLine="true"
+            android:text="New Text"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_gravity="top"
+            android:layout_marginBottom="8dp" />
+
+        <View
+            android:id="@+id/fake_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividerSearchEngineList" />
+    </LinearLayout>
+
+</RelativeLayout>

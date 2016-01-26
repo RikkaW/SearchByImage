@@ -16,26 +16,25 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
+import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.utils.HttpUtils;
 import rikka.searchbyimage.utils.ImageUtils;
-import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.utils.ResponseUtils;
 import rikka.searchbyimage.utils.Utils;
 
 public class UploadActivity extends AppCompatActivity {
@@ -46,51 +45,24 @@ public class UploadActivity extends AppCompatActivity {
     public final static int SITE_SAUCENAO = 4;
     public final static int SITE_ASCII2D = 5;
 
-    private class Error {
-        public String title;
-        public String message;
-
-        Error(String title, String message) {
-            this.title = title;
-            this.message = message;
-        }
-    }
-
-    private class HttpUpload {
-        public String url;
-        public int siteId;
-        public Error error;
-        public String html;
-
-        HttpUpload() {
-        }
-
-        HttpUpload(Error error) {
-            this.error = error;
-        }
-
-        HttpUpload(String url, int siteId, String html) {
-            this.url = url;
-            this.siteId = siteId;
-            this.html = html;
-        }
-    }
-
-    private class UploadTask extends AsyncTask<Uri, Integer, HttpUpload> {
+    private class UploadTask extends AsyncTask<Uri, Integer, ResponseUtils.HttpUpload> {
 
         private Activity mActivity;
         private SharedPreferences mSharedPref;
 
-        private HttpUpload mHttpUpload;
+        private ResponseUtils.HttpUpload mHttpUpload;
+
+        private List<CustomEngine> mData;
 
         public UploadTask(Activity activity) {
             mActivity = activity;
         }
 
-        protected HttpUpload doInBackground(Uri... imageUrl) {
+        protected ResponseUtils.HttpUpload doInBackground(Uri... imageUrl) {
             mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+            mData = CustomEngine.getList(mActivity);
 
-            mHttpUpload = new HttpUpload();
+            mHttpUpload = new ResponseUtils.HttpUpload();
             mHttpUpload.siteId = Integer.parseInt(mSharedPref.getString("search_engine_preference", "0"));
 
             SearchByImageApplication application = (SearchByImageApplication) getApplication();
@@ -100,24 +72,17 @@ public class UploadActivity extends AppCompatActivity {
                 inputStream = ImageUtils.ResizeImage(inputStream);
             }
 
-            String uploadUri = null;
-            String key = null;
-
+            String uploadUri;
+            String key;
 
             HttpUtils.Body body = new HttpUtils.Body();
 
+            CustomEngine item = CustomEngine.getItemById(mHttpUpload.siteId);
+            uploadUri = item.upload_url;
+            key = item.post_file_key;
+
             switch (mHttpUpload.siteId) {
-                case SITE_GOOGLE:
-                    uploadUri = "https://www.google.com/searchbyimage/upload";
-                    key = "encoded_image";
-                    break;
-                case SITE_BAIDU:
-                    uploadUri = "http://image.baidu.com/pictureup/uploadwise";
-                    key = "upload";
-                    break;
                 case SITE_IQDB:
-                    uploadUri = "https://iqdb.org/";
-                    key = "file";
                     Set<String> iqdb_service = mSharedPref.getStringSet("iqdb_service", new HashSet<String>());
                     String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
 
@@ -129,21 +94,19 @@ public class UploadActivity extends AppCompatActivity {
                         body.add("forcegray", "on");
                     }
                     break;
-                case SITE_TINEYE:
-                    uploadUri = "https://www.tineye.com/search";
-                    key = "image";
-                    break;
                 case SITE_SAUCENAO:
-                    uploadUri = "http://saucenao.com/search.php";
-                    key = "file";
                     body.add("hide", mSharedPref.getString("saucenao_hide", "0"));
                     body.add("database", mSharedPref.getString("saucenao_database", "999"));
                     break;
-                case SITE_ASCII2D:
-                    uploadUri = "http://www.ascii2d.net/search/file";
-                    key = "file";
+                default:
+                    if (item.post_text_key.size() > 0) {
+                        for (int i = 0; i < item.post_text_key.size(); i++) {
+                            body.add(item.post_text_key.get(i), item.post_text_value.get(i));
+                        }
+                    }
                     break;
             }
+
             body.add(key, getImageFileName(imageUrl[0]), Utils.streamToCacheFile(mActivity, inputStream, "image.png"));
 
             try {
@@ -162,10 +125,14 @@ public class UploadActivity extends AppCompatActivity {
                             public void onSuccess(String url, int code, InputStream stream) {
                                 switch (mHttpUpload.siteId) {
                                     case SITE_GOOGLE:
-                                        url = getModifiedGoogleUrl(url);
+                                        url = ResponseUtils.getModifiedGoogleUrl(mActivity, url);
                                         break;
                                     case SITE_BAIDU:
-                                        url = getUrlFromBaiduJSON(stream);
+                                        try {
+                                            url = ResponseUtils.getUrlFromBaiduJSON(mActivity, stream);
+                                        } catch (Exception e) {
+                                            mHttpUpload.error = new ResponseUtils.ErrorMessage("Message from image.baidu.com:", e.getMessage());
+                                        }
                                         break;
                                     case SITE_IQDB:
                                     case SITE_SAUCENAO:
@@ -179,7 +146,7 @@ public class UploadActivity extends AppCompatActivity {
 
                             @Override
                             public void onFail(int code) {
-                                mHttpUpload.error = new Error(getString(R.string.socket_exception), Integer.toString(code));
+                                mHttpUpload.error = new ResponseUtils.ErrorMessage(getString(R.string.socket_exception), Integer.toString(code));
                             }
 
                             @Override
@@ -190,129 +157,26 @@ public class UploadActivity extends AppCompatActivity {
                 );
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-                mHttpUpload.error = getError(R.string.unknown_host_exception, e);
+                mHttpUpload.error = new ResponseUtils.ErrorMessage(e, mActivity.getString(R.string.unknown_host_exception));
             } catch (SocketTimeoutException e) {
                 e.printStackTrace();
-                mHttpUpload.error = getError(R.string.timeout_exception, e);
+                mHttpUpload.error = new ResponseUtils.ErrorMessage(e, mActivity.getString(R.string.timeout_exception));
             } catch (IOException e) {
                 e.printStackTrace();
-                mHttpUpload.error = getError(R.string.socket_exception, e);
+                mHttpUpload.error = new ResponseUtils.ErrorMessage(e, mActivity.getString(R.string.socket_exception));
             }
 
             return mHttpUpload;
         }
 
-        private Error getError(int resId, Exception e) {
-            if (BuildConfig.DEBUG) {
-                return new Error(getString(resId), getExceptionText(e));
-            } else {
-                return new Error(null, getString(resId));
-            }
-        }
 
-        private String getModifiedGoogleUrl(String url) {
-            boolean safeSearch = mSharedPref.getBoolean("safe_search_preference", true);
-            boolean noRedirect = mSharedPref.getString("google_region_preference", "0").equals("1");
-            boolean customRedirect = mSharedPref.getString("google_region_preference", "0").equals("2");
 
-            url += safeSearch ? "&safe=active" : "&safe=off";
-
-            if (noRedirect || customRedirect) {
-                url += "?gws_rd=cr";
-            }
-
-            int start = url.indexOf("www.google.");
-            int end = url.indexOf("/", start);
-
-            String googleUri = "www.google.com";
-
-            if (customRedirect) {
-                googleUri = mSharedPref.getString("google_region", googleUri);
-            }
-
-            return url.substring(0, start) + googleUri + url.substring(end);
-        }
-
-        private String getUrlFromBaiduJSON(InputStream stream) {
-            int err_no = 0;
-            String contsign = "";
-            String obj_url = "";
-            String simid = "";
-            String error_msg = "";
-
-            JsonReader reader = null;
-            try {
-                reader = new JsonReader(new InputStreamReader(stream));
-                reader.beginObject();
-
-                while (reader.hasNext()) {
-                    String keyName = reader.nextName();
-                    switch (keyName) {
-                        case "errno":
-                            err_no = reader.nextInt();
-                            break;
-                        case "msg":
-                            error_msg = reader.nextString();
-                            break;
-                        case "json_data":
-                            reader.beginObject();
-                            break;
-                        case "contsign":
-                            contsign = reader.nextString();
-                            break;
-                        case "obj_url":
-                            obj_url = reader.nextString();
-                            break;
-                        case "simid":
-                            simid = reader.nextString();
-                            break;
-                        default:
-                            reader.skipValue();
-                            break;
-                    }
-                }
-                reader.endObject();
-            } catch (IllegalStateException | IOException e) {
-                e.printStackTrace();
-                mHttpUpload.error = new Error("Message from image.baidu.com:", error_msg + "\n\n" + getString(R.string.notice_baidu) + (BuildConfig.DEBUG ? "\n\n" + getExceptionText(e) : ""));
-                return "";
-            } finally {
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (err_no != 0) {
-                mHttpUpload.error = new Error("Message from image.baidu.com:", error_msg + "\n\n" + getString(R.string.notice_baidu));
-                return "";
-            }
-
-            return "http://image.baidu.com/n/mo_search?guess=1&rn=30&appid=0&tag=1&isMobile=0" + "&queryImageUrl=" + obj_url + "&querySign=" + contsign + "&simid=" + simid;
-        }
-
-        @Override
         protected void onProgressUpdate(Integer... values) {
             Toast.makeText(mActivity, "Retry: " + Integer.toString(values[0]), Toast.LENGTH_SHORT).show();
             mProgressDialog.setMessage("Retrying: " + Integer.toString(values[0]));
         }
 
-        private String getExceptionText(Exception e) {
-            String result = "Error: " + e.toString() + "\nFile: ";
-
-            for (StackTraceElement stackTraceElement :
-                    e.getStackTrace()) {
-                //if (stackTraceElement.getFileName().startsWith("HttpUtil") || stackTraceElement.getFileName().startsWith("UploadActivity"))
-                    result += "\n" + stackTraceElement.getFileName() + " (" + stackTraceElement.getLineNumber() + ")";
-            }
-
-            return result;
-        }
-
-        protected void onPostExecute(HttpUpload result) {
+        protected void onPostExecute(ResponseUtils.HttpUpload result) {
             if (result.error != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 builder.setMessage(result.error.message);
@@ -336,57 +200,16 @@ public class UploadActivity extends AppCompatActivity {
                 return;
             }
 
-            Intent intent;
-
-            switch (result.siteId) {
-                case SITE_BAIDU:
-                case SITE_GOOGLE:
-                case SITE_TINEYE:
-                case SITE_ASCII2D:
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
-                    switch (sharedPref.getString("show_result_in", URLUtils.SHOW_IN_WEBVIEW)) {
-                        case URLUtils.SHOW_IN_WEBVIEW:
-                        case URLUtils.SHOW_IN_CHROME:
-                            intent = new Intent(mActivity, ChromeCustomTabsActivity.class);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                            } else {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            }
-                            intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
-                            intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
-
-                            startActivity(intent);
-                            break;
-                        case URLUtils.SHOW_IN_BROWSER:
-                            URLUtils.OpenBrowser(mActivity, Uri.parse(result.url));
-                            break;
-                    }
-
+            CustomEngine item = CustomEngine.getItemById(mHttpUpload.siteId);
+            switch (item.result_open_action) {
+                case CustomEngine.RESULT_OPEN_ACTION.BUILD_IN_IQDB:
+                    ResponseUtils.openIqdbResult(mActivity, result);
                     break;
-                case SITE_IQDB:
-                    intent = new Intent(getApplicationContext(), ResultActivity.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    } else {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
-                    intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
-
-                    startActivity(intent);
+                case CustomEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE:
+                    ResponseUtils.openHTMLinWebView(mActivity, result);
                     break;
-                case SITE_SAUCENAO:
-                    intent = new Intent(getApplicationContext(), WebViewActivity.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    } else {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    intent.putExtra(WebViewActivity.EXTRA_FILE, result.html);
-                    intent.putExtra(WebViewActivity.EXTRA_SITE_ID, result.siteId);
-
-                    startActivity(intent);
+                case CustomEngine.RESULT_OPEN_ACTION.DEFAULT:
+                    ResponseUtils.openURL(mActivity, result);
                     break;
             }
 

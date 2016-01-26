@@ -113,4 +113,14 @@
     <string name="app_crash_send_cancel">Cancel</string>
     <string name="app_crash_no_email_client">No mail app installed</string>
     <string name="baidu_settings">Baidu settings</string>
+
+    <string name="edit_sites" translatable="false">Edit engines</string>
+    <string name="edit_site" translatable="false">Edit data</string>
+    <string name="upload_url" translatable="false">Upload url</string>
+    <string name="engine_name" translatable="false">Name</string>
+    <string name="upload_form_key" translatable="false">Key</string>
+    <string name="upload_form_value" translatable="false">Value</string>
+    <string name="upload_form_your_image" translatable="false">(image)</string>
+    <string name="upload_form_build_in_selector" translatable="false">(selector)</string>
+    <string name="upload_form_add" translatable="false">New form data</string>
 </resources>

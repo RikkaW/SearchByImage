@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.Utils;
@@ -62,7 +63,7 @@ public class WebViewActivity extends AppCompatActivity {
             "rikka.searchbyimage.ui.WebViewActivity.EXTRA_FILE";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_SITE_ID";
+            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_EDIT_LOCATION";
 
     private static final String[] SITE_URL = {
             "", // google
@@ -168,8 +169,16 @@ public class WebViewActivity extends AppCompatActivity {
         mNormalMode = false;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+            String siteName;
+            if (siteId <= 5) {
+                siteName = getResources().getStringArray(R.array.search_engines)[siteId];
+            } else {
+                CustomEngine item = CustomEngine.getItemById(siteId);
+                siteName = item.name;
+            }
+
             String title = String.format(getString(R.string.search_result), siteName);
+
 
             setTaskDescription(new ActivityManager.TaskDescription(
                     title,
