@@ -30,10 +30,11 @@
 
         <ImageView
             android:id="@+id/item_icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_open_in_new_24dp" />
+            android:src="@drawable/ic_open_in_new_24dp"
+            android:padding="4dp" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -42,8 +43,7 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentStart="false"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_toEndOf="@+id/item_icon"
             android:layout_toRightOf="@+id/item_icon"
             android:orientation="vertical"
@@ -72,22 +72,21 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/item_icon2"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_site_enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_more_vert_selector" />
+            android:layout_marginRight="12dp" />
     </RelativeLayout>
 
     <View
         android:id="@+id/fake_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="48dp"
+        android:layout_marginLeft="64dp"
         android:background="@color/dividerSearchEngineList" />
 
 </LinearLayout>

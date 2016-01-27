@@ -1,9 +1,11 @@
 package rikka.searchbyimage.ui.apdater;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -91,13 +93,16 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             holder.vHead.setVisibility(View.GONE);
         }
 
-        holder.vHead.setText(viewType == VIEW_TYPE_HEADER_BUILT_IN ? "Built-in" : "Custom");
+        holder.vHead.setText(viewType == VIEW_TYPE_HEADER_BUILT_IN ?
+                holder.itemView.getContext().getString(R.string.built_in) : holder.itemView.getContext().getString(R.string.custom));
 
-        CustomEngine item = mData.get(position);
+        final CustomEngine item = mData.get(position);
 
         if (position == 5 || (position == mData.size() - 1)) {
             holder.vDivider.setVisibility(View.GONE);
         }
+
+        holder.vSwitch.setChecked(item.enabled == 1);
 
         int start = item.upload_url.indexOf("//") + 2;
         start = item.upload_url.indexOf("/", start);
@@ -113,11 +118,9 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
 
         if (mOnItemClickListener != null)
         {
-            holder.View.setOnClickListener(new View.OnClickListener()
-            {
+            holder.View.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     int pos = toRealPosition(holder.getLayoutPosition());
                     mOnItemClickListener.onItemClick(holder.itemView,
                             holder.getLayoutPosition(),
@@ -126,11 +129,9 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
                 }
             });
 
-            holder.View.setOnLongClickListener(new View.OnLongClickListener()
-            {
+            holder.View.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View v)
-                {
+                public boolean onLongClick(View v) {
                     int pos = toRealPosition(holder.getLayoutPosition());
                     mOnItemClickListener.onItemLongClick(holder.itemView,
                             holder.getLayoutPosition(),
@@ -140,6 +141,13 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
                 }
             });
         }
+
+        holder.vSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item.enabled = isChecked ? 1 : 0;
+            }
+        });
     }
 
     @Override
@@ -154,6 +162,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         protected TextView vHead;
         protected View vDivider;
         protected View View;
+        protected SwitchCompat vSwitch;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -164,6 +173,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             vHead = (TextView) itemView.findViewById(R.id.item_header);
             vDivider = itemView.findViewById(R.id.fake_divider);
             View = itemView.findViewById(R.id.view);
+            vSwitch = (SwitchCompat) itemView.findViewById(R.id.switch_site_enabled);
         }
     }
 }

@@ -1,19 +1,26 @@
 package rikka.searchbyimage.ui;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
+import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,7 +30,11 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
 import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.SearchEngineAdapter;
+import rikka.searchbyimage.utils.ParcelableUtils;
+import rikka.searchbyimage.utils.Utils;
+import rikka.searchbyimage.widget.BaseRecyclerViewItemDecoration;
 
 public class EditSitesActivity extends AppCompatActivity {
     Activity mActivity;
@@ -62,6 +73,9 @@ public class EditSitesActivity extends AppCompatActivity {
                 startActivity(new Intent(mActivity, EditSiteInfoActivity.class));
             }
         });
+
+        /*
+        overscroll animation will disappear... OAQ
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) mFAB.getLayoutParams();
         p.setBehavior(new FloatingActionButton.Behavior() {
             @Override
@@ -86,7 +100,7 @@ public class EditSitesActivity extends AppCompatActivity {
                 }
             }
         });
-        mFAB.setLayoutParams(p);
+        mFAB.setLayoutParams(p);*/
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -95,6 +109,18 @@ public class EditSitesActivity extends AppCompatActivity {
         mAdapter = getAdapter(this);
         mAdapter.notifyItemInserted(1);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && mFAB.getVisibility() == View.VISIBLE) {
+                    mFAB.hide();
+                } else if (dy < 0 && mFAB.getVisibility() != View.VISIBLE) {
+                    mFAB.show();
+                }
+            }
+        });
 
         /*mRecyclerView.addItemDecoration(new BaseRecyclerViewItemDecoration(
                 new ColorDrawable(ContextCompat.getColor(this, R.color.dividerSearchEngineList))) {
@@ -177,5 +203,52 @@ public class EditSitesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (countEnabled() == 0) {
+            Snackbar.make(mCoordinatorLayout, R.string.choose_one, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        writeToDb();
+    }
+
+    private void writeToDb() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String selection = CustomEngineTable.COLUMN_ID + " LIKE ?";
+
+        int enabledCount = countEnabled();
+        for (int i = 0; i < mData.size(); i++) {
+            ContentValues values = new ContentValues();
+            if (enabledCount == 0 && i == 0) {
+                values.put(CustomEngineTable.COLUMN_ENABLED, 1);
+            } else {
+                values.put(CustomEngineTable.COLUMN_ENABLED, mData.get(i).enabled);
+            }
+
+            String[] selectionArgs = {Integer.toString(i)};
+            db.update(
+                    CustomEngineTable.TABLE_NAME,
+                    values,
+                    selection,
+                    selectionArgs);
+        }
+    }
+
+    private int countEnabled() {
+        int result = 0;
+        for (CustomEngine item:
+             mData) {
+            result += item.enabled;
+        }
+
+        return result;
     }
 }

@@ -123,4 +123,13 @@
     <string name="upload_form_your_image" translatable="false">(image)</string>
     <string name="upload_form_built_in_selector" translatable="false">(selector)</string>
     <string name="upload_form_add" translatable="false">New form data</string>
+    <string name="built_in" translatable="false">Built-in</string>
+    <string name="custom" translatable="false">Custom</string>
+    <string name="check_your_data" translatable="false">Check your data</string>
+    <string name="choose_one" translatable="false">Please enable at least one search engine</string>
+
+    <string name="advance" translatable="false">Advance</string>
+    <string name="custom_search_engine" translatable="false">Custom search engines</string>
+    <string name="help" translatable="false">Help</string>
+
 </resources>

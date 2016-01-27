@@ -1,16 +1,22 @@
 package rikka.searchbyimage.ui;
 
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Html;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +34,8 @@ import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
+import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.utils.Utils;
 
 public class EditSiteInfoActivity extends AppCompatActivity {
     public static final String EXTRA_EDIT_LOCATION =
@@ -35,6 +43,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
 
     DatabaseHelper mDbHelper;
 
+    Activity mActivity;
     CoordinatorLayout mCoordinatorLayout;
     Toolbar mToolbar;
     FloatingActionButton mFAB;
@@ -47,6 +56,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
     List<CustomEngine> mData;
     CustomEngine mItem;
     PostFormAdapter mAdapter;
+    MyLinearLayoutManager mLayoutManager;
 
     boolean mEnabled = true;
 
@@ -56,6 +66,8 @@ public class EditSiteInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_engine);
+
+        mActivity = this;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -81,7 +93,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
                 }
 
                 if (!check()) {
-                    Snackbar.make(mCoordinatorLayout, "Check your data", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mCoordinatorLayout, R.string.check_your_data, Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
@@ -96,35 +108,44 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this) {
+        mLayoutManager = new MyLinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(EditSitesActivity.getAdapter(this));
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setHasFixedSize(false);
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public boolean canScrollVertically() {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
-                                  int widthSpec, int heightSpec) {
-                final int width = View.MeasureSpec.getSize(widthSpec);
-                int height = 0;
-                int childHeight = 0;
-                for (int i = 0; i < getItemCount(); i++) {
-                    try {
-                        childHeight = measureScrapChildHeight(recycler, i,
-                                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED));
-                        height = height + childHeight;
-
-                    } catch (IndexOutOfBoundsException ignore) {
-                        height = height + childHeight;
-                    }
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder.getLayoutPosition() == mAdapter.getItemCount() - 1) {
+                    return 0;
                 }
-                setMeasuredDimension(width, height);
+                return super.getMovementFlags(recyclerView, viewHolder);
             }
-        });
-        mRecyclerView.setAdapter(EditSitesActivity.getAdapter(this));
-        mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setHasFixedSize(false);
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                mAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
+                mAdapter.setItemCount(mAdapter.getItemCount() - 1);
+                mLayoutManager.setFakeItemCount(1);
+                mCoordinatorLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLayoutManager.setFakeItemCount(0);
+                        mRecyclerView.requestLayout();
+                    }
+                }, 500);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_EDIT_LOCATION)) {
@@ -158,15 +179,37 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             }
         } else {
             mAdapter = new PostFormAdapter();
-            mItem = mAdapter.getData();
             mRecyclerView.setAdapter(mAdapter);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_info, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.help:
+                URLUtils.Open(
+                        "https://github.com/RikkaW/SearchByImage/wiki/%E5%B8%AE%E5%8A%A9%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E",
+                        this);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void modify() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        CustomEngineParcelable parcelable = getParcelable();
+        CustomEngineParcelable parcelable = new CustomEngineParcelable();
+        parcelable.data = getData();
 
         ContentValues values = new ContentValues();
         values.put(CustomEngineTable.COLUMN_DATA, ParcelableUtils.marshall(parcelable));
@@ -184,12 +227,15 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         mItem.upload_url = parcelable.data.upload_url;
         mItem.post_file_key = parcelable.data.post_file_key;
         mItem.result_open_action = parcelable.data.result_open_action;
+        mItem.post_text_key = parcelable.data.post_text_key;
+        mItem.post_text_value = parcelable.data.post_text_value;
+        mItem.post_text_type = parcelable.data.post_text_type;
 
-        EditSitesActivity.getAdapter(this).notifyItemChanged(mLocation + 2);
+        EditSitesActivity.getAdapter(this).notifyItemChanged(mLocation + 1);
     }
 
     private void add() {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        /*SQLiteDatabase db = mDbHelper.getWritableDatabase();
         CustomEngineParcelable parcelable = getParcelable();
         parcelable.data.id = CustomEngine.getAvailableId();
         mData.add(parcelable.data);
@@ -198,55 +244,48 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         values.put(CustomEngineTable.COLUMN_ID, parcelable.data.id);
         values.put(CustomEngineTable.COLUMN_DATA, ParcelableUtils.marshall(parcelable));
 
-        db.insert(CustomEngineTable.TABLE_NAME, null, values);
+        db.insert(CustomEngineTable.TABLE_NAME, null, values);*/
+
+        CustomEngineParcelable parcelable = new CustomEngineParcelable();
+        parcelable.data = getData();
+        parcelable.data.id = CustomEngine.getAvailableId();
+        parcelable.data.enabled = 1;
+
+        CustomEngine.addEngineToDb(this, parcelable, parcelable.data.id);
+        CustomEngine.addEngineToList(parcelable.data);
 
         EditSitesActivity.getAdapter(this).notifyItemInserted(mData.size() - 1);
     }
 
-    private CustomEngineParcelable getParcelable() {
-        CustomEngineParcelable parcelable = new CustomEngineParcelable();
-        parcelable.data.name = mEditTextName.getText().toString();
-        parcelable.data.upload_url = mEditTextUrl.getText().toString();
-        parcelable.data.post_file_key = mEditTextFileKey.getText().toString();
-        parcelable.data.result_open_action = mSpinner.getSelectedItemPosition();
-        parcelable.data.post_text_type = mItem.post_text_type;
-        parcelable.data.post_text_value = mItem.post_text_value;
-        parcelable.data.post_text_key = mItem.post_text_key;
-        return parcelable;
+    private CustomEngine getData() {
+        CustomEngine data = new CustomEngine();
+        data.name = mEditTextName.getText().toString();
+        data.upload_url = mEditTextUrl.getText().toString();
+        data.post_file_key = mEditTextFileKey.getText().toString();
+        data.result_open_action = mSpinner.getSelectedItemPosition();
+
+        data.post_text_key.clear();
+        data.post_text_value.clear();
+        data.post_text_type.clear();
+
+        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+            View view = mRecyclerView.getChildAt(i);
+            if (view == null)
+                continue;
+            EditText key = (EditText) view.findViewById(R.id.editText_key);
+            EditText value = (EditText) view.findViewById(R.id.editText_value);
+            if (key != null && value != null) {
+                data.post_text_key.add(key.getEditableText().toString());
+                data.post_text_value.add(value.getEditableText().toString());
+                data.post_text_type.add(0);
+            }
+        }
+        return data;
     }
 
     private boolean check() {
         return mEditTextName.getText().toString().length() != 0
                 && (URLUtil.isHttpUrl(mEditTextUrl.getText().toString()) || URLUtil.isHttpsUrl(mEditTextUrl.getText().toString()))
                 && mEditTextFileKey.getText().toString().length() != 0;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private int measureScrapChildHeight(RecyclerView.Recycler recycler, int position, int widthSpec,
-                                        int heightSpec) throws IndexOutOfBoundsException {
-        View view = recycler.getViewForPosition(position);
-        int height = 0;
-        if (view != null) {
-
-            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
-            int childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec,
-                    view.getPaddingLeft() + view.getPaddingRight(), p.width);
-            int childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec,
-                    view.getPaddingTop() + view.getPaddingBottom(), p.height);
-            view.measure(childWidthSpec, childHeightSpec);
-            height = view.getMeasuredHeight() + p.bottomMargin + p.topMargin;
-            recycler.recycleView(view);
-        }
-        return height;
     }
 }

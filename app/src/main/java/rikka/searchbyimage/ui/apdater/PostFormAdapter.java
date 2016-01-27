@@ -3,6 +3,7 @@ package rikka.searchbyimage.ui.apdater;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,7 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
     CustomEngine mData;
     boolean mEnabled;
     PostFormAdapter mAdapter;
-
-    public CustomEngine getData() {
-        return mData;
-    }
+    int mCount;
 
     @Override
     public int getItemViewType(int position) {
@@ -35,7 +33,6 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(viewType == 1 ? R.layout.list_item_post_form_add : R.layout.list_item_post_form, parent, false);
-
         return new ViewHolder(itemView);
     }
 
@@ -46,10 +43,8 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
                 holder.vView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mData.post_text_key.add("");
-                        mData.post_text_value.add("");
-                        mData.post_text_type.add(0);
-                        mAdapter.notifyItemInserted(mData.post_text_key.size() - 1);
+                        mAdapter.notifyItemInserted(mCount - 1);
+                        mCount++;
                     }
                 });
             } else {
@@ -57,48 +52,17 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
             }
 
         } else {
-            holder.vKey.setText(mData.post_text_key.get(position));
-            holder.vValue.setText(mData.post_text_value.get(position));
+            if (position < mData.post_text_key.size()) {
+                holder.vKey.setText(mData.post_text_key.get(position));
+                holder.vValue.setText(mData.post_text_value.get(position));
 
-            if (mData.post_text_type.get(position) == -1) {
-                holder.vValue.setText(R.string.upload_form_built_in_selector);
-                holder.vValue.setEnabled(false);
+                if (mData.post_text_type.get(position) == -1) {
+                    holder.vValue.setText(R.string.upload_form_built_in_selector);
+                    holder.vValue.setEnabled(false);
+                }
             }
 
-            if (mEnabled) {
-                holder.vKey.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        mData.post_text_key.set(position, s.toString());
-                    }
-                });
-                holder.vValue.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        mData.post_text_value.set(position, s.toString());
-                    }
-                });
-            } else {
+            if (!mEnabled) {
                 holder.vKey.setEnabled(false);
                 holder.vValue.setEnabled(false);
             }
@@ -109,17 +73,23 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
         mData = data;
         mEnabled = enabled;
         mAdapter = this;
+        mCount = mData.post_text_key.size() + 1;
     }
 
     public PostFormAdapter() {
         mData = new CustomEngine();
         mEnabled = true;
         mAdapter = this;
+        mCount = 1;
     }
 
     @Override
     public int getItemCount() {
-        return mData.post_text_key.size() + 1;
+        return mCount;
+    }
+
+    public void setItemCount(int count) {
+        mCount = count;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

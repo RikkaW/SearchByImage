@@ -42,13 +42,15 @@ public class SettingsFragment extends PreferenceFragment implements
     PreferenceCategory mCategoryGoogle;
     PreferenceCategory mCategoryIqdb;
     PreferenceCategory mCategoryBaidu;
+    PreferenceCategory mCategoryNotice;
+    PreferenceCategory mCategoryAdvance;
+
     SwitchPreference mSafeSearch;
     PreferenceScreen mScreen;
     EditTextPreference mCustomGoogleUri;
     PreferenceCategory mCategorySauceNAO;
     DropDownPreference mSearchEngine;
 
-    PreferenceCategory mCategoryNotice;
     Preference mNotice;
 
     List<CustomEngine> mData;
@@ -103,6 +105,7 @@ public class SettingsFragment extends PreferenceFragment implements
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
         mCategorySauceNAO = (PreferenceCategory) findPreference("category_saucenao");
         mCategoryBaidu = (PreferenceCategory) findPreference("category_baidu");
+        mCategoryAdvance = (PreferenceCategory) findPreference("category_advance");
 
         mData = CustomEngine.getList(mActivity);
         mSearchEngine = (DropDownPreference) findPreference("search_engine_preference");
@@ -127,6 +130,9 @@ public class SettingsFragment extends PreferenceFragment implements
 
             Preference githubPref = findPreference("open_source");
             githubPref.setOnPreferenceClickListener(this);
+
+            Preference advancePref = findPreference("advance");
+            advancePref.setOnPreferenceClickListener(this);
 
             Preference donatePref = findPreference("donate");
             if (BuildConfig.hideOtherEngine) {
@@ -171,19 +177,22 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     private void addCustomEngines() {
-        int count = mSearchEngine.getItemCount();
+        /*int count = mSearchEngine.getItemCount();
         for (int i = 6; i < count; i++) {
             mSearchEngine.removeItem(6);
-        }
+        }*/
+
+        mSearchEngine.clearItems();
 
         for (CustomEngine item : mData) {
-            if (item.id > 5) {
+            if (item.enabled == 1) {
                 mSearchEngine.addItem(item.name, Integer.toString(item.id));
             }
         }
 
         SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
 
+        mSearchEngine.setSelectedItem(0);
         mSearchEngine.setSelectedValue(sharedPreferences.getString("search_engine_id", "0"));
     }
 
@@ -221,6 +230,12 @@ public class SettingsFragment extends PreferenceFragment implements
 
     private void setSearchEngineHide() {
         SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+
+        if (sharedPreferences.getBoolean("developer", false)) {
+            mScreen.addPreference(mCategoryAdvance);
+        } else {
+            mScreen.removePreference(mCategoryAdvance);
+        }
 
         int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
 
@@ -279,13 +294,16 @@ public class SettingsFragment extends PreferenceFragment implements
         String key = preference.getKey();
 
         switch (key) {
+            case "advance":
+                startActivity(new Intent(mActivity, EditSitesActivity.class));
+                break;
             case "version":
                 getActivity().getWindow().getDecorView().removeCallbacks(clearClickCount);
                 getActivity().getWindow().getDecorView().postDelayed(clearClickCount, 3000);
 
                 click++;
 
-                startActivity(new Intent(mActivity, EditSitesActivity.class));
+                //startActivity(new Intent(mActivity, EditSitesActivity.class));
 
                 if (click == 5)
                     Toast.makeText(mActivity, "OAO", Toast.LENGTH_SHORT).show();
@@ -300,6 +318,10 @@ public class SettingsFragment extends PreferenceFragment implements
 
                     click = -10;
 
+                    SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+                    sharedPreferences.edit().putBoolean("developer", true).apply();
+
+                    mScreen.addPreference(mCategoryAdvance);
                     /*View view = mActivity.findViewById(R.id.settings_container);
                     view.animate()
                             .rotation(view.getRotation() + 180 + 360)
