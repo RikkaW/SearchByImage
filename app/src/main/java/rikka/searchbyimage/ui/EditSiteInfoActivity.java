@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
+import rikka.searchbyimage.utils.Utils;
 
 public class EditSiteInfoActivity extends AppCompatActivity {
     public static final String EXTRA_EDIT_LOCATION =
@@ -95,7 +97,21 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this)  {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+            @Override
+            public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
+                                  int widthSpec, int heightSpec) {
+                int width = View.MeasureSpec.getSize(widthSpec);
+                int height = getItemCount() * Utils.dpToPx(48);
+
+                setMeasuredDimension(width, height);
+            }
+        });
         mRecyclerView.setAdapter(EditSitesActivity.getAdapter(this));
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(false);
