@@ -20,7 +20,7 @@
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:id="@+id/imageView"
+        android:id="@+id/item_icon"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
@@ -63,9 +63,9 @@
         android:layout_height="wrap_content"
         android:text="Do you want to replace the existing file poi.png?"
         android:id="@+id/infobar_text"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_alignTop="@+id/item_icon"
+        android:layout_toRightOf="@+id/item_icon"
+        android:layout_toEndOf="@+id/item_icon"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat" />

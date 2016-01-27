@@ -47,11 +47,18 @@
             android:theme="@style/Transparent">
             <intent-filter>
                 <action android:name="rikka.searchbyimage.SEND_LOG" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.EditSitesActivity"
+            android:label="@string/edit_sites"/>
+        <activity android:name=".ui.EditSiteInfoActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/edit_site"/>
 
         <receiver android:name=".receiver.ShareBroadcastReceiver" />
+
     </application>
 
 </manifest>

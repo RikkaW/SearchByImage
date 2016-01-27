@@ -11,9 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,11 +22,11 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.ui.apdater.RecyclerViewAdapter;
+import rikka.searchbyimage.ui.apdater.ResultAdapter;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
-import rikka.searchbyimage.widget.SimpleDividerItemDecoration;
+import rikka.searchbyimage.widget.BaseRecyclerViewItemDecoration;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -37,10 +34,10 @@ public class ResultActivity extends AppCompatActivity {
             "rikka.searchbyimage.ui.ResultActivity.EXTRA_FILE";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ui.ResultActivity.EXTRA_SITE_ID";
+            "rikka.searchbyimage.ui.ResultActivity.EXTRA_EDIT_LOCATION";
 
     RecyclerView mRecyclerView;
-    RecyclerViewAdapter mAdapter;
+    ResultAdapter mAdapter;
     Activity mActivity;
 
     @Override
@@ -69,13 +66,13 @@ public class ResultActivity extends AppCompatActivity {
 
             mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             //mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-            mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getApplicationContext()));
+            mRecyclerView.addItemDecoration(new BaseRecyclerViewItemDecoration(getApplicationContext()));
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setHasFixedSize(true);
 
-            mAdapter = new RecyclerViewAdapter(list);
-            mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            mAdapter = new ResultAdapter(list);
+            mAdapter.setOnItemClickListener(new ResultAdapter.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(View view, int position, IqdbResultCollecter.IqdbItem item) {

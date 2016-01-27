@@ -61,7 +61,7 @@
 
     <string name="permission_require">需要权限</string>
     <string name="permission_require_detail">您需要授予应用“读取外部存储权限”才能上传该图片。</string>
-    <string name="ok">获取权限</string>
+    <string name="get_permission">获取权限</string>
 
     <string name="donate">捐赠</string>
     <string name="donate_summary">Google Wallet/支付宝: rikka@xing.moe</string>
@@ -84,7 +84,7 @@
     <string name="socket_exception">网络错误</string>
 
     <string name="notice">注意</string>
-    <string name="notice_baidu">不支持WebP格式和较大图片</string>
+    <string name="notice_baidu">百度不支持WebP格式和较大图片</string>
 
     <string name="show_result_in">结果打开方式</string>
     <string name="build_in_browser">内置浏览器</string>

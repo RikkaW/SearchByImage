@@ -8,3 +8,4 @@
 /captures
 *.apk
 .idea/
+gradle.properties

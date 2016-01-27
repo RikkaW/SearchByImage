@@ -62,7 +62,7 @@
 
     <string name="permission_require">アクセスが必要</string>
     <string name="permission_require_detail">アップロードがSDカードのコンテンツの読み取りことが必要です。</string>
-    <string name="ok">OK</string>
+    <string name="get_permission">OK</string>
 
     <string name="donate">寄付</string>
 	<string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
@@ -85,7 +85,7 @@
     <string name="unknown_host_exception">ドメイン解決エラー</string>
 
     <string name="notice">注意</string>
-    <string name="notice_baidu">WebP画像と大きな画像がサポートされていません</string>
+    <string name="notice_baidu">百度は、WebP画像と大きな画像がサポートされていません</string>
 
     <string name="show_result_in">検索結果を表示</string>
     <string name="build_in_browser">アプリ内ブラウザ</string>

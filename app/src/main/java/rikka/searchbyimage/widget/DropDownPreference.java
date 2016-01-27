@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import rikka.searchbyimage.R;
 
@@ -78,6 +79,7 @@ public class DropDownPreference extends Preference {
                 addItem(mEntries[i].toString(), mEntryValues[i]);
             }
         }
+        a.recycle();
     }
 
     public DropDownPreference(Context context) {
@@ -147,6 +149,10 @@ public class DropDownPreference extends Preference {
         }
     }
 
+    public int getSelectedPosition() {
+        return mSelectedPosition;
+    }
+
     public void setSelectedValue(Object value) {
         final int i = mValues.indexOf(value);
         if (i > -1) {
@@ -166,6 +172,26 @@ public class DropDownPreference extends Preference {
     public void removeItem(int index) {
         mAdapter.remove(mAdapter.getItem(index));
         mValues.remove(index);
+    }
+
+    public Object getValue(int index) {
+        return mValues.get(index);
+    }
+
+    public ArrayAdapter<String> getAdapter() {
+        return mAdapter;
+    }
+
+    public ArrayList<Object> getValues() {
+        return mValues;
+    }
+
+    public void setAdapter(ArrayAdapter<String> adapter) {
+        mAdapter = adapter;
+    }
+
+    public void setValues(ArrayList<Object> values) {
+        mValues = values;
     }
 
     public int getItemCount() {

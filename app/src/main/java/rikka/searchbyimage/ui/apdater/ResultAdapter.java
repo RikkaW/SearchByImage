@@ -18,10 +18,10 @@ import rikka.searchbyimage.utils.IqdbResultCollecter;
 /**
  * Created by Rikka on 2015/12/20.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
-    private ArrayList<IqdbResultCollecter.IqdbItem> list;
-    private int count = 0;
+    private ArrayList<IqdbResultCollecter.IqdbItem> mData;
+    private int mCount = 0;
 
     public interface OnItemClickListener
     {
@@ -36,30 +36,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
-    public RecyclerViewAdapter(ArrayList<IqdbResultCollecter.IqdbItem> list) {
-        this.list = list;
-        this.count = list.size();
+    public ResultAdapter(ArrayList<IqdbResultCollecter.IqdbItem> mData) {
+        this.mData = mData;
+        this.mCount = mData.size();
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_iqdb_result, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        final ViewHolder mViewHolder = (ViewHolder)holder;
-        mViewHolder.mTextViewURL.setText(list.get(position).imageURL);
-        mViewHolder.mTextViewSize.setText(list.get(position).size);
-        mViewHolder.mTextViewSimilarity.setText(list.get(position).similarity);
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        IqdbResultCollecter.IqdbItem item = mData.get(position);
+        holder.mTextViewURL.setText(item.imageURL);
+        holder.mTextViewSize.setText(item.size);
+        holder.mTextViewSimilarity.setText(item.similarity);
 
-        Glide.with(mViewHolder.mImageView.getContext())
-                .load(list.get(position).thumbnailURL)
+        Glide.with(holder.mImageView.getContext())
+                .load(item.thumbnailURL)
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .crossFade()
-                .into(mViewHolder.mImageView);
+                .into(holder.mImageView);
 
         if (mOnItemClickListener != null)
         {
@@ -69,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View v)
                 {
                     int pos = holder.getLayoutPosition();
-                    mOnItemClickListener.onItemClick(holder.itemView, pos, list.get(pos));
+                    mOnItemClickListener.onItemClick(holder.itemView, pos, mData.get(pos));
                 }
             });
 
@@ -79,7 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public boolean onLongClick(View v)
                 {
                     int pos = holder.getLayoutPosition();
-                    mOnItemClickListener.onItemLongClick(holder.itemView, pos, list.get(pos));
+                    mOnItemClickListener.onItemLongClick(holder.itemView, pos, mData.get(pos));
                     return false;
                 }
             });
@@ -88,7 +88,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return count;
+        return mCount;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
