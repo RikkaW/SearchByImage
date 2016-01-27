@@ -111,13 +111,13 @@
     </string-array>
 
     <string-array name="custom_open_with" translatable="false">
-        <item>Open URL</item>
-        <item>Open saved HTML file in WebView</item>
+        <item>@string/open_url</item>
+        <item>@string/open_html</item>
     </string-array>
 
     <string-array name="custom_open_with_in_app" translatable="false">
-        <item>Open URL</item>
-        <item>Open saved HTML file in WebView</item>
-        <item>Build-in viewer for iqdb.org</item>
+        <item>@string/open_url</item>
+        <item>@string/open_html</item>
+        <item>@string/open_iqdb</item>
     </string-array>
 </resources>

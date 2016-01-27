@@ -157,7 +157,7 @@ public class EditSitesActivity extends AppCompatActivity {
 
                 new AlertDialog.Builder(mActivity)
                         .setItems(
-                                new CharSequence[] {"Delete"},
+                                new CharSequence[] {getString(R.string.delete)},
                                 new DialogInterface.OnClickListener()
                                 {
                                     @Override

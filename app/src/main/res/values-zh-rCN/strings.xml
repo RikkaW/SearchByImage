@@ -112,4 +112,27 @@
     <string name="app_crash_send_cancel">取消</string>
     <string name="app_crash_no_email_client">唉..没有邮件客户端的样子..</string>
     <string name="baidu_settings">百度设置</string>
+
+    <string name="edit_sites">搜索引擎</string>
+    <string name="edit_site">编辑数据</string>
+    <string name="request_url">请求URL</string>
+    <string name="engine_name">名称</string>
+    <string name="upload_form_key">Key</string>
+    <string name="upload_form_value">Value</string>
+    <string name="upload_form_your_image">(图片)</string>
+    <string name="upload_form_built_in_selector">(选择器)</string>
+    <string name="upload_form_add">添加表单数据</string>
+    <string name="built_in">内置</string>
+    <string name="custom">自定义</string>
+    <string name="check_your_data">请检查你的数据</string>
+    <string name="choose_one">请至少启用一个搜索引擎</string>
+
+    <string name="open_url">打开URL</string>
+    <string name="open_html">在WebView中打开保存的HTML文件</string>
+    <string name="open_iqdb">内置iqdb.org结果查看器</string>
+
+    <string name="advance">高级</string>
+    <string name="custom_search_engine">自定义搜索引擎</string>
+    <string name="help">帮助</string>
+    <string name="delete">删除</string>
 </resources>

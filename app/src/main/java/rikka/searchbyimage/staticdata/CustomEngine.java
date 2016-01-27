@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
 import rikka.searchbyimage.utils.ParcelableUtils;
@@ -153,7 +154,7 @@ public class CustomEngine {
             ids[item.id] = true;
         }
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < (BuildConfig.hideOtherEngine ? 1 : 6); i++) {
             if (!ids[i]) {
                 CustomEngineParcelable parcelable = new CustomEngineParcelable();
                 parcelable.data.id = i;

@@ -22,7 +22,7 @@
     <string name="general">通用</string>
     <string name="safe_search_summary">阻止不合適的圖片</string>
     <string name="rate">評分</string>
-    <string name="rate_summary">能给5星就太好啦 &gt;﹏&lt;</string>
+    <string name="rate_summary">能給5星就太好啦 &gt;﹏&lt;</string>
     <string name="build_version">版本</string>
 
     <string name="google_settings">Google 設定</string>
@@ -41,11 +41,11 @@
 
     <string name="save_link">保存連接</string>
     <string name="save_image">保存圖片</string>
-    <string name="open_with">用其他应用打开…</string>
-    <string name="open">打开</string>
+    <string name="open_with">用其他軟體打開…</string>
+    <string name="open">打開</string>
 
     <string name="share">分享</string>
-    <string name="share_url">选择分享方式</string>
+    <string name="share_url">選擇分享方式</string>
 
     <string name="use_chrome_custom_tabs">使用內建瀏覽器</string>
     <string name="use_chrome_custom_tabs_summary">使用 WebView 或 Chrome custom tabs</string>
@@ -53,19 +53,19 @@
     <string name="search_result">%s 搜尋結果</string>
 
     <string name="settings">設定</string>
-    <string name="setting_each_time">上載前打開設置</string>
-    <string name="resize_image">压缩上載圖片</string>
-    <string name="try_resize_image_if_error">当图片不能正常上传时可尝试此选项</string>
-    <string name="start_upload">開始上載</string>
+    <string name="setting_each_time">上傳前打開設置</string>
+    <string name="resize_image">壓縮上傳圖片</string>
+    <string name="try_resize_image_if_error">當圖片不能正常上傳時可嘗試此選項</string>
+    <string name="start_upload">開始上傳</string>
 
-    <string name="permission_require">需要权限</string>
-    <string name="permission_require_detail">您需要授予應用“讀取外部存儲”權限才能上載該圖片。</string>
+    <string name="permission_require">需要權限</string>
+    <string name="permission_require_detail">您需要授予軟體“讀取外部存儲”權限才能上傳該圖片。</string>
     <string name="get_permission">獲取權限</string>
 
-    <string name="donate">捐赠</string>
+    <string name="donate">捐贈</string>
     <string name="donate_summary">Google Wallet/Alipay: rikka@xing.moe</string>
 
-    <string name="something_wrong">出错了 OAO</string>
+    <string name="something_wrong">出錯了 OAO</string>
 
     <string name="saucenao_settings">SauceNAO 設定</string>
     <string name="saucenao_hide_title">隱藏</string>
@@ -77,22 +77,22 @@
         <item>已知和預估危險來源</item>
         <item>除了已知安全來源</item>
     </string-array>
-    <string name="timeout_exception">连接超时</string>
-    <string name="socket_exception">网络错误</string>
-    <string name="unknown_host_exception">域名解析错误</string>
+    <string name="timeout_exception">連線超時</string>
+    <string name="socket_exception">網路錯誤</string>
+    <string name="unknown_host_exception">域名解析錯誤</string>
 
     <string name="notice">注意</string>
-    <string name="notice_baidu">Baidu不支持WebP格式和较大图片</string>
+    <string name="notice_baidu">Baidu不支持WebP格式和較大圖片</string>
 
-    <string name="show_result_in">结果打开方式</string>
+    <string name="show_result_in">结果打開方式</string>
     <string name="build_in_browser">內建瀏覽器</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
-    <string name="browser_app">瀏覽器应用</string>
+    <string name="browser_app">瀏覽器軟體</string>
     <string name="search_this_image_by_google">使用 Google 搜尋此圖片</string>
-    <string name="refresh">刷新</string>
-    <string name="copy_link">拷貝鏈接</string>
-    <string name="open_in_browser">在瀏覽器中打开</string>
-    <string name="copy_to_clipboard">%s 已拷貝到剪貼板</string>
+    <string name="refresh">重新整理</string>
+    <string name="copy_link">複製連接</string>
+    <string name="open_in_browser">在瀏覽器中打開</string>
+    <string name="copy_to_clipboard">%s 已複製到剪貼板</string>
 
     <string name="save_failed">保存失敗</string>
     <string name="downloaded">%s 下載完成</string>
@@ -102,12 +102,35 @@
     <string name="create_new_file">建立新檔案</string>
     <string name="file_overwrite" formatted="false"><![CDATA[您要取代「<b>%2$s</b>」目錄中現有的 <b>%1$s</b> 嗎？]]></string>
 
-    <string name="send_via">发送方式</string>
+    <string name="send_via">發送方式</string>
 
-    <string name="app_crash_title">坏掉了 QAQ</string>
-    <string name="app_crash_message">使用邮件客户端发送错误报告给开发者以帮助解决问题。</string>
-    <string name="app_crash_send_email">确定</string>
+    <string name="app_crash_title">壞掉了 QAQ</string>
+    <string name="app_crash_message">使用Email發送錯誤報告給開發者以幫助解決問題。</string>
+    <string name="app_crash_send_email">確定</string>
     <string name="app_crash_send_cancel">取消</string>
-    <string name="app_crash_no_email_client">唉..没有邮件客户端的样子..</string>
+    <string name="app_crash_no_email_client">唉..没有Email軟體的樣子..</string>
     <string name="baidu_settings">Baidu 設定</string>
+
+    <string name="edit_sites">搜索引擎</string>
+    <string name="edit_site">编辑数据</string>
+    <string name="request_url">请求URL</string>
+    <string name="engine_name">名称</string>
+    <string name="upload_form_key">Key</string>
+    <string name="upload_form_value">Value</string>
+    <string name="upload_form_your_image">(图片)</string>
+    <string name="upload_form_built_in_selector">(选择器)</string>
+    <string name="upload_form_add">添加表单数据</string>
+    <string name="built_in">内置</string>
+    <string name="custom">自定义</string>
+    <string name="check_your_data">请检查你的数据</string>
+    <string name="choose_one">请至少启用一个搜索引擎</string>
+
+    <string name="open_url">打开URL</string>
+    <string name="open_html">在WebView中打开保存的HTML文件</string>
+    <string name="open_iqdb">内置iqdb.org结果查看器</string>
+
+    <string name="advance">高级</string>
+    <string name="custom_search_engine">自定义搜索引擎</string>
+    <string name="help">帮助</string>
+    <string name="delete">删除</string>
 </resources>

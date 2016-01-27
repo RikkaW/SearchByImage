@@ -89,13 +89,13 @@ public class SettingsFragment extends PreferenceFragment implements
         boolean popup = getArguments().getBoolean("popup");
 
         if (popup) {
-            if (!BuildConfig.hideOtherEngine)
+            //if (!BuildConfig.hideOtherEngine)
                 addPreferencesFromResource(R.xml.preferences_general_mini);
 
             addPreferencesFromResource(R.xml.preferences_search_settings);
         } else {
             addPreferencesFromResource(R.xml.preferences_usage);
-            addPreferencesFromResource(BuildConfig.hideOtherEngine ? R.xml.preferences_general_gp : R.xml.preferences_general);
+            addPreferencesFromResource(/*BuildConfig.hideOtherEngine ? R.xml.preferences_general_gp : */R.xml.preferences_general);
             addPreferencesFromResource(R.xml.preferences_search_settings);
             addPreferencesFromResource(R.xml.preferences_about);
         }
@@ -125,6 +125,13 @@ public class SettingsFragment extends PreferenceFragment implements
 
         if (!popup)
         {
+            /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+            if (sharedPreferences.getBoolean("developer", false)) {
+                mScreen.addPreference(mCategoryAdvance);
+            } else {
+                mScreen.removePreference(mCategoryAdvance);
+            }*/
+
             Preference versionPref = findPreference("version");
             versionPref.setOnPreferenceClickListener(this);
 
@@ -132,7 +139,9 @@ public class SettingsFragment extends PreferenceFragment implements
             githubPref.setOnPreferenceClickListener(this);
 
             Preference advancePref = findPreference("advance");
-            advancePref.setOnPreferenceClickListener(this);
+            if (advancePref != null) {
+                advancePref.setOnPreferenceClickListener(this);
+            }
 
             Preference donatePref = findPreference("donate");
             if (BuildConfig.hideOtherEngine) {
@@ -231,12 +240,6 @@ public class SettingsFragment extends PreferenceFragment implements
     private void setSearchEngineHide() {
         SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
 
-        if (sharedPreferences.getBoolean("developer", false)) {
-            mScreen.addPreference(mCategoryAdvance);
-        } else {
-            mScreen.removePreference(mCategoryAdvance);
-        }
-
         int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
 
         switch (siteId) {
@@ -318,10 +321,14 @@ public class SettingsFragment extends PreferenceFragment implements
 
                     click = -10;
 
-                    SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+                    /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
                     sharedPreferences.edit().putBoolean("developer", true).apply();
 
                     mScreen.addPreference(mCategoryAdvance);
+                    Preference advancePref = findPreference("advance");
+                    if (advancePref != null) {
+                        advancePref.setOnPreferenceClickListener(this);
+                    }*/
                     /*View view = mActivity.findViewById(R.id.settings_container);
                     view.animate()
                             .rotation(view.getRotation() + 180 + 360)

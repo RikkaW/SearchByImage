@@ -82,7 +82,7 @@
                     android:id="@+id/edit_url"
                     android:layout_marginLeft="16dp"
                     android:inputType="textUri"
-                    android:hint="@string/upload_url"
+                    android:hint="@string/request_url"
                     android:layout_gravity="center_vertical"
                     android:minLines="1" />
             </LinearLayout>
