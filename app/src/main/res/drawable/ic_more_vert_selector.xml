@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_more_vert_not_press_24dp" android:state_pressed="false" />
+    <item android:drawable="@drawable/ic_more_vert_pressed_24dp" android:state_pressed="true" />
+</selector>
