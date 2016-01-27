@@ -126,8 +126,6 @@
 
             </LinearLayout>
 
-
-
             <LinearLayout
                 android:id="@+id/linearLayout_open_action"
                 android:layout_width="match_parent"

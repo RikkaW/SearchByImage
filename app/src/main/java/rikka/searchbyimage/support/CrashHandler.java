@@ -4,16 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Build;
-import android.os.Environment;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.ui.SendReportActivity;
 
-public class CrashHandler implements Thread.UncaughtExceptionHandler
-{
+public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public static String CRASH_DIR;
     public static String CRASH_LOG;
 
@@ -99,7 +98,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler
         /*if (mPrevious != null) {
             mPrevious.uncaughtException(thread, throwable);
         }*/
-
+        if (BuildConfig.DEBUG) {
+            throwable.printStackTrace();
+        }
         System.exit(1);
     }
 }
