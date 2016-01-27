@@ -121,6 +121,6 @@
     <string name="upload_form_key" translatable="false">Key</string>
     <string name="upload_form_value" translatable="false">Value</string>
     <string name="upload_form_your_image" translatable="false">(image)</string>
-    <string name="upload_form_build_in_selector" translatable="false">(selector)</string>
+    <string name="upload_form_built_in_selector" translatable="false">(selector)</string>
     <string name="upload_form_add" translatable="false">New form data</string>
 </resources>

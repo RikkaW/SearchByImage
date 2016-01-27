@@ -39,8 +39,8 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
 
     private static final int RESOURCE_ID[] = {
             R.layout.list_item_edit_sites,
-            R.layout.list_item_edit_sites_header,
-            R.layout.list_item_edit_sites_header,
+            R.layout.list_item_edit_sites,
+            R.layout.list_item_edit_sites,
             R.layout.list_item_edit_sites_empty
     };
 
@@ -53,78 +53,98 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         return new ViewHolder(itemView);
     }
 
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_HEADER_BUILT_IN = 1;
+    private static final int VIEW_TYPE_HEADER_CUSTOM = 2;
+    private static final int VIEW_TYPE_EMPTY = 3;
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-            return 1;
-        } else if (position == 6 + 1 && mData.size() > 6) {
-            return 2;
-        } else if (position == getItemCount() - 1) {
-            return 3;
+            return VIEW_TYPE_HEADER_BUILT_IN;
+        } else if (position == 6 || position == getItemCount() - 1) {
+            return VIEW_TYPE_EMPTY;
+        } else if (position == 7) {
+            return VIEW_TYPE_HEADER_CUSTOM;
         }
-        return 0;
+        return VIEW_TYPE_ITEM;
+    }
+
+    public int toRealPosition(int pos) {
+        if (pos > 6) {
+            pos -= 1;
+        }
+        return pos;
     }
 
     @Override
     public void onBindViewHolder(final SearchEngineAdapter.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        if (viewType == 0) {
-            position = holder.getRealPosition();
-            CustomEngine item = mData.get(position);
 
-            if (position == 5 || (position == mData.size() - 1)) {
-                holder.vDivider.setVisibility(View.GONE);
-            }
+        if (viewType == VIEW_TYPE_EMPTY) {
+            return;
+        }
 
-            int start = item.upload_url.indexOf("//") + 2;
-            start = item.upload_url.indexOf("/", start);
-            String url = start != -1 ? item.upload_url.substring(0, start) : item.upload_url;
+        position = toRealPosition(position);
 
-            holder.vName.setText(item.name);
-            holder.vUrl.setText(url);
+        if (viewType == VIEW_TYPE_ITEM) {
+            holder.vHead.setVisibility(View.GONE);
+        }
 
-            Glide.with(holder.vIcon.getContext())
-                    .load(url + "/favicon.ico")
-                    .crossFade()
-                    .into(holder.vIcon);
+        holder.vHead.setText(viewType == VIEW_TYPE_HEADER_BUILT_IN ? "Built-in" : "Custom");
 
-            if (mOnItemClickListener != null)
+        CustomEngine item = mData.get(position);
+
+        if (position == 5 || (position == mData.size() - 1)) {
+            holder.vDivider.setVisibility(View.GONE);
+        }
+
+        int start = item.upload_url.indexOf("//") + 2;
+        start = item.upload_url.indexOf("/", start);
+        String url = start != -1 ? item.upload_url.substring(0, start) : item.upload_url;
+
+        holder.vName.setText(item.name);
+        holder.vUrl.setText(url);
+
+        Glide.with(holder.vIcon.getContext())
+                .load(url + "/favicon.ico")
+                .crossFade()
+                .into(holder.vIcon);
+
+        if (mOnItemClickListener != null)
+        {
+            holder.View.setOnClickListener(new View.OnClickListener()
             {
-                holder.itemView.setOnClickListener(new View.OnClickListener()
+                @Override
+                public void onClick(View v)
                 {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        int pos = holder.getRealPosition();
-                        mOnItemClickListener.onItemClick(holder.itemView,
-                                holder.getLayoutPosition(),
-                                pos,
-                                mData.get(pos));
-                    }
-                });
+                    int pos = toRealPosition(holder.getLayoutPosition());
+                    mOnItemClickListener.onItemClick(holder.itemView,
+                            holder.getLayoutPosition(),
+                            pos,
+                            mData.get(pos));
+                }
+            });
 
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener()
+            holder.View.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
                 {
-                    @Override
-                    public boolean onLongClick(View v)
-                    {
-                        int pos = holder.getRealPosition();
-                        mOnItemClickListener.onItemLongClick(holder.itemView,
-                                holder.getLayoutPosition(),
-                                pos,
-                                mData.get(pos));
-                        return false;
-                    }
-                });
-            }
-        } else if (viewType != 3) {
-            holder.vHead.setText(viewType == 1 ? "Build-in" : "Custom");
+                    int pos = toRealPosition(holder.getLayoutPosition());
+                    mOnItemClickListener.onItemLongClick(holder.itemView,
+                            holder.getLayoutPosition(),
+                            pos,
+                            mData.get(pos));
+                    return false;
+                }
+            });
         }
     }
 
     @Override
     public int getItemCount() {
-        return (mData.size() > 6 ? mData.size() + 2 : mData.size() + 1) + 1;
+        return (mData.size() > 6 ? mData.size() + 2 : mData.size() + 1);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -133,15 +153,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         protected ImageView vIcon;
         protected TextView vHead;
         protected View vDivider;
-
-        public int getRealPosition() {
-            int pos = getLayoutPosition();
-            pos --;
-            if (pos > 6) {
-                pos --;
-            }
-            return pos;
-        }
+        protected View View;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -151,6 +163,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             vIcon = (ImageView) itemView.findViewById(R.id.item_icon);
             vHead = (TextView) itemView.findViewById(R.id.item_header);
             vDivider = itemView.findViewById(R.id.fake_divider);
+            View = itemView.findViewById(R.id.view);
         }
     }
 }

@@ -61,7 +61,7 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
             holder.vValue.setText(mData.post_text_value.get(position));
 
             if (mData.post_text_type.get(position) == -1) {
-                holder.vValue.setText(R.string.upload_form_build_in_selector);
+                holder.vValue.setText(R.string.upload_form_built_in_selector);
                 holder.vValue.setEnabled(false);
             }
 
