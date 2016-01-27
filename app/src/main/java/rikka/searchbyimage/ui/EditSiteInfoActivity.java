@@ -3,11 +3,11 @@ package rikka.searchbyimage.ui;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +28,6 @@ import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
-import rikka.searchbyimage.utils.Utils;
 
 public class EditSiteInfoActivity extends AppCompatActivity {
     public static final String EXTRA_EDIT_LOCATION =
@@ -97,7 +96,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this)  {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -106,9 +105,20 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             @Override
             public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
                                   int widthSpec, int heightSpec) {
-                int width = View.MeasureSpec.getSize(widthSpec);
-                int height = getItemCount() * Utils.dpToPx(48);
+                final int width = View.MeasureSpec.getSize(widthSpec);
+                int height = 0;
+                int childHeight = 0;
+                for (int i = 0; i < getItemCount(); i++) {
+                    try {
+                        childHeight = measureScrapChildHeight(recycler, i,
+                                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED));
+                        height = height + childHeight;
 
+                    } catch (IndexOutOfBoundsException ignore) {
+                        height = height + childHeight;
+                    }
+                }
                 setMeasuredDimension(width, height);
             }
         });
@@ -133,8 +143,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
                 mRecyclerView.setAdapter(mAdapter);
 
 
-                if (!mEnabled)
-                {
+                if (!mEnabled) {
                     mEditTextUrl.setEnabled(false);
                     mEditTextName.setEnabled(false);
                     mEditTextFileKey.setEnabled(false);
@@ -163,7 +172,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         values.put(CustomEngineTable.COLUMN_DATA, ParcelableUtils.marshall(parcelable));
 
         String selection = CustomEngineTable.COLUMN_ID + " LIKE ?";
-        String[] selectionArgs = { String.valueOf(mItem.id) };
+        String[] selectionArgs = {String.valueOf(mItem.id)};
 
         db.update(
                 CustomEngineTable.TABLE_NAME,
@@ -221,5 +230,23 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private int measureScrapChildHeight(RecyclerView.Recycler recycler, int position, int widthSpec,
+                                        int heightSpec) throws IndexOutOfBoundsException {
+        View view = recycler.getViewForPosition(position);
+        int height = 0;
+        if (view != null) {
+
+            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
+            int childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec,
+                    view.getPaddingLeft() + view.getPaddingRight(), p.width);
+            int childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec,
+                    view.getPaddingTop() + view.getPaddingBottom(), p.height);
+            view.measure(childWidthSpec, childHeightSpec);
+            height = view.getMeasuredHeight() + p.bottomMargin + p.topMargin;
+            recycler.recycleView(view);
+        }
+        return height;
     }
 }
