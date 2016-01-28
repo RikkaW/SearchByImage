@@ -114,13 +114,26 @@
     <string name="app_crash_no_email_client">No mail app installed</string>
     <string name="baidu_settings">Baidu settings</string>
 
-    <string name="edit_sites" translatable="false">Edit engines</string>
-    <string name="edit_site" translatable="false">Edit data</string>
-    <string name="upload_url" translatable="false">Upload url</string>
-    <string name="engine_name" translatable="false">Name</string>
-    <string name="upload_form_key" translatable="false">Key</string>
-    <string name="upload_form_value" translatable="false">Value</string>
-    <string name="upload_form_your_image" translatable="false">(image)</string>
-    <string name="upload_form_built_in_selector" translatable="false">(selector)</string>
-    <string name="upload_form_add" translatable="false">New form data</string>
+    <string name="edit_sites">Search engines</string>
+    <string name="edit_site">Edit data</string>
+    <string name="request_url">Request url</string>
+    <string name="engine_name">Name</string>
+    <string name="upload_form_key">Key</string>
+    <string name="upload_form_value">Value</string>
+    <string name="upload_form_your_image">(image)</string>
+    <string name="upload_form_built_in_selector">(selector)</string>
+    <string name="upload_form_add">New form data</string>
+    <string name="built_in">Built-in</string>
+    <string name="custom">Custom</string>
+    <string name="check_your_data">Check your data</string>
+    <string name="choose_one">Please enable at least one search engine</string>
+
+    <string name="open_url">Open URL</string>
+    <string name="open_html">Open saved HTML file in WebView</string>
+    <string name="open_iqdb">Built-in viewer for iqdb.org</string>
+
+    <string name="advance">Advance</string>
+    <string name="custom_search_engine">Custom search engines</string>
+    <string name="help">Help</string>
+    <string name="delete">Delete</string>
 </resources>

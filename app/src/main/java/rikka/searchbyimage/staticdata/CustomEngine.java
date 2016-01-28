@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
 import rikka.searchbyimage.utils.ParcelableUtils;
@@ -21,6 +22,7 @@ import rikka.searchbyimage.utils.ParcelableUtils;
  */
 public class CustomEngine {
     public int id;
+    public int enabled;
     public String name;
     public String upload_url;
     public String post_file_key;
@@ -56,11 +58,13 @@ public class CustomEngine {
         if (cursor.getCount() > 0) {
             int columnId = cursor.getColumnIndex(CustomEngineTable.COLUMN_ID);
             int columnData = cursor.getColumnIndex(CustomEngineTable.COLUMN_DATA);
+            int columnEnabled = cursor.getColumnIndex(CustomEngineTable.COLUMN_ENABLED);
 
             cursor.moveToFirst();
             do {
                 CustomEngine item = ParcelableUtils.unmarshall(cursor.getBlob(columnData), CustomEngineParcelable.CREATOR).data;
                 item.id = cursor.getInt(columnId);
+                item.enabled = cursor.getInt(columnEnabled);
                 list.add(item);
             } while (cursor.moveToNext());
         }
@@ -150,10 +154,11 @@ public class CustomEngine {
             ids[item.id] = true;
         }
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < (BuildConfig.hideOtherEngine ? 1 : 6); i++) {
             if (!ids[i]) {
                 CustomEngineParcelable parcelable = new CustomEngineParcelable();
                 parcelable.data.id = i;
+                parcelable.data.enabled = 1;
                 parcelable.data.name = BUILD_IN_ENGINE_NAME[i];
                 parcelable.data.upload_url = BUILD_IN_ENGINE_URL[i];
                 parcelable.data.post_file_key = BUILD_IN_ENGINE_FILE_KEY[i];
@@ -186,21 +191,22 @@ public class CustomEngine {
         }
     }
 
-    private static void addEngineToDb(Context context, CustomEngineParcelable parcelable, int id) {
+    public static void addEngineToDb(Context context, CustomEngineParcelable parcelable, int id) {
         SQLiteDatabase db = DatabaseHelper.instance(context).getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(CustomEngineTable.COLUMN_ID, id);
+        values.put(CustomEngineTable.COLUMN_ENABLED, 1);
         values.put(CustomEngineTable.COLUMN_DATA, ParcelableUtils.marshall(parcelable));
 
         db.insert(CustomEngineTable.TABLE_NAME, null, values);
     }
 
-    private static void addEngineToList(CustomEngineParcelable parcelable) {
-        addEngineToList(parcelable, sList);
+    public static void addEngineToList(CustomEngine data) {
+        addEngineToList(data, sList);
     }
 
-    private static void addEngineToList(CustomEngineParcelable parcelable, List<CustomEngine> list) {
-        list.add(parcelable.data);
+    public static void addEngineToList(CustomEngine data, List<CustomEngine> list) {
+        list.add(data);
     }
 }

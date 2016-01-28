@@ -4,6 +4,20 @@
     android:key="screen">
 
     <PreferenceCategory
+        android:key="category_advance"
+        android:title="@string/advance"
+        android:order="8"
+        android:layout="@layout/preference_category_material">
+
+        <Preference
+            android:title="@string/custom_search_engine"
+            android:key="advance"
+            android:layout="@layout/preference_material">
+
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="about"
         android:title="@string/about"
         android:order="9"
