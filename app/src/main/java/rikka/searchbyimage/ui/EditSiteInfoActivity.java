@@ -277,7 +277,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         mItem.post_text_value = parcelable.data.post_text_value;
         mItem.post_text_type = parcelable.data.post_text_type;
 
-        EditSitesActivity.getAdapter(this).notifyItemChanged(mLocation + 1);
+        EditSitesActivity.getAdapter(this).notifyItemChanged(mLocation);
     }
 
     private void add() {
@@ -301,6 +301,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         CustomEngine.addEngineToList(parcelable.data);
 
         EditSitesActivity.getAdapter(this).notifyItemInserted(mData.size() - 1);
+        EditSitesActivity.getAdapter(this).notifyItemChanged(mData.size() - 2);
     }
 
     private CustomEngine getData() {

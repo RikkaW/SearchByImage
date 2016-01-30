@@ -23,8 +23,8 @@ import rikka.searchbyimage.staticdata.CustomEngine;
 public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapter.ViewHolder> {
     public interface OnItemClickListener
     {
-        void onItemClick(View view, int position, int realPosition, CustomEngine item);
-        void onItemLongClick(View view , int position, int realPosition, CustomEngine item);
+        void onItemClick(View view, int position, CustomEngine item);
+        void onItemLongClick(View view , int position, CustomEngine item);
     }
 
     private OnItemClickListener mOnItemClickListener;
@@ -40,63 +40,53 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         mData = data;
     }
 
-    private static final int RESOURCE_ID[] = {
-            R.layout.list_item_edit_sites,
-            R.layout.list_item_edit_sites,
-            R.layout.list_item_edit_sites,
-            R.layout.list_item_edit_sites_empty
-    };
-
     @Override
     public SearchEngineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(RESOURCE_ID[viewType], parent, false);
+                inflate(R.layout.list_item_edit_sites, parent, false);
 
         return new ViewHolder(itemView);
     }
 
-    private static final int VIEW_TYPE_ITEM = 0;
-    private static final int VIEW_TYPE_HEADER_BUILT_IN = 1;
-    private static final int VIEW_TYPE_HEADER_CUSTOM = 2;
-    private static final int VIEW_TYPE_EMPTY = 3;
+    private static final int VIEW_TYPE_ITEM = 1<<0;
+    private static final int VIEW_TYPE_HEADER_BUILT_IN = 1<<1;
+    private static final int VIEW_TYPE_HEADER_CUSTOM = 1<<2;
+    private static final int VIEW_TYPE_EMPTY = 1<<3;
 
     private static final int BUILT_IN_ENGINES = (BuildConfig.hideOtherEngine ? 1 : 6);
+
     @Override
     public int getItemViewType(int position) {
+        int flag = VIEW_TYPE_ITEM;
         if (position == 0) {
-            return VIEW_TYPE_HEADER_BUILT_IN;
-        } else if (position == BUILT_IN_ENGINES || position == getItemCount() - 1) {
-            return VIEW_TYPE_EMPTY;
-        } else if (position == BUILT_IN_ENGINES + 1) {
-            return VIEW_TYPE_HEADER_CUSTOM;
+            flag |= VIEW_TYPE_HEADER_BUILT_IN;
         }
-        return VIEW_TYPE_ITEM;
-    }
+        if (position == BUILT_IN_ENGINES) {
+            flag |= VIEW_TYPE_HEADER_CUSTOM;
+        }
 
-    public int toRealPosition(int pos) {
-        if (pos > BUILT_IN_ENGINES) {
-            pos -= 1;
+        if (position == BUILT_IN_ENGINES - 1 || position == getItemCount() -1) {
+            flag |= VIEW_TYPE_EMPTY;
         }
-        return pos;
+
+        return flag;
     }
 
     @Override
     public void onBindViewHolder(final SearchEngineAdapter.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
-        if (viewType == VIEW_TYPE_EMPTY) {
-            return;
+        if ((viewType & VIEW_TYPE_EMPTY) == 0) {
+            holder.ViewEmpty.setVisibility(View.GONE);
         }
 
-        position = toRealPosition(position);
-
-        if (viewType == VIEW_TYPE_ITEM) {
+        if ((viewType & (VIEW_TYPE_HEADER_BUILT_IN | VIEW_TYPE_HEADER_CUSTOM)) == 0) {
             holder.vHead.setVisibility(View.GONE);
+        } else {
+            holder.vHead.setText(((viewType & VIEW_TYPE_HEADER_BUILT_IN) >= 1) ?
+                    holder.itemView.getContext().getString(R.string.built_in) : holder.itemView.getContext().getString(R.string.custom));
         }
-
-        holder.vHead.setText(viewType == VIEW_TYPE_HEADER_BUILT_IN ?
-                holder.itemView.getContext().getString(R.string.built_in) : holder.itemView.getContext().getString(R.string.custom));
 
         final CustomEngine item = mData.get(position);
 
@@ -123,9 +113,8 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             holder.View.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = toRealPosition(holder.getLayoutPosition());
+                    int pos = holder.getLayoutPosition();
                     mOnItemClickListener.onItemClick(holder.itemView,
-                            holder.getLayoutPosition(),
                             pos,
                             mData.get(pos));
                 }
@@ -134,9 +123,8 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             holder.View.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    int pos = toRealPosition(holder.getLayoutPosition());
+                    int pos = holder.getLayoutPosition();
                     mOnItemClickListener.onItemLongClick(holder.itemView,
-                            holder.getLayoutPosition(),
                             pos,
                             mData.get(pos));
                     return false;
@@ -154,7 +142,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
 
     @Override
     public int getItemCount() {
-        return (mData.size() > BUILT_IN_ENGINES ? mData.size() + 2 : mData.size() + 1);
+        return mData.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -164,6 +152,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         protected TextView vHead;
         protected View vDivider;
         protected View View;
+        protected View ViewEmpty;
         protected SwitchCompat vSwitch;
 
         public ViewHolder(View itemView) {
@@ -175,6 +164,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             vHead = (TextView) itemView.findViewById(R.id.item_header);
             vDivider = itemView.findViewById(R.id.fake_divider);
             View = itemView.findViewById(R.id.view);
+            ViewEmpty = itemView.findViewById(R.id.empty_view);
             vSwitch = (SwitchCompat) itemView.findViewById(R.id.switch_site_enabled);
         }
     }
