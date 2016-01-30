@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import android.view.View;
 
 import java.util.List;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
@@ -141,18 +143,19 @@ public class EditSitesActivity extends AppCompatActivity {
                 return 1;
             }
         });*/
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mAdapter.setOnItemClickListener(new SearchEngineAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, final int realPosition, CustomEngine item) {
+            public void onItemClick(View view, int position, CustomEngine item) {
                 Intent intent = new Intent(mActivity, EditSiteInfoActivity.class);
-                intent.putExtra(EditSiteInfoActivity.EXTRA_EDIT_LOCATION, realPosition);
+                intent.putExtra(EditSiteInfoActivity.EXTRA_EDIT_LOCATION, position);
                 startActivity(intent);
                 /*startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation(mActivity).toBundle());*/
             }
 
             @Override
-            public void onItemLongClick(View view, final int position, final int realPosition, final CustomEngine item) {
+            public void onItemLongClick(View view, final int position, final CustomEngine item) {
                 if (item.id < 6) {
                     return;
                 }
@@ -168,8 +171,16 @@ public class EditSitesActivity extends AppCompatActivity {
                                             case 0:
                                                 delete(item.id);
 
-                                                mData.remove(realPosition);
+                                                mData.remove(position);
+
+                                                mAdapter.notifyItemChanged(position - 1);
                                                 mAdapter.notifyItemRemoved(position);
+                                                /*if (mData.size() == (BuildConfig.hideOtherEngine ? 1 : 6)) {
+                                                    mAdapter.notifyItemRangeRemoved(position - 1, 2);
+                                                } else {
+                                                    mAdapter.notifyItemChanged(position - 1);
+                                                    mAdapter.notifyItemRemoved(position);
+                                                }*/
 
                                                 //Snackbar.make(mCoordinatorLayout, "Deleted", Snackbar.LENGTH_SHORT).show();
                                                 break;
