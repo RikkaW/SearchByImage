@@ -84,7 +84,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         if ((viewType & (VIEW_TYPE_HEADER_BUILT_IN | VIEW_TYPE_HEADER_CUSTOM)) == 0) {
             holder.vHead.setVisibility(View.GONE);
         } else {
-            holder.vHead.setText(((viewType & VIEW_TYPE_HEADER_BUILT_IN) == 1) ?
+            holder.vHead.setText(((viewType & VIEW_TYPE_HEADER_BUILT_IN) >= 1) ?
                     holder.itemView.getContext().getString(R.string.built_in) : holder.itemView.getContext().getString(R.string.custom));
         }
 
