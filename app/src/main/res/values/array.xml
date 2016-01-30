@@ -99,7 +99,7 @@
     </string-array>
 
     <string-array name="open_with">
-        <item>@string/build_in_browser</item>
+        <item>@string/built_in_browser</item>
         <item>@string/chrome_custom_tabs</item>
         <item>@string/browser_app</item>
     </string-array>

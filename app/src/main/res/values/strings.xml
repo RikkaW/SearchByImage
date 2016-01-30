@@ -88,7 +88,7 @@
     <string name="notice_baidu">WEBP image or large image is not supported by Baidu</string>
 
     <string name="show_result_in">Show result in</string>
-    <string name="build_in_browser">Build-in browser</string>
+    <string name="built_in_browser">Built-in browser</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
     <string name="browser_app">Browser app</string>
     <string name="search_this_image_by_google">Search Google for this image</string>
@@ -128,6 +128,7 @@
     <string name="check_your_data">Check your data</string>
     <string name="choose_one">Please enable at least one search engine</string>
 
+    <string name="open_action">Open action</string>
     <string name="open_url">Open URL</string>
     <string name="open_html">Open saved HTML file in WebView</string>
     <string name="open_iqdb">Built-in viewer for iqdb.org</string>
@@ -136,4 +137,7 @@
     <string name="custom_search_engine">Custom search engines</string>
     <string name="help">Help</string>
     <string name="delete">Delete</string>
+    <string name="post_form">Form</string>
+    <string name="not_empty">Should not be empty</string>
+
 </resources>

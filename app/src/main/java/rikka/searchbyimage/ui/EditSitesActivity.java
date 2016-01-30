@@ -1,6 +1,7 @@
 package rikka.searchbyimage.ui;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -107,7 +108,6 @@ public class EditSitesActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mData = CustomEngine.getList(this);
         mAdapter = getAdapter(this);
-        mAdapter.notifyItemInserted(1);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -147,6 +147,8 @@ public class EditSitesActivity extends AppCompatActivity {
                 Intent intent = new Intent(mActivity, EditSiteInfoActivity.class);
                 intent.putExtra(EditSiteInfoActivity.EXTRA_EDIT_LOCATION, realPosition);
                 startActivity(intent);
+                /*startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation(mActivity).toBundle());*/
             }
 
             @Override

@@ -3,7 +3,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:paddingLeft="48dp"
+    android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:focusable="true"
     android:clickable="true"
@@ -15,7 +15,6 @@
         android:id="@+id/imageView6"
         android:src="@drawable/ic_add_24dp"
         android:cropToPadding="false"
-        android:layout_marginLeft="20dp"
         android:layout_gravity="center_vertical" />
 
     <TextView

@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 
@@ -60,20 +61,21 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
     private static final int VIEW_TYPE_HEADER_CUSTOM = 2;
     private static final int VIEW_TYPE_EMPTY = 3;
 
+    private static final int BUILT_IN_ENGINES = (BuildConfig.hideOtherEngine ? 1 : 6);
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
             return VIEW_TYPE_HEADER_BUILT_IN;
-        } else if (position == 6 || position == getItemCount() - 1) {
+        } else if (position == BUILT_IN_ENGINES || position == getItemCount() - 1) {
             return VIEW_TYPE_EMPTY;
-        } else if (position == 7) {
+        } else if (position == BUILT_IN_ENGINES + 1) {
             return VIEW_TYPE_HEADER_CUSTOM;
         }
         return VIEW_TYPE_ITEM;
     }
 
     public int toRealPosition(int pos) {
-        if (pos > 6) {
+        if (pos > BUILT_IN_ENGINES) {
             pos -= 1;
         }
         return pos;
@@ -98,7 +100,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
 
         final CustomEngine item = mData.get(position);
 
-        if (position == 5 || (position == mData.size() - 1)) {
+        if (position == BUILT_IN_ENGINES - 1 || (position == mData.size() - 1)) {
             holder.vDivider.setVisibility(View.GONE);
         }
 
@@ -152,7 +154,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
 
     @Override
     public int getItemCount() {
-        return (mData.size() > 6 ? mData.size() + 2 : mData.size() + 1);
+        return (mData.size() > BUILT_IN_ENGINES ? mData.size() + 2 : mData.size() + 1);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

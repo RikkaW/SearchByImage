@@ -203,6 +203,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         mSearchEngine.setSelectedItem(0);
         mSearchEngine.setSelectedValue(sharedPreferences.getString("search_engine_id", "0"));
+
+        setSearchEngineHide();
     }
 
     @Override

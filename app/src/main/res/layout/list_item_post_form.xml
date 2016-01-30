@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_below="@+id/linearLayout_form"
-    android:paddingLeft="48dp"
+    android:paddingLeft="16dp"
     android:paddingRight="16dp">
 
     <EditText
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText_key"
-        android:layout_marginLeft="16dp"
         android:hint="@string/upload_form_key"
-        android:layout_marginStart="16dp"
         android:inputType="textNoSuggestions"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"/>

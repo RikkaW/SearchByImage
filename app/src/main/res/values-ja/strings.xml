@@ -88,7 +88,7 @@
     <string name="notice_baidu">百度は、WebP画像と大きな画像がサポートされていません</string>
 
     <string name="show_result_in">検索結果を表示</string>
-    <string name="build_in_browser">アプリ内ブラウザ</string>
+    <string name="built_in_browser">アプリ内ブラウザ</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
     <string name="browser_app">ブラウザアプリ</string>
     <string name="search_this_image_by_google">この画像をGoogleで検索</string>
@@ -136,4 +136,7 @@
     <string name="custom_search_engine">Custom search engines</string>
     <string name="help">Help</string>
     <string name="delete">Delete</string>
+    <string name="open_action">Open action</string>
+    <string name="post_form">Form</string>
+    <string name="not_empty">Should not be empty</string>
 </resources>
