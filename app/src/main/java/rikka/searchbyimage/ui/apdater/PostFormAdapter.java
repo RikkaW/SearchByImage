@@ -17,11 +17,23 @@ import rikka.searchbyimage.staticdata.CustomEngine;
  * Created by Rikka on 2016/1/26.
  */
 public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHolder> {
+    public interface OnFocusChangeListener
+    {
+        void onFocusChange(View view, boolean hasFocus);
+    }
+
+    private OnFocusChangeListener mOnFocusChangeListener;
+
+    public void setOnFocusChangeListener(OnFocusChangeListener mOnFocusChangeListener)
+    {
+        this.mOnFocusChangeListener = mOnFocusChangeListener;
+    }
 
     CustomEngine mData;
     boolean mEnabled;
     PostFormAdapter mAdapter;
     int mCount;
+    RecyclerView mRecyclerView;
 
     @Override
     public int getItemViewType(int position) {
@@ -60,6 +72,23 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
                     holder.vValue.setText(R.string.upload_form_built_in_selector);
                     holder.vValue.setEnabled(false);
                 }
+
+                holder.vKey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (mOnFocusChangeListener != null) {
+                            mOnFocusChangeListener.onFocusChange(v, hasFocus);
+                        }
+                    }
+                });
+                holder.vValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (mOnFocusChangeListener != null) {
+                            mOnFocusChangeListener.onFocusChange(v, hasFocus);
+                        }
+                    }
+                });
             }
 
             if (!mEnabled) {

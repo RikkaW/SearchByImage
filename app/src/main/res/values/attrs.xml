@@ -4,4 +4,8 @@
         <attr name="myEntries" format="reference"/>
         <attr name="myEntryValues" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="DropDown">
+        <attr name="myTitle" format="string" />
+    </declare-styleable>
 </resources>

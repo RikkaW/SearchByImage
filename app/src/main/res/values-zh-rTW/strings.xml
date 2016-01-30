@@ -85,7 +85,7 @@
     <string name="notice_baidu">Baidu不支持WebP格式和較大圖片</string>
 
     <string name="show_result_in">结果打開方式</string>
-    <string name="build_in_browser">內建瀏覽器</string>
+    <string name="built_in_browser">內建瀏覽器</string>
     <string name="chrome_custom_tabs">Chrome custom tabs</string>
     <string name="browser_app">瀏覽器軟體</string>
     <string name="search_this_image_by_google">使用 Google 搜尋此圖片</string>
@@ -111,26 +111,29 @@
     <string name="app_crash_no_email_client">唉..没有Email軟體的樣子..</string>
     <string name="baidu_settings">Baidu 設定</string>
 
-    <string name="edit_sites">搜索引擎</string>
-    <string name="edit_site">编辑数据</string>
-    <string name="request_url">请求URL</string>
-    <string name="engine_name">名称</string>
+    <string name="edit_sites">搜尋引擎</string>
+    <string name="edit_site">編輯資料</string>
+    <string name="request_url">請求URL</string>
+    <string name="engine_name">名稱</string>
     <string name="upload_form_key">Key</string>
     <string name="upload_form_value">Value</string>
-    <string name="upload_form_your_image">(图片)</string>
-    <string name="upload_form_built_in_selector">(选择器)</string>
-    <string name="upload_form_add">添加表单数据</string>
+    <string name="upload_form_your_image">(圖片)</string>
+    <string name="upload_form_built_in_selector">(選擇)</string>
+    <string name="upload_form_add">添加表單資料</string>
     <string name="built_in">内置</string>
-    <string name="custom">自定义</string>
-    <string name="check_your_data">请检查你的数据</string>
-    <string name="choose_one">请至少启用一个搜索引擎</string>
+    <string name="custom">自定義</string>
+    <string name="check_your_data">請檢察你的資料</string>
+    <string name="choose_one">請至少啟用一個搜尋引擎</string>
 
-    <string name="open_url">打开URL</string>
-    <string name="open_html">在WebView中打开保存的HTML文件</string>
-    <string name="open_iqdb">内置iqdb.org结果查看器</string>
+    <string name="open_url">打開URL</string>
+    <string name="open_html">在WebView中打開保存的HTML文件</string>
+    <string name="open_iqdb">内置iqdb.org結果查看器</string>
 
-    <string name="advance">高级</string>
-    <string name="custom_search_engine">自定义搜索引擎</string>
-    <string name="help">帮助</string>
+    <string name="advance">高級</string>
+    <string name="custom_search_engine">自定義搜尋引擎</string>
+    <string name="help">幫助</string>
     <string name="delete">删除</string>
+    <string name="open_action">打開方式</string>
+    <string name="post_form">表单</string>
+    <string name="not_empty">不能为空</string>
 </resources>

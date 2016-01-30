@@ -1,32 +1,45 @@
 package rikka.searchbyimage.ui;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Html;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.List;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
@@ -35,7 +48,7 @@ import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
 import rikka.searchbyimage.utils.URLUtils;
-import rikka.searchbyimage.utils.Utils;
+import rikka.searchbyimage.widget.DropDown;
 
 public class EditSiteInfoActivity extends AppCompatActivity {
     public static final String EXTRA_EDIT_LOCATION =
@@ -50,7 +63,10 @@ public class EditSiteInfoActivity extends AppCompatActivity {
     EditText mEditTextName;
     EditText mEditTextUrl;
     EditText mEditTextFileKey;
-    Spinner mSpinner;
+    TextInputLayout mTextInputName;
+    TextInputLayout mTextInputUrl;
+    TextView mFormTitle;
+    DropDown mSpinner;
     RecyclerView mRecyclerView;
 
     List<CustomEngine> mData;
@@ -79,7 +95,15 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         mEditTextName = (EditText) findViewById(R.id.edit_name);
         mEditTextUrl = (EditText) findViewById(R.id.edit_url);
         mEditTextFileKey = (EditText) findViewById(R.id.edit_file_key);
-        mSpinner = (Spinner) findViewById(R.id.spinner);
+
+        mFormTitle = (TextView) findViewById(R.id.post_form_title);
+
+        mTextInputName = (TextInputLayout) findViewById(R.id.textInupt_name);
+        mTextInputUrl = (TextInputLayout) findViewById(R.id.textInput_url);
+
+        mSpinner = (DropDown) findViewById(R.id.dropDown);
+        mSpinner.setAdapter(ArrayAdapter.createFromResource(this,
+                R.array.custom_open_with, android.R.layout.simple_spinner_dropdown_item));
 
         mDbHelper = DatabaseHelper.instance(this);
         mData = CustomEngine.getList(this);
@@ -89,7 +113,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!mEnabled) {
-                    finish();
+                    onBackPressed();
                 }
 
                 if (!check()) {
@@ -103,7 +127,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
                     modify();
                 }
 
-                finish();
+                onBackPressed();
             }
         });
 
@@ -165,12 +189,14 @@ public class EditSiteInfoActivity extends AppCompatActivity {
 
 
                 if (!mEnabled) {
+                    mTextInputName.setEnabled(false);
+                    mTextInputUrl.setEnabled(false);
                     mEditTextUrl.setEnabled(false);
                     mEditTextName.setEnabled(false);
                     mEditTextFileKey.setEnabled(false);
                     mSpinner.setEnabled(false);
                     mSpinner.setAdapter(ArrayAdapter.createFromResource(this,
-                            R.array.custom_open_with_in_app, android.R.layout.simple_spinner_item));
+                            R.array.custom_open_with_in_app, android.R.layout.simple_spinner_dropdown_item));
                     mSpinner.setSelection(mItem.result_open_action);
                 }
 
@@ -181,11 +207,31 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             mAdapter = new PostFormAdapter();
             mRecyclerView.setAdapter(mAdapter);
         }
+
+        mEditTextFileKey.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), true));
+        mEditTextName.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), false));
+        mEditTextUrl.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), false));
+        mSpinner.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), false));
+        mAdapter.setOnFocusChangeListener(new PostFormAdapter.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+                }
+            }
+        });
+
+        mEditTextName.addTextChangedListener(new TextChangeRemoveErrorTextWatcher(mTextInputName));
+        mEditTextUrl.addTextChangedListener(new TextChangeRemoveErrorTextWatcher(mTextInputUrl));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit_info, menu);
+        if (!BuildConfig.hideOtherEngine) {
+            getMenuInflater().inflate(R.menu.edit_info, menu);
+            return true;
+        }
+
         return true;
     }
 
@@ -264,6 +310,10 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         data.post_file_key = mEditTextFileKey.getText().toString();
         data.result_open_action = mSpinner.getSelectedItemPosition();
 
+        if (!URLUtil.isHttpUrl(data.upload_url) && !URLUtil.isHttpsUrl(data.upload_url)) {
+            data.upload_url = "http://" + data.upload_url;
+        }
+
         data.post_text_key.clear();
         data.post_text_value.clear();
         data.post_text_type.clear();
@@ -284,8 +334,61 @@ public class EditSiteInfoActivity extends AppCompatActivity {
     }
 
     private boolean check() {
+        if (mEditTextName.getText().toString().length() == 0) {
+            mTextInputName.setError(getString(R.string.not_empty));
+        }
+
+        if (mEditTextUrl.getText().toString().length() == 0) {
+            mTextInputUrl.setError(getString(R.string.not_empty));
+        }
+
         return mEditTextName.getText().toString().length() != 0
-                && (URLUtil.isHttpUrl(mEditTextUrl.getText().toString()) || URLUtil.isHttpsUrl(mEditTextUrl.getText().toString()))
+                && mEditTextUrl.getText().toString().length() != 0/*(URLUtil.isHttpUrl(mEditTextUrl.getText().toString()) || URLUtil.isHttpsUrl(mEditTextUrl.getText().toString()))*/
                 && mEditTextFileKey.getText().toString().length() != 0;
+    }
+
+    private class MyOnFocusChangeListener implements View.OnFocusChangeListener {
+        ColorStateList mColor;
+        boolean mFocusHaveColor;
+
+        public MyOnFocusChangeListener(ColorStateList color, boolean focusHaveColor) {
+            mColor = color;
+            mFocusHaveColor = focusHaveColor;
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                return;
+            }
+            if (mFocusHaveColor) {
+                mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+            } else {
+                mFormTitle.setTextColor(mColor);
+            }
+        }
+    }
+
+    private class TextChangeRemoveErrorTextWatcher implements TextWatcher {
+        TextInputLayout mTextInputLayout;
+
+        public TextChangeRemoveErrorTextWatcher(TextInputLayout textInputLayout) {
+            mTextInputLayout = textInputLayout;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mTextInputLayout.setErrorEnabled(false);
+        }
     }
 }
