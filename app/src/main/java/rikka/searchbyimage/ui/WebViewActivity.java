@@ -21,7 +21,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -174,7 +173,7 @@ public class WebViewActivity extends AppCompatActivity {
                 siteName = getResources().getStringArray(R.array.search_engines)[siteId];
             } else {
                 CustomEngine item = CustomEngine.getItemById(siteId);
-                siteName = item.name;
+                siteName = item.getName();
             }
 
             String title = String.format(getString(R.string.search_result), siteName);

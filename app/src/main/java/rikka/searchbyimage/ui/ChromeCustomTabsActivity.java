@@ -3,8 +3,8 @@ package rikka.searchbyimage.ui;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -34,7 +34,7 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
                 siteName = getResources().getStringArray(R.array.search_engines)[siteId];
             } else {
                 CustomEngine item = CustomEngine.getItemById(siteId);
-                siteName = item.name;
+                siteName = item.getName();
             }
 
             String label = String.format(getString(R.string.search_result), siteName);
