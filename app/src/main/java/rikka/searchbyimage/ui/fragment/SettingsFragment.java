@@ -194,8 +194,8 @@ public class SettingsFragment extends PreferenceFragment implements
         mSearchEngine.clearItems();
 
         for (CustomEngine item : mData) {
-            if (item.enabled == 1) {
-                mSearchEngine.addItem(item.name, Integer.toString(item.id));
+            if (item.getEnabled() == 1) {
+                mSearchEngine.addItem(item.getName(), Integer.toString(item.getId()));
             }
         }
 

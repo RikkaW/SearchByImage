@@ -78,8 +78,8 @@ public class UploadActivity extends AppCompatActivity {
             HttpUtils.Body body = new HttpUtils.Body();
 
             CustomEngine item = CustomEngine.getItemById(mHttpUpload.siteId);
-            uploadUri = item.upload_url;
-            key = item.post_file_key;
+            uploadUri = item.getUpload_url();
+            key = item.getPost_file_key();
 
             switch (mHttpUpload.siteId) {
                 case SITE_IQDB:
@@ -201,7 +201,7 @@ public class UploadActivity extends AppCompatActivity {
             }
 
             CustomEngine item = CustomEngine.getItemById(mHttpUpload.siteId);
-            switch (item.result_open_action) {
+            switch (item.getResult_open_action()) {
                 case CustomEngine.RESULT_OPEN_ACTION.BUILD_IN_IQDB:
                     ResponseUtils.openIqdbResult(mActivity, result);
                     break;

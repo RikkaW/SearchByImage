@@ -1,37 +1,39 @@
 package rikka.searchbyimage.ui.apdater;
 
+import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import rikka.searchbyimage.BR;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.databinding.ListItemEditSitesBinding;
 import rikka.searchbyimage.staticdata.CustomEngine;
 
 /**
  * Created by Rikka on 2016/1/24.
  */
 public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapter.ViewHolder> {
-    public interface OnItemClickListener
-    {
+    public interface OnItemClickListener {
         void onItemClick(View view, int position, CustomEngine item);
-        void onItemLongClick(View view , int position, CustomEngine item);
+
+        void onItemLongClick(View view, int position, CustomEngine item);
     }
 
-    private OnItemClickListener mOnItemClickListener;
+    protected static OnItemClickListener mOnItemClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener)
-    {
-        this.mOnItemClickListener = mOnItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        SearchEngineAdapter.mOnItemClickListener = mOnItemClickListener;
     }
 
     private List<CustomEngine> mData;
@@ -49,10 +51,11 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         return new ViewHolder(itemView);
     }
 
-    private static final int VIEW_TYPE_ITEM = 1<<0;
-    private static final int VIEW_TYPE_HEADER_BUILT_IN = 1<<1;
-    private static final int VIEW_TYPE_HEADER_CUSTOM = 1<<2;
-    private static final int VIEW_TYPE_EMPTY = 1<<3;
+
+    private static final int VIEW_TYPE_ITEM = 1 << 0;
+    private static final int VIEW_TYPE_HEADER_BUILT_IN = 1 << 1;
+    private static final int VIEW_TYPE_HEADER_CUSTOM = 1 << 2;
+    private static final int VIEW_TYPE_EMPTY = 1 << 3;
 
     private static final int BUILT_IN_ENGINES = (BuildConfig.hideOtherEngine ? 1 : 6);
 
@@ -66,7 +69,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             flag |= VIEW_TYPE_HEADER_CUSTOM;
         }
 
-        if (position == BUILT_IN_ENGINES - 1 || position == getItemCount() -1) {
+        if (position == BUILT_IN_ENGINES - 1 || position == getItemCount() - 1) {
             flag |= VIEW_TYPE_EMPTY;
         }
 
@@ -81,63 +84,12 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             holder.ViewEmpty.setVisibility(View.GONE);
         }
 
-        if ((viewType & (VIEW_TYPE_HEADER_BUILT_IN | VIEW_TYPE_HEADER_CUSTOM)) == 0) {
-            holder.vHead.setVisibility(View.GONE);
-        } else {
-            holder.vHead.setText(((viewType & VIEW_TYPE_HEADER_BUILT_IN) >= 1) ?
-                    holder.itemView.getContext().getString(R.string.built_in) : holder.itemView.getContext().getString(R.string.custom));
-        }
-
-        final CustomEngine item = mData.get(position);
+        CustomEngine engine = mData.get(position);
+        holder.bind(engine, viewType);
 
         if (position == BUILT_IN_ENGINES - 1 || (position == mData.size() - 1)) {
             holder.vDivider.setVisibility(View.GONE);
         }
-
-        holder.vSwitch.setChecked(item.enabled == 1);
-
-        int start = item.upload_url.indexOf("//") + 2;
-        start = item.upload_url.indexOf("/", start);
-        String url = start != -1 ? item.upload_url.substring(0, start) : item.upload_url;
-
-        holder.vName.setText(item.name);
-        holder.vUrl.setText(url);
-
-        Glide.with(holder.vIcon.getContext())
-                .load(url + "/favicon.ico")
-                .crossFade()
-                .into(holder.vIcon);
-
-        if (mOnItemClickListener != null)
-        {
-            holder.View.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickListener.onItemClick(holder.itemView,
-                            pos,
-                            mData.get(pos));
-                }
-            });
-
-            holder.View.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickListener.onItemLongClick(holder.itemView,
-                            pos,
-                            mData.get(pos));
-                    return false;
-                }
-            });
-        }
-
-        holder.vSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                item.enabled = isChecked ? 1 : 0;
-            }
-        });
     }
 
     @Override
@@ -145,27 +97,91 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         return mData.size();
     }
 
+    @BindingAdapter({"bind:layout_flag"})
+    public static void setHeadViewableAndText(TextView vHead, Integer layout_flag) {
+        if (layout_flag == null) {
+            layout_flag = VIEW_TYPE_HEADER_BUILT_IN;
+        }
+        if ((layout_flag & (VIEW_TYPE_HEADER_BUILT_IN | VIEW_TYPE_HEADER_CUSTOM)) == 0) {
+            vHead.setVisibility(View.GONE);
+        } else {
+            vHead.setText(((layout_flag & VIEW_TYPE_HEADER_BUILT_IN) >= 1) ?
+                    vHead.getContext().getString(R.string.built_in) : vHead.getContext().getString(R.string.custom));
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        protected TextView vName;
-        protected TextView vUrl;
-        protected ImageView vIcon;
-        protected TextView vHead;
         protected View vDivider;
-        protected View View;
         protected View ViewEmpty;
-        protected SwitchCompat vSwitch;
+
+        private ListItemEditSitesBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            vName = (TextView) itemView.findViewById(R.id.item_name);
-            vUrl = (TextView) itemView.findViewById(R.id.item_url);
-            vIcon = (ImageView) itemView.findViewById(R.id.item_icon);
-            vHead = (TextView) itemView.findViewById(R.id.item_header);
+            binding = ListItemEditSitesBinding.bind(itemView);
             vDivider = itemView.findViewById(R.id.fake_divider);
-            View = itemView.findViewById(R.id.view);
             ViewEmpty = itemView.findViewById(R.id.empty_view);
-            vSwitch = (SwitchCompat) itemView.findViewById(R.id.switch_site_enabled);
+        }
+
+        private void bind(CustomEngine engine, int layout_flag) {
+            binding.setEngine(engine);
+            binding.setListener(new Listener(layout_flag));
+        }
+
+        public class Listener implements Observable {
+            private int layout_flag;
+            private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
+
+            @Bindable
+            public int getLayout_flag() {
+                return layout_flag;
+            }
+
+            public void setLayout_flag(int layout_flag) {
+                this.layout_flag = layout_flag;
+                pcr.notifyChange(this, BR.layout_flag);
+            }
+
+            public Listener(int layout_flag) {
+                this.layout_flag = layout_flag;
+            }
+
+            public SwitchCompat.OnCheckedChangeListener switchCheckedChangeListener = new SwitchCompat.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    binding.getEngine().setEnabled(isChecked ? 1 : 0);
+                }
+            };
+
+            public View.OnClickListener viewOnClick = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getLayoutPosition();
+                    mOnItemClickListener.onItemClick(itemView,
+                            pos,
+                            binding.getEngine());
+                }
+            };
+            public View.OnLongClickListener viewOnLongClick = new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = getLayoutPosition();
+                    mOnItemClickListener.onItemLongClick(itemView,
+                            pos,
+                            binding.getEngine());
+                    return false;
+                }
+            };
+
+            @Override
+            public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+                pcr.add(callback);
+            }
+
+            @Override
+            public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+                pcr.remove(callback);
+            }
         }
     }
 }

@@ -1,43 +1,31 @@
 package rikka.searchbyimage.ui;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Canvas;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import java.util.List;
 
-import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
 import rikka.searchbyimage.staticdata.CustomEngine;
-import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.SearchEngineAdapter;
-import rikka.searchbyimage.utils.ParcelableUtils;
-import rikka.searchbyimage.utils.Utils;
-import rikka.searchbyimage.widget.BaseRecyclerViewItemDecoration;
 
 public class EditSitesActivity extends AppCompatActivity {
     Activity mActivity;
@@ -156,7 +144,7 @@ public class EditSitesActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, final int position, final CustomEngine item) {
-                if (item.id < 6) {
+                if (item.getId() < 6) {
                     return;
                 }
 
@@ -169,7 +157,7 @@ public class EditSitesActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
                                             case 0:
-                                                delete(item.id);
+                                                delete(item.getId());
 
                                                 mData.remove(position);
 
@@ -243,7 +231,7 @@ public class EditSitesActivity extends AppCompatActivity {
             if (enabledCount == 0 && i == 0) {
                 values.put(CustomEngineTable.COLUMN_ENABLED, 1);
             } else {
-                values.put(CustomEngineTable.COLUMN_ENABLED, mData.get(i).enabled);
+                values.put(CustomEngineTable.COLUMN_ENABLED, mData.get(i).getEnabled());
             }
 
             String[] selectionArgs = {Integer.toString(i)};
@@ -259,7 +247,7 @@ public class EditSitesActivity extends AppCompatActivity {
         int result = 0;
         for (CustomEngine item:
              mData) {
-            result += item.enabled;
+            result += item.getEnabled();
         }
 
         return result;

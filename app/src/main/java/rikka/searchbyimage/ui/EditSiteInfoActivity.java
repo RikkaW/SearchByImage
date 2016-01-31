@@ -1,15 +1,11 @@
 package rikka.searchbyimage.ui;
 
-import android.animation.Animator;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,17 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.Slide;
-import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -176,14 +164,14 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             mLocation = intent.getIntExtra(EXTRA_EDIT_LOCATION, -1);
             mItem = mData.get(mLocation);
             if (mItem != null) {
-                mEditTextUrl.setText(mItem.upload_url);
-                mEditTextName.setText(mItem.name);
-                mEditTextFileKey.setText(mItem.post_file_key);
-                if (mItem.result_open_action <= CustomEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE) {
-                    mSpinner.setSelection(mItem.result_open_action);
+                mEditTextUrl.setText(mItem.getUpload_url());
+                mEditTextName.setText(mItem.getName());
+                mEditTextFileKey.setText(mItem.getPost_file_key());
+                if (mItem.getResult_open_action() <= CustomEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE) {
+                    mSpinner.setSelection(mItem.getResult_open_action());
                 }
 
-                mEnabled = (mItem.id > 5);
+                mEnabled = (mItem.getId() > 5);
                 mAdapter = new PostFormAdapter(mItem, mEnabled);
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -197,7 +185,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
                     mSpinner.setEnabled(false);
                     mSpinner.setAdapter(ArrayAdapter.createFromResource(this,
                             R.array.custom_open_with_in_app, android.R.layout.simple_spinner_dropdown_item));
-                    mSpinner.setSelection(mItem.result_open_action);
+                    mSpinner.setSelection(mItem.getResult_open_action());
                 }
 
             } else {
@@ -261,7 +249,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         values.put(CustomEngineTable.COLUMN_DATA, ParcelableUtils.marshall(parcelable));
 
         String selection = CustomEngineTable.COLUMN_ID + " LIKE ?";
-        String[] selectionArgs = {String.valueOf(mItem.id)};
+        String[] selectionArgs = {String.valueOf(mItem.getId())};
 
         db.update(
                 CustomEngineTable.TABLE_NAME,
@@ -269,10 +257,10 @@ public class EditSiteInfoActivity extends AppCompatActivity {
                 selection,
                 selectionArgs);
 
-        mItem.name = parcelable.data.name;
-        mItem.upload_url = parcelable.data.upload_url;
-        mItem.post_file_key = parcelable.data.post_file_key;
-        mItem.result_open_action = parcelable.data.result_open_action;
+        mItem.setName(parcelable.data.getName());
+        mItem.setUpload_url(parcelable.data.getUpload_url());
+        mItem.setPost_file_key(parcelable.data.getPost_file_key());
+        mItem.setResult_open_action(parcelable.data.getResult_open_action());
         mItem.post_text_key = parcelable.data.post_text_key;
         mItem.post_text_value = parcelable.data.post_text_value;
         mItem.post_text_type = parcelable.data.post_text_type;
@@ -294,10 +282,10 @@ public class EditSiteInfoActivity extends AppCompatActivity {
 
         CustomEngineParcelable parcelable = new CustomEngineParcelable();
         parcelable.data = getData();
-        parcelable.data.id = CustomEngine.getAvailableId();
-        parcelable.data.enabled = 1;
+        parcelable.data.setId(CustomEngine.getAvailableId());
+        parcelable.data.setEnabled(1);
 
-        CustomEngine.addEngineToDb(this, parcelable, parcelable.data.id);
+        CustomEngine.addEngineToDb(this, parcelable, parcelable.data.getId());
         CustomEngine.addEngineToList(parcelable.data);
 
         EditSitesActivity.getAdapter(this).notifyItemInserted(mData.size() - 1);
@@ -306,13 +294,13 @@ public class EditSiteInfoActivity extends AppCompatActivity {
 
     private CustomEngine getData() {
         CustomEngine data = new CustomEngine();
-        data.name = mEditTextName.getText().toString();
-        data.upload_url = mEditTextUrl.getText().toString();
-        data.post_file_key = mEditTextFileKey.getText().toString();
-        data.result_open_action = mSpinner.getSelectedItemPosition();
+        data.setName(mEditTextName.getText().toString());
+        data.setUpload_url(mEditTextUrl.getText().toString());
+        data.setPost_file_key(mEditTextFileKey.getText().toString());
+        data.setResult_open_action(mSpinner.getSelectedItemPosition());
 
-        if (!URLUtil.isHttpUrl(data.upload_url) && !URLUtil.isHttpsUrl(data.upload_url)) {
-            data.upload_url = "http://" + data.upload_url;
+        if (!URLUtil.isHttpUrl(data.getUpload_url()) && !URLUtil.isHttpsUrl(data.getUpload_url())) {
+            data.setUpload_url("http://" + data.getUpload_url());
         }
 
         data.post_text_key.clear();

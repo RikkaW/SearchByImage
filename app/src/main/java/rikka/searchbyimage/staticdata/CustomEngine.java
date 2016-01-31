@@ -4,13 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
+import android.databinding.Bindable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
+import android.net.Uri;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.database.DatabaseHelper;
@@ -20,16 +20,93 @@ import rikka.searchbyimage.utils.ParcelableUtils;
 /**
  * Created by Rikka on 2016/1/25.
  */
-public class CustomEngine {
-    public int id;
-    public int enabled;
-    public String name;
-    public String upload_url;
-    public String post_file_key;
-    public int result_open_action = RESULT_OPEN_ACTION.DEFAULT;
+public class CustomEngine implements Observable {
+    private int id;
+    private int enabled;
+    private String name;
+    private String upload_url;
+    private String post_file_key;
+    private int result_open_action = RESULT_OPEN_ACTION.DEFAULT;
     public List<String> post_text_key = new ArrayList<>();
     public List<String> post_text_value = new ArrayList<>();
     public List<Integer> post_text_type = new ArrayList<>();
+
+    @Bindable
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Bindable
+    public int getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
+    }
+
+    @Bindable
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Bindable
+    public String getUpload_url() {
+        return upload_url;
+    }
+
+    public void setUpload_url(String upload_url) {
+        this.upload_url = upload_url;
+    }
+
+    @Bindable
+    public String getPost_file_key() {
+        return post_file_key;
+    }
+
+    public void setPost_file_key(String post_file_key) {
+        this.post_file_key = post_file_key;
+    }
+
+    @Bindable
+    public int getResult_open_action() {
+        return result_open_action;
+    }
+
+    public void setResult_open_action(int result_open_action) {
+        this.result_open_action = result_open_action;
+    }
+
+    @Bindable
+    public String getEngineIcon() {
+        return getEngineHost() + "/favicon.ico";
+    }
+
+    @Bindable
+    public String getEngineHost() {
+        Uri uri = Uri.parse(upload_url);
+        return new Uri.Builder().scheme(uri.getScheme()).authority(uri.getHost()).build().toString();
+    }
+
+    private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
+
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        pcr.add(callback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        pcr.remove(callback);
+    }
 
     public static class RESULT_OPEN_ACTION {
         public static final int DEFAULT = 0;
@@ -150,7 +227,7 @@ public class CustomEngine {
 
     private static void addBuildInEngines(Context context, List<CustomEngine> list) {
         boolean ids[] = new boolean[6];
-        for (CustomEngine item: list) {
+        for (CustomEngine item : list) {
             ids[item.id] = true;
         }
 
