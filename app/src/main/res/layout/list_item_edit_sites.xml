@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="engine"
             type="rikka.searchbyimage.staticdata.CustomEngine" />
@@ -11,6 +13,10 @@
         <variable
             name="Listener"
             type="rikka.searchbyimage.ui.apdater.SearchEngineAdapter.ViewHolder.Listener" />
+
+        <variable
+            name="LayoutStyle"
+            type="rikka.searchbyimage.ui.apdater.SearchEngineAdapter.ViewHolder.LayoutStyle" />
     </data>
 
     <LinearLayout
@@ -32,8 +38,9 @@
                 android:layout_marginLeft="16dp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="bottom"
+                android:text="@{LayoutStyle.headText}"
                 android:textSize="14sp"
-                app:layout_flag="@{Listener.layout_flag}"
+                android:visibility="@{LayoutStyle.needShowHead?View.VISIBLE:View.GONE}"
                 tools:text="New Text" />
 
             <RelativeLayout
@@ -111,14 +118,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="64dp"
-                android:background="@color/dividerSearchEngineList" />
+                android:background="@color/dividerSearchEngineList"
+                android:visibility="@{LayoutStyle.needDivider?View.VISIBLE:View.GONE}" />
 
         </LinearLayout>
 
         <View
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
-            android:layout_height="8dp" />
+            android:layout_height="8dp"
+            android:visibility="@{LayoutStyle.needEmptyView?View.VISIBLE:View.GONE}" />
     </LinearLayout>
 </layout>
 

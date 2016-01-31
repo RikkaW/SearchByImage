@@ -1,7 +1,6 @@
 package rikka.searchbyimage.ui.apdater;
 
 import android.databinding.Bindable;
-import android.databinding.BindingAdapter;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -80,16 +78,9 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
     public void onBindViewHolder(final SearchEngineAdapter.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
-        if ((viewType & VIEW_TYPE_EMPTY) == 0) {
-            holder.ViewEmpty.setVisibility(View.GONE);
-        }
-
         CustomEngine engine = mData.get(position);
-        holder.bind(engine, viewType);
-
-        if (position == BUILT_IN_ENGINES - 1 || (position == mData.size() - 1)) {
-            holder.vDivider.setVisibility(View.GONE);
-        }
+        boolean needDivider = !(position == BUILT_IN_ENGINES - 1 || (position == mData.size() - 1));
+        holder.bind(engine, viewType, needDivider);
     }
 
     @Override
@@ -97,54 +88,78 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         return mData.size();
     }
 
-    @BindingAdapter({"bind:layout_flag"})
-    public static void setHeadViewableAndText(TextView vHead, Integer layout_flag) {
-        if (layout_flag == null) {
-            layout_flag = VIEW_TYPE_HEADER_BUILT_IN;
-        }
-        if ((layout_flag & (VIEW_TYPE_HEADER_BUILT_IN | VIEW_TYPE_HEADER_CUSTOM)) == 0) {
-            vHead.setVisibility(View.GONE);
-        } else {
-            vHead.setText(((layout_flag & VIEW_TYPE_HEADER_BUILT_IN) >= 1) ?
-                    vHead.getContext().getString(R.string.built_in) : vHead.getContext().getString(R.string.custom));
-        }
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        protected View vDivider;
-        protected View ViewEmpty;
 
         private ListItemEditSitesBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView);
             binding = ListItemEditSitesBinding.bind(itemView);
-            vDivider = itemView.findViewById(R.id.fake_divider);
-            ViewEmpty = itemView.findViewById(R.id.empty_view);
         }
 
-        private void bind(CustomEngine engine, int layout_flag) {
+        private void bind(CustomEngine engine, int layout_flag, boolean needDivider) {
             binding.setEngine(engine);
-            binding.setListener(new Listener(layout_flag));
+            binding.setListener(new Listener());
+            binding.setLayoutStyle(new LayoutStyle(layout_flag, needDivider));
+        }
+
+        public class LayoutStyle implements Observable {
+
+            private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
+
+            private int viewType;
+            private boolean needDivider;
+
+            public LayoutStyle(int layout_flag, boolean needDivider) {
+                this.viewType = layout_flag;
+                this.needDivider = needDivider;
+            }
+
+            @Bindable
+            public boolean getNeedShowHead() {
+                return (viewType & (VIEW_TYPE_HEADER_BUILT_IN | VIEW_TYPE_HEADER_CUSTOM)) != 0;
+            }
+
+            @Bindable
+            public String getHeadText() {
+                return (viewType & VIEW_TYPE_HEADER_BUILT_IN) >= 1 ?
+                        itemView.getContext().getString(R.string.built_in) : itemView.getContext().getString(R.string.custom);
+            }
+
+            @Bindable
+            public int getViewType() {
+                return viewType;
+            }
+
+            @Bindable
+            public boolean getNeedEmptyView() {
+                return (viewType & VIEW_TYPE_EMPTY) != 0;
+            }
+
+            @Bindable
+            public boolean getNeedDivider() {
+                return needDivider;
+            }
+
+            public void setViewType(int viewType) {
+                this.viewType = viewType;
+                pcr.notifyChange(this, BR.viewType);
+            }
+
+            @Override
+            public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+                pcr.add(callback);
+            }
+
+            @Override
+            public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+                pcr.remove(callback);
+            }
         }
 
         public class Listener implements Observable {
-            private int layout_flag;
+
             private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
-
-            @Bindable
-            public int getLayout_flag() {
-                return layout_flag;
-            }
-
-            public void setLayout_flag(int layout_flag) {
-                this.layout_flag = layout_flag;
-                pcr.notifyChange(this, BR.layout_flag);
-            }
-
-            public Listener(int layout_flag) {
-                this.layout_flag = layout_flag;
-            }
 
             public SwitchCompat.OnCheckedChangeListener switchCheckedChangeListener = new SwitchCompat.OnCheckedChangeListener() {
                 @Override
