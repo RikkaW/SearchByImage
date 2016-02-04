@@ -114,28 +114,28 @@
     <string name="app_crash_no_email_client">メールアプリ見つかりません。</string>
     <string name="baidu_settings">Baidu設定</string>
 
-    <string name="edit_sites">Search engines</string>
-    <string name="edit_site">Edit data</string>
-    <string name="request_url">Request url</string>
-    <string name="engine_name">Name</string>
-    <string name="upload_form_key">Key</string>
-    <string name="upload_form_value">Value</string>
+    <string name="edit_sites">検索エンジン</string>
+    <string name="edit_site">データの編集</string>
+    <string name="request_url">リクエストURL</string>
+    <string name="engine_name">名前</string>
+    <string name="upload_form_key">キー</string>
+    <string name="upload_form_value">値</string>
     <string name="upload_form_your_image">(image)</string>
     <string name="upload_form_built_in_selector">(selector)</string>
-    <string name="upload_form_add">New form data</string>
-    <string name="built_in">Built-in</string>
-    <string name="custom">Custom</string>
-    <string name="check_your_data">Check your data</string>
-    <string name="choose_one">Please enable at least one search engine</string>
+    <string name="upload_form_add">フォームデータを追加</string>
+    <string name="built_in">ビルトイン</string>
+    <string name="custom">カスタム</string>
+    <string name="check_your_data">データを確認してください</string>
+    <string name="choose_one">少なくとも1つの検索エンジンを有効にしてください</string>
 
-    <string name="open_url">Open URL</string>
-    <string name="open_html">Open saved HTML file in WebView</string>
-    <string name="open_iqdb">Built-in viewer for iqdb.org</string>
+    <string name="open_url">URLを開く</string>
+    <string name="open_html">WebViewで保存されたHTMLファイルを開く</string>
+    <string name="open_iqdb">ビルトインiqdb.org用のビューア</string>
 
-    <string name="advance">Advance</string>
-    <string name="custom_search_engine">Custom search engines</string>
-    <string name="help">Help</string>
-    <string name="delete">Delete</string>
+    <string name="advance">詳細設定</string>
+    <string name="custom_search_engine">検索エンジンのカスタム</string>
+    <string name="help">ヘルプ</string>
+    <string name="delete">削除</string>
     <string name="open_action">Open action</string>
     <string name="post_form">Form</string>
     <string name="not_empty">Should not be empty</string>
