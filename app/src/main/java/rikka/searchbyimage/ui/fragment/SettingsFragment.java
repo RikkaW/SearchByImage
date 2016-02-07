@@ -123,6 +123,11 @@ public class SettingsFragment extends PreferenceFragment implements
             mSafeSearch.setChecked(true);
         }
 
+        if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
+            DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
+            showResultInPreference.removeItem(1);
+        }
+
         if (!popup)
         {
             /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
@@ -154,11 +159,6 @@ public class SettingsFragment extends PreferenceFragment implements
                 versionPref.setSummary(mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
-            }
-
-            if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
-                DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
-                showResultInPreference.removeItem(1);
             }
         }
     }
