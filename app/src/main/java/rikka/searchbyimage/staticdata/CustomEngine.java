@@ -224,8 +224,13 @@ public class CustomEngine implements Observable {
     public final static int SITE_ASCII2D = 5;
 
     /**
+     * add built-in engines to database
+     * <p/>
+     * if BuildConfig.hideOtherEngine is true, only add Google engine
+     * otherwise add all the engines
      *
-     * */
+     * @param db the database
+     */
     public static void addBuildInEngines(SQLiteDatabase db) {
 
         for (int i = 0; i < (BuildConfig.hideOtherEngine ? 1 : 6); i++) {
