@@ -126,8 +126,6 @@ public class CustomEngine implements Observable {
     private static List<CustomEngine> loadList(Context context) {
         List<CustomEngine> list = new ArrayList<>();
 
-        addBuildInEngines(context, list);
-
         DatabaseHelper dbHelper = DatabaseHelper.instance(context);
         Cursor cursor = dbHelper.getReadableDatabase()
                 .query(CustomEngineTable.TABLE_NAME, null, null, null, null, null, null);
@@ -147,6 +145,8 @@ public class CustomEngine implements Observable {
         }
 
         cursor.close();
+
+        addBuildInEngines(context, list);
 
         return list;
     }
@@ -263,7 +263,7 @@ public class CustomEngine implements Observable {
                 }
 
                 addEngineToDb(context, parcelable, i);
-                //addEngineToList(parcelable, list);
+                addEngineToList(parcelable.data, list);
             }
         }
     }
