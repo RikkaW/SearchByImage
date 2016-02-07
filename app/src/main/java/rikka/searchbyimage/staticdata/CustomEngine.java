@@ -146,8 +146,6 @@ public class CustomEngine implements Observable {
 
         cursor.close();
 
-        addBuildInEngines(context, list);
-
         return list;
     }
 
@@ -225,51 +223,53 @@ public class CustomEngine implements Observable {
     public final static int SITE_SAUCENAO = 4;
     public final static int SITE_ASCII2D = 5;
 
-    private static void addBuildInEngines(Context context, List<CustomEngine> list) {
-        boolean ids[] = new boolean[6];
-        for (CustomEngine item : list) {
-            ids[item.id] = true;
-        }
+    /**
+     *
+     * */
+    public static void addBuildInEngines(SQLiteDatabase db) {
 
         for (int i = 0; i < (BuildConfig.hideOtherEngine ? 1 : 6); i++) {
-            if (!ids[i]) {
-                CustomEngineParcelable parcelable = new CustomEngineParcelable();
-                parcelable.data.id = i;
-                parcelable.data.enabled = 1;
-                parcelable.data.name = BUILD_IN_ENGINE_NAME[i];
-                parcelable.data.upload_url = BUILD_IN_ENGINE_URL[i];
-                parcelable.data.post_file_key = BUILD_IN_ENGINE_FILE_KEY[i];
-                parcelable.data.result_open_action = BUILD_IN_ENGINE_OPEN_ACTION[i];
+            CustomEngineParcelable parcelable = new CustomEngineParcelable();
+            parcelable.data.id = i;
+            parcelable.data.enabled = 1;
+            parcelable.data.name = BUILD_IN_ENGINE_NAME[i];
+            parcelable.data.upload_url = BUILD_IN_ENGINE_URL[i];
+            parcelable.data.post_file_key = BUILD_IN_ENGINE_FILE_KEY[i];
+            parcelable.data.result_open_action = BUILD_IN_ENGINE_OPEN_ACTION[i];
 
-                switch (i) {
-                    case SITE_IQDB:
-                        parcelable.data.post_text_key.add("service");
-                        parcelable.data.post_text_value.add("");
-                        parcelable.data.post_text_type.add(-1);
+            switch (i) {
+                case SITE_IQDB:
+                    parcelable.data.post_text_key.add("service");
+                    parcelable.data.post_text_value.add("");
+                    parcelable.data.post_text_type.add(-1);
 
-                        parcelable.data.post_text_key.add("forcegray");
-                        parcelable.data.post_text_value.add("");
-                        parcelable.data.post_text_type.add(-1);
-                        break;
-                    case SITE_SAUCENAO:
-                        parcelable.data.post_text_key.add("hide");
-                        parcelable.data.post_text_value.add("");
-                        parcelable.data.post_text_type.add(-1);
+                    parcelable.data.post_text_key.add("forcegray");
+                    parcelable.data.post_text_value.add("");
+                    parcelable.data.post_text_type.add(-1);
+                    break;
+                case SITE_SAUCENAO:
+                    parcelable.data.post_text_key.add("hide");
+                    parcelable.data.post_text_value.add("");
+                    parcelable.data.post_text_type.add(-1);
 
-                        parcelable.data.post_text_key.add("database");
-                        parcelable.data.post_text_value.add("");
-                        parcelable.data.post_text_type.add(-1);
-                        break;
-                }
-
-                addEngineToDb(context, parcelable, i);
-                addEngineToList(parcelable.data, list);
+                    parcelable.data.post_text_key.add("database");
+                    parcelable.data.post_text_value.add("");
+                    parcelable.data.post_text_type.add(-1);
+                    break;
             }
+
+            addEngineToDb(db, parcelable, i);
         }
+
     }
 
     public static void addEngineToDb(Context context, CustomEngineParcelable parcelable, int id) {
         SQLiteDatabase db = DatabaseHelper.instance(context).getWritableDatabase();
+
+        addEngineToDb(db, parcelable, id);
+    }
+
+    public static void addEngineToDb(SQLiteDatabase db, CustomEngineParcelable parcelable, int id) {
 
         ContentValues values = new ContentValues();
         values.put(CustomEngineTable.COLUMN_ID, id);

@@ -5,12 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import rikka.searchbyimage.database.table.CustomEngineTable;
+import rikka.searchbyimage.staticdata.CustomEngine;
 
 /**
  * Created by Rikka on 2016/1/24.
  */
-public class DatabaseHelper extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 2;
+public class DatabaseHelper extends SQLiteOpenHelper {
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "search_engines.db";
 
     private static DatabaseHelper instance;
@@ -29,12 +30,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CustomEngineTable.SQL_CREATE_ENTRIES);
+        CustomEngine.addBuildInEngines(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion == 2) {
-            db.execSQL("ALTER TABLE " + CustomEngineTable.TABLE_NAME + " ADD " + CustomEngineTable.COLUMN_ENABLED + " integer NOT NULL DEFAULT(1)");
+
+        switch (oldVersion) {
+            case 1:
+                db.execSQL("ALTER TABLE " + CustomEngineTable.TABLE_NAME + " ADD " + CustomEngineTable.COLUMN_ENABLED + " integer NOT NULL DEFAULT(1)");
+                //do not add break
+            case 2:
+                CustomEngine.addBuildInEngines(db);
+                break;
+            default:
+                break;
         }
+
     }
 }
