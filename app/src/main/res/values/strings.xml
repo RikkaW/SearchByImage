@@ -140,4 +140,5 @@
     <string name="post_form">Form</string>
     <string name="not_empty">Should not be empty</string>
 
+    <string name="invalid_web_url">Url is invalid</string>
 </resources>
