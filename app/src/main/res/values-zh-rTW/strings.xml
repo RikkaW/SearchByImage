@@ -136,4 +136,5 @@
     <string name="open_action">打開方式</string>
     <string name="post_form">表单</string>
     <string name="not_empty">不能为空</string>
+    <string name="invalid_web_url">網址不正確</string>
 </resources>

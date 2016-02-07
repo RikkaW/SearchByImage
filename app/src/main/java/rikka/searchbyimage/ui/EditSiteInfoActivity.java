@@ -3,7 +3,6 @@ package rikka.searchbyimage.ui;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -196,10 +196,6 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             mRecyclerView.setAdapter(mAdapter);
         }
 
-        mEditTextFileKey.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), true));
-        mEditTextName.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), false));
-        mEditTextUrl.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), false));
-        mSpinner.setOnFocusChangeListener(new MyOnFocusChangeListener(mFormTitle.getTextColors(), false));
         mAdapter.setOnFocusChangeListener(new PostFormAdapter.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -299,7 +295,7 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         data.setPost_file_key(mEditTextFileKey.getText().toString());
         data.setResult_open_action(mSpinner.getSelectedItemPosition());
 
-        if (!URLUtil.isHttpUrl(data.getUpload_url()) && !URLUtil.isHttpsUrl(data.getUpload_url())) {
+        if (!URLUtil.isNetworkUrl(data.getUpload_url())) {
             data.setUpload_url("http://" + data.getUpload_url());
         }
 
@@ -327,35 +323,17 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             mTextInputName.setError(getString(R.string.not_empty));
         }
 
+        if (!Patterns.WEB_URL.matcher(mEditTextUrl.getText().toString()).matches()) {
+            mTextInputUrl.setError(getString(R.string.invalid_web_url));
+        }
+
         if (mEditTextUrl.getText().toString().length() == 0) {
             mTextInputUrl.setError(getString(R.string.not_empty));
         }
 
         return mEditTextName.getText().toString().length() != 0
-                && mEditTextUrl.getText().toString().length() != 0/*(URLUtil.isHttpUrl(mEditTextUrl.getText().toString()) || URLUtil.isHttpsUrl(mEditTextUrl.getText().toString()))*/
+                && Patterns.WEB_URL.matcher(mEditTextUrl.getText().toString()).matches()
                 && mEditTextFileKey.getText().toString().length() != 0;
-    }
-
-    private class MyOnFocusChangeListener implements View.OnFocusChangeListener {
-        ColorStateList mColor;
-        boolean mFocusHaveColor;
-
-        public MyOnFocusChangeListener(ColorStateList color, boolean focusHaveColor) {
-            mColor = color;
-            mFocusHaveColor = focusHaveColor;
-        }
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (!hasFocus) {
-                return;
-            }
-            if (mFocusHaveColor) {
-                mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-            } else {
-                mFormTitle.setTextColor(mColor);
-            }
-        }
     }
 
     private class TextChangeRemoveErrorTextWatcher implements TextWatcher {
