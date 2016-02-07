@@ -226,7 +226,7 @@ public class CustomEngine implements Observable {
     public final static int SITE_ASCII2D = 5;
 
     private static void addBuildInEngines(Context context, List<CustomEngine> list) {
-        boolean ids[] = new boolean[6];
+        boolean ids[] = new boolean[6 + list.size()];
         for (CustomEngine item : list) {
             ids[item.id] = true;
         }

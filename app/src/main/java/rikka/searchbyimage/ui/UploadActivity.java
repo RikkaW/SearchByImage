@@ -213,9 +213,11 @@ public class UploadActivity extends AppCompatActivity {
                     break;
             }
 
-            mProgressDialog.dismiss();
-            finish();
-
+            try {
+                mProgressDialog.dismiss();
+            } finally {
+                finish();
+            }
         }
     }
 
