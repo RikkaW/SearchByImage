@@ -274,6 +274,14 @@ public class CustomEngine implements Observable {
         addEngineToDb(db, parcelable, id);
     }
 
+    /**
+     * add engine to database
+     * if the id already exist,replace the old one
+     *
+     * @param db         SQLiteDatabase
+     * @param parcelable engine need to add
+     * @param id         engine id
+     */
     public static void addEngineToDb(SQLiteDatabase db, CustomEngineParcelable parcelable, int id) {
 
         ContentValues values = new ContentValues();
@@ -281,7 +289,11 @@ public class CustomEngine implements Observable {
         values.put(CustomEngineTable.COLUMN_ENABLED, 1);
         values.put(CustomEngineTable.COLUMN_DATA, ParcelableUtils.marshall(parcelable));
 
-        db.insert(CustomEngineTable.TABLE_NAME, null, values);
+        if (isEngineIDExist(id, db)) {
+            db.replace(CustomEngineTable.TABLE_NAME, null, values);
+        } else {
+            db.insert(CustomEngineTable.TABLE_NAME, null, values);
+        }
     }
 
     public static void addEngineToList(CustomEngine data) {
@@ -290,5 +302,24 @@ public class CustomEngine implements Observable {
 
     public static void addEngineToList(CustomEngine data, List<CustomEngine> list) {
         list.add(data);
+    }
+
+    /**
+     * declare the Engine ID already used
+     *
+     * @param id the engine ID
+     * @param db SQLiteDatabase
+     * @return if the ID exist return true,otherwise return false
+     */
+    private static boolean isEngineIDExist(int id, SQLiteDatabase db) {
+        Cursor cursor = db.query(
+                CustomEngineTable.TABLE_NAME,
+                new String[]{CustomEngineTable.COLUMN_ID},
+                CustomEngineTable.COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)},
+                null, null, null);
+        boolean ans = cursor.getCount() == 1;
+        cursor.close();
+        return ans;
     }
 }
