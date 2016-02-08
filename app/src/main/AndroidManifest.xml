@@ -55,6 +55,7 @@
             android:label="@string/edit_sites"/>
         <activity android:name=".ui.EditSiteInfoActivity"
             android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.UseColorControlActivated"
             android:label="@string/edit_site"/>
 
         <receiver android:name=".receiver.ShareBroadcastReceiver" />
