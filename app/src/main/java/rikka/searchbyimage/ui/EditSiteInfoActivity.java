@@ -196,12 +196,17 @@ public class EditSiteInfoActivity extends AppCompatActivity {
             mRecyclerView.setAdapter(mAdapter);
         }
 
+        mEditTextFileKey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                setFormTitleColor(hasFocus);
+            }
+        });
+
         mAdapter.setOnFocusChangeListener(new PostFormAdapter.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-                }
+                setFormTitleColor(hasFocus);
             }
         });
 
@@ -217,6 +222,21 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    /**
+     * set FormTitle Color
+     * if control view get focus ,set color to colorPrimary
+     * otherwise,set color to default
+     *
+     * @param hasFocus if control view has focus
+     */
+    private void setFormTitleColor(boolean hasFocus) {
+        if (hasFocus) {
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+        } else {
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, android.R.color.primary_text_light));
+        }
     }
 
     @Override

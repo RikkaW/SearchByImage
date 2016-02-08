@@ -1,9 +1,6 @@
 package rikka.searchbyimage.ui.apdater;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,24 +69,24 @@ public class PostFormAdapter extends RecyclerView.Adapter<PostFormAdapter.ViewHo
                     holder.vValue.setText(R.string.upload_form_built_in_selector);
                     holder.vValue.setEnabled(false);
                 }
-
-                holder.vKey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (mOnFocusChangeListener != null) {
-                            mOnFocusChangeListener.onFocusChange(v, hasFocus);
-                        }
-                    }
-                });
-                holder.vValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (mOnFocusChangeListener != null) {
-                            mOnFocusChangeListener.onFocusChange(v, hasFocus);
-                        }
-                    }
-                });
             }
+
+            holder.vKey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (mOnFocusChangeListener != null) {
+                        mOnFocusChangeListener.onFocusChange(v, hasFocus);
+                    }
+                }
+            });
+            holder.vValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (mOnFocusChangeListener != null) {
+                        mOnFocusChangeListener.onFocusChange(v, hasFocus);
+                    }
+                }
+            });
 
             if (!mEnabled) {
                 holder.vKey.setEnabled(false);
