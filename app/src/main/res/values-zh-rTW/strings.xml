@@ -39,7 +39,7 @@
     <string name="iqdb_service_select">搜尋網站</string>
     <string name="iqdb_forcegray">忽略顏色</string>
 
-    <string name="save_link">保存連接</string>
+    <string name="copy_url">複製網址</string>
     <string name="save_image">保存圖片</string>
     <string name="open_with">用其他軟體打開…</string>
     <string name="open">打開</string>
