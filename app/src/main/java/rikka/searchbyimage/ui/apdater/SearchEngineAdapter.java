@@ -106,7 +106,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
     /**
      * get number of enabled engines
      */
-    private int getEnabledEngineNumber() {
+    public int getEnabledEngineNumber() {
         int enabledNumber = 0;
         for (CustomEngine customEngine : mData) {
             if (customEngine.getEnabled() == 1) {
