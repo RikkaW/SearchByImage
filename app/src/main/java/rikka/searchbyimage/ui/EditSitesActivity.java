@@ -230,6 +230,7 @@ public class EditSitesActivity extends AppCompatActivity {
             ContentValues values = new ContentValues();
             if (enabledCount == 0 && i == 0) {
                 values.put(CustomEngineTable.COLUMN_ENABLED, 1);
+                mData.get(0).setEnabled(1);
             } else {
                 values.put(CustomEngineTable.COLUMN_ENABLED, mData.get(i).getEnabled());
             }
