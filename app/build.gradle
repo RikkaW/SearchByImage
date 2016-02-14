@@ -21,7 +21,7 @@ android {
     }
 
     productFlavors {
-        def String name = "1.4.3"
+        def String name = "1.4.4"
 
         COOLAPK {
             applicationId "rikka.searchbyimage"
