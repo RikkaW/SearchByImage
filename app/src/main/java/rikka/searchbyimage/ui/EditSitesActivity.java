@@ -150,9 +150,8 @@ public class EditSitesActivity extends AppCompatActivity {
 
                 new AlertDialog.Builder(mActivity)
                         .setItems(
-                                new CharSequence[] {getString(R.string.delete)},
-                                new DialogInterface.OnClickListener()
-                                {
+                                new CharSequence[]{getString(R.string.delete)},
+                                new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
@@ -178,6 +177,13 @@ public class EditSitesActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+        mAdapter.setShowMessage(new SearchEngineAdapter.ShowMessage() {
+            @Override
+            public void showNoLessThanOne() {
+                Snackbar.make(mCoordinatorLayout, R.string.choose_one, Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     public static synchronized SearchEngineAdapter getAdapter(Context context) {
@@ -191,7 +197,7 @@ public class EditSitesActivity extends AppCompatActivity {
     private void delete(int id) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String selection = CustomEngineTable.COLUMN_ID + " LIKE ?";
-        String[] selectionArgs = { String.valueOf(id)};
+        String[] selectionArgs = {String.valueOf(id)};
         db.delete(CustomEngineTable.TABLE_NAME, selection, selectionArgs);
     }
 
@@ -207,15 +213,6 @@ public class EditSitesActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (countEnabled() == 0) {
-            Snackbar.make(mCoordinatorLayout, R.string.choose_one, Snackbar.LENGTH_LONG).show();
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         writeToDb();
@@ -225,7 +222,7 @@ public class EditSitesActivity extends AppCompatActivity {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String selection = CustomEngineTable.COLUMN_ID + " LIKE ?";
 
-        int enabledCount = countEnabled();
+        int enabledCount = mAdapter.getEnabledEngineNumber();
         for (int i = 0; i < mData.size(); i++) {
             ContentValues values = new ContentValues();
             if (enabledCount == 0 && i == 0) {
@@ -242,15 +239,5 @@ public class EditSitesActivity extends AppCompatActivity {
                     selection,
                     selectionArgs);
         }
-    }
-
-    private int countEnabled() {
-        int result = 0;
-        for (CustomEngine item:
-             mData) {
-            result += item.getEnabled();
-        }
-
-        return result;
     }
 }
