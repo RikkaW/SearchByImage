@@ -222,7 +222,7 @@ public class EditSitesActivity extends AppCompatActivity {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String selection = CustomEngineTable.COLUMN_ID + " LIKE ?";
 
-        int enabledCount = countEnabled();
+        int enabledCount = mAdapter.getEnabledEngineNumber();
         for (int i = 0; i < mData.size(); i++) {
             ContentValues values = new ContentValues();
             if (enabledCount == 0 && i == 0) {
@@ -239,15 +239,5 @@ public class EditSitesActivity extends AppCompatActivity {
                     selection,
                     selectionArgs);
         }
-    }
-
-    private int countEnabled() {
-        int result = 0;
-        for (CustomEngine item :
-                mData) {
-            result += item.getEnabled();
-        }
-
-        return result;
     }
 }
