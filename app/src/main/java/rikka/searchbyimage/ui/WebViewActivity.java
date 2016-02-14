@@ -391,7 +391,7 @@ public class WebViewActivity extends AppCompatActivity {
             menu.setHeaderView(new ContextMenuTitleView(this, mImageUrl));
             //menu.setHeaderTitle(mImageUrl);
             menu.add(Menu.NONE, 2, 0, R.string.open_with).setOnMenuItemClickListener(handler);
-            menu.add(Menu.NONE, 0, 1, R.string.save_link).setOnMenuItemClickListener(handler);
+            menu.add(Menu.NONE, 0, 1, R.string.copy_url).setOnMenuItemClickListener(handler);
         }
 
         if (result.getType() == WebView.HitTestResult.IMAGE_TYPE ||
@@ -400,7 +400,7 @@ public class WebViewActivity extends AppCompatActivity {
             mImageUrl = result.getExtra();
             //menu.setHeaderTitle(mImageUrl);
             menu.setHeaderView(new ContextMenuTitleView(this, mImageUrl));
-            menu.add(Menu.NONE, 0, 0, R.string.save_link).setOnMenuItemClickListener(handler);
+            menu.add(Menu.NONE, 0, 0, R.string.copy_url).setOnMenuItemClickListener(handler);
             menu.add(Menu.NONE, 1, 1, R.string.save_image).setOnMenuItemClickListener(handler);
             menu.add(Menu.NONE, 3, 2, R.string.search_this_image_by_google).setOnMenuItemClickListener(handler);
 

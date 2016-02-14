@@ -1,17 +1,24 @@
 package rikka.searchbyimage.ui.fragment;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +97,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
         if (popup) {
             //if (!BuildConfig.hideOtherEngine)
-                addPreferencesFromResource(R.xml.preferences_general_mini);
+            addPreferencesFromResource(R.xml.preferences_general_mini);
 
             addPreferencesFromResource(R.xml.preferences_search_settings);
         } else {
@@ -294,6 +301,8 @@ public class SettingsFragment extends PreferenceFragment implements
         }*/
     }
 
+    int mIsRed = 0;
+
     @Override
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
@@ -308,6 +317,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
                 click++;
 
+
+
                 //startActivity(new Intent(mActivity, EditSitesActivity.class));
 
                 if (click == 5)
@@ -321,6 +332,54 @@ public class SettingsFragment extends PreferenceFragment implements
                 else if (click == 40) {
                     Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
 
+                    int color[][] = {
+                            {
+                                    ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+                                    Color.parseColor("#F44336")
+                            },
+                            {
+                                    ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark),
+                                    Color.parseColor("#D32F2F")
+                            }
+                    };
+
+
+                    final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+
+                    colorAnimation(
+                            color[0][mIsRed],
+                            color[0][1 - mIsRed],
+                            250,
+                            new ValueAnimator.AnimatorUpdateListener() {
+
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animator) {
+                                    toolbar.setBackgroundColor((int) animator.getAnimatedValue());
+                                }
+                            });
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        colorAnimation(
+                                color[1][mIsRed],
+                                color[1][1 - mIsRed],
+                                250,
+                                new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator animator) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            getActivity().getWindow().setStatusBarColor((int) animator.getAnimatedValue());
+                                        }
+                                    }
+                                });
+
+                        getActivity().setTaskDescription(new ActivityManager.TaskDescription(
+                                getActivity().getTitle().toString(),
+                                null,
+                                color[1][1 - mIsRed]));
+
+
+                    }
+                    mIsRed = 1 - mIsRed;
                     click = -10;
 
                     /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
@@ -352,5 +411,12 @@ public class SettingsFragment extends PreferenceFragment implements
         }
 
         return false;
+    }
+
+    void colorAnimation(int colorFrom, int colorTo, int duration, ValueAnimator.AnimatorUpdateListener listener) {
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(duration);
+        colorAnimation.addUpdateListener(listener);
+        colorAnimation.start();
     }
 }

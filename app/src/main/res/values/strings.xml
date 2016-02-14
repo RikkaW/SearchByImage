@@ -40,7 +40,7 @@
     <string name="iqdb_service_select">Search sites</string>
     <string name="iqdb_forcegray">Ignore colors</string>
 
-    <string name="save_link">Save link</string>
+    <string name="copy_url">Copy url</string>
     <string name="save_image">Save image</string>
     <string name="open_with">Open with…</string>
     <string name="open">open</string>

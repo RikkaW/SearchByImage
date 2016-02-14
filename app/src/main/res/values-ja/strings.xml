@@ -40,7 +40,7 @@
     <string name="iqdb_service_select">検索サイト</string>
     <string name="iqdb_forcegray">色を無視</string>
 
-    <string name="save_link">リンクを保存</string>
+    <string name="copy_url">URLをコピー</string>
     <string name="save_image">画像を保存</string>
     <string name="open_with">その他アプリで開く…</string>
     <string name="open">開く</string>
