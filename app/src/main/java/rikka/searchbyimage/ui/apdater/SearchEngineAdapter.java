@@ -28,10 +28,25 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         void onItemLongClick(View view, int position, CustomEngine item);
     }
 
-    protected static OnItemClickListener mOnItemClickListener;
+    /**
+     * interface to show message in UI
+     */
+    public interface ShowMessage {
+        /**
+         * show "at least select one engine" message
+         */
+        void showNoLessThanOne();
+    }
+
+    protected OnItemClickListener mOnItemClickListener;
+    protected ShowMessage showMessage;
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        SearchEngineAdapter.mOnItemClickListener = mOnItemClickListener;
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    public void setShowMessage(ShowMessage showMessage) {
+        this.showMessage = showMessage;
     }
 
     private List<CustomEngine> mData;
@@ -50,7 +65,7 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
     }
 
 
-    private static final int VIEW_TYPE_ITEM = 1 << 0;
+    private static final int VIEW_TYPE_ITEM = 1;
     private static final int VIEW_TYPE_HEADER_BUILT_IN = 1 << 1;
     private static final int VIEW_TYPE_HEADER_CUSTOM = 1 << 2;
     private static final int VIEW_TYPE_EMPTY = 1 << 3;
@@ -88,7 +103,20 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
         return mData.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * get number of enabled engines
+     */
+    private int getEnabledEngineNumber() {
+        int enabledNumber = 0;
+        for (CustomEngine customEngine : mData) {
+            if (customEngine.getEnabled() == 1) {
+                enabledNumber++;
+            }
+        }
+        return enabledNumber;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ListItemEditSitesBinding binding;
 
@@ -97,6 +125,13 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             binding = ListItemEditSitesBinding.bind(itemView);
         }
 
+        /**
+         * bind view
+         *
+         * @param engine      the engine bind to view
+         * @param layout_flag layout flag for view
+         * @param needDivider if view need a divider
+         */
         private void bind(CustomEngine engine, int layout_flag, boolean needDivider) {
             binding.setEngine(engine);
             binding.setListener(new Listener());
@@ -164,7 +199,18 @@ public class SearchEngineAdapter extends RecyclerView.Adapter<SearchEngineAdapte
             public SwitchCompat.OnCheckedChangeListener switchCheckedChangeListener = new SwitchCompat.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    binding.getEngine().setEnabled(isChecked ? 1 : 0);
+                    if (isChecked) {
+                        binding.getEngine().setEnabled(1);
+                        return;
+                    }
+                    if (getEnabledEngineNumber() > 1) {
+                        binding.getEngine().setEnabled(0);
+                    } else {
+                        if (showMessage != null) {
+                            showMessage.showNoLessThanOne();
+                        }
+                        buttonView.setChecked(true);
+                    }
                 }
             };
 
