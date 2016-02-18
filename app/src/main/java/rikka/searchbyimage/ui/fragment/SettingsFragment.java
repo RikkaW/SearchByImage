@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import me.qixingchen.settings.DropDownPreference;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -34,8 +35,7 @@ import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
-import rikka.searchbyimage.widget.BaseRecyclerViewItemDecoration;
-import rikka.searchbyimage.widget.DropDownPreference;
+import me.qixingchen.settings.BaseRecyclerViewItemDecoration;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -135,8 +135,7 @@ public class SettingsFragment extends PreferenceFragment implements
             showResultInPreference.removeItem(1);
         }
 
-        if (!popup)
-        {
+        if (!popup) {
             /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
             if (sharedPreferences.getBoolean("developer", false)) {
                 mScreen.addPreference(mCategoryAdvance);
@@ -318,7 +317,6 @@ public class SettingsFragment extends PreferenceFragment implements
                 click++;
 
 
-
                 //startActivity(new Intent(mActivity, EditSitesActivity.class));
 
                 if (click == 5)
@@ -344,7 +342,7 @@ public class SettingsFragment extends PreferenceFragment implements
                     };
 
 
-                    final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+                    final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
                     colorAnimation(
                             color[0][mIsRed],

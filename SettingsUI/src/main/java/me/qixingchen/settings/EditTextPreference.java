@@ -1,4 +1,4 @@
-package rikka.searchbyimage.widget;
+package me.qixingchen.settings;
 
 import android.content.Context;
 import android.util.AttributeSet;

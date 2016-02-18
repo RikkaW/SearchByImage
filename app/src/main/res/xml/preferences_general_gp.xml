@@ -22,7 +22,7 @@
             android:title="@string/resize_image"
             android:layout="@layout/preference_material"/>
 
-        <rikka.searchbyimage.widget.DropDownPreference
+        <me.qixingchen.settings.DropDownPreference
             android:defaultValue="0"
             android:key="show_result_in"
             android:title="@string/show_result_in"

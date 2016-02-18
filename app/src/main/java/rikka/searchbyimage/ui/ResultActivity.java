@@ -26,7 +26,7 @@ import rikka.searchbyimage.ui.apdater.ResultAdapter;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
-import rikka.searchbyimage.widget.BaseRecyclerViewItemDecoration;
+import me.qixingchen.settings.BaseRecyclerViewItemDecoration;
 
 public class ResultActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package rikka.searchbyimage.widget;
+package me.qixingchen.settings;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,9 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
-import rikka.searchbyimage.R;
 
 /**
  * Created by Rikka on 2015/12/15.
