@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import me.qixingchen.settings.DropDown;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
@@ -36,7 +37,6 @@ import rikka.searchbyimage.staticdata.CustomEngineParcelable;
 import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
 import rikka.searchbyimage.utils.URLUtils;
-import rikka.searchbyimage.widget.DropDown;
 
 public class EditSiteInfoActivity extends AppCompatActivity {
     public static final String EXTRA_EDIT_LOCATION =

@@ -29,7 +29,7 @@
             android:defaultValue="false"
             android:layout="@layout/preference_material"/>
 
-        <rikka.searchbyimage.widget.DropDownPreference
+        <me.qixingchen.settings.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
@@ -37,7 +37,7 @@
             android:defaultValue="0"
             android:layout="@layout/preference_material"/>
 
-        <rikka.searchbyimage.widget.EditTextPreference
+        <me.qixingchen.settings.EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
             android:defaultValue= "www.google.com"
@@ -73,7 +73,7 @@
         android:order="3"
         android:layout="@layout/preference_category_material">
 
-        <rikka.searchbyimage.widget.DropDownPreference
+        <me.qixingchen.settings.DropDownPreference
             android:key="saucenao_hide"
             android:title="@string/saucenao_hide_title"
             app:myEntries="@array/saucenao_hide"
@@ -81,7 +81,7 @@
             android:defaultValue="0"
             android:layout="@layout/preference_material"/>
 
-        <rikka.searchbyimage.widget.DropDownPreference
+        <me.qixingchen.settings.DropDownPreference
             android:key="saucenao_database"
             android:title="@string/saucenao_database_title"
             app:myEntries="@array/saucenao_database"

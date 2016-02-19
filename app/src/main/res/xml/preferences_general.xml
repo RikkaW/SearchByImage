@@ -10,7 +10,7 @@
         android:order="1"
         android:layout="@layout/preference_category_material">
 
-        <rikka.searchbyimage.widget.DropDownPreference
+        <me.qixingchen.settings.DropDownPreference
             android:defaultValue="0"
             android:key="search_engine_preference"
             android:title="@string/search_engine"
@@ -37,7 +37,7 @@
             android:summary="@string/use_chrome_custom_tabs_summary"
             android:layout="@layout/preference_material"/>-->
 
-        <rikka.searchbyimage.widget.DropDownPreference
+        <me.qixingchen.settings.DropDownPreference
             android:defaultValue="0"
             android:key="show_result_in"
             android:title="@string/show_result_in"
