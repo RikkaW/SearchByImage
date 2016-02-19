@@ -22,7 +22,7 @@
         android:order="3"
         android:layout="@layout/preference_category_material">
 
-        <SwitchPreference
+        <android.support.v14.preference.SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
@@ -51,7 +51,7 @@
         android:order="3"
         android:layout="@layout/preference_category_material">
 
-        <MultiSelectListPreference
+        <android.support.v14.preference.MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
@@ -59,7 +59,7 @@
             android:defaultValue="@array/iqdb_service_id_default"
             android:layout="@layout/preference_material"/>
 
-        <SwitchPreference
+        <android.support.v14.preference.SwitchPreference
             android:key="iqdb_forcegray"
             android:title="@string/iqdb_forcegray"
             android:defaultValue="false"

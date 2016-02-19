@@ -146,6 +146,10 @@ public class DropDownPreference extends Preference {
         }
     }
 
+    public Object getSelectedValue() {
+        return mValues.get(mSelectedPosition);
+    }
+
     public int getSelectedPosition() {
         return mSelectedPosition;
     }
