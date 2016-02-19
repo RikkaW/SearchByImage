@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="preferenceTheme">@style/AppTheme.Preference</item>
+        <item name="preferenceTheme">@style/PreferenceTheme.Material</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -20,7 +20,7 @@
     </style>
 
     <style name="PopupTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="preferenceTheme">@style/AppTheme.Preference</item>
+        <item name="preferenceTheme">@style/PreferenceTheme.Material</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -43,8 +43,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay.v14.Material"></style>
 
     <style name="InfoBarButton" parent="AppTheme">
         <!--<item name="colorAccent">#304ffe</item>

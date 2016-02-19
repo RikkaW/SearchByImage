@@ -14,4 +14,7 @@
     <color name="infoBarBorder">#757575</color>
 
     <color name="dividerSearchEngineList">#20000000</color>
+
+    <color name="preference_fallback_accent_color">@color/colorAccent</color>
+
 </resources>

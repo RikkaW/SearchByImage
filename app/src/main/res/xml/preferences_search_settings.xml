@@ -7,87 +7,75 @@
     <PreferenceCategory
         android:title="@string/baidu_settings"
         android:key="category_baidu"
-        android:order="3"
-        android:layout="@layout/preference_category_material">
+        android:order="3">
         <Preference
             android:key="preference_notice"
             android:title="@string/notice"
-            android:summary="@string/notice_baidu"
-            android:layout="@layout/preference_material"/>
+            android:summary="@string/notice_baidu"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/google_settings"
         android:key="category_google"
-        android:order="3"
-        android:layout="@layout/preference_category_material">
+        android:order="3">
 
         <android.support.v14.preference.SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="false"/>
 
         <me.qixingchen.settings.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
             app:myEntryValues="@array/google_region_redirect_value"
-            android:defaultValue="0"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="0"/>
 
         <me.qixingchen.settings.EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
-            android:defaultValue= "www.google.com"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue= "www.google.com"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/iqdb_settings"
         android:key="category_iqdb"
-        android:order="3"
-        android:layout="@layout/preference_category_material">
+        android:order="3">
 
         <android.support.v14.preference.MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
-            android:defaultValue="@array/iqdb_service_id_default"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="@array/iqdb_service_id_default"/>
 
         <android.support.v14.preference.SwitchPreference
             android:key="iqdb_forcegray"
             android:title="@string/iqdb_forcegray"
-            android:defaultValue="false"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/saucenao_settings"
         android:key="category_saucenao"
-        android:order="3"
-        android:layout="@layout/preference_category_material">
+        android:order="3">
 
         <me.qixingchen.settings.DropDownPreference
             android:key="saucenao_hide"
             android:title="@string/saucenao_hide_title"
             app:myEntries="@array/saucenao_hide"
             app:myEntryValues="@array/saucenao_hide_value"
-            android:defaultValue="0"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="0"/>
 
         <me.qixingchen.settings.DropDownPreference
             android:key="saucenao_database"
             android:title="@string/saucenao_database_title"
             app:myEntries="@array/saucenao_database"
             app:myEntryValues="@array/saucenao_database_value"
-            android:defaultValue="0"
-            android:layout="@layout/preference_material"/>
+            android:defaultValue="0"/>
 
     </PreferenceCategory>
 
