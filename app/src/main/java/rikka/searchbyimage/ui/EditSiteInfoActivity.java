@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import me.qixingchen.settings.DropDown;
+import rikka.searchbyimage.widget.DropDown;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;

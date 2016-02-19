@@ -1,4 +1,4 @@
-package me.qixingchen.settings;
+package rikka.searchbyimage.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import rikka.searchbyimage.R;
+import rikka.searchbyimage.utils.Utils;
 
 /**
  * Created by Rikka on 2016/1/29.
@@ -64,7 +67,7 @@ public class DropDown extends FrameLayout {
             }
         });
 
-        LayoutInflater.from(context).inflate(R.layout.drop_down, this);
+        LayoutInflater.from(context).inflate(me.qixingchen.settings.R.layout.drop_down, this);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DropDown);
         mTitle = a.getString(R.styleable.DropDown_myTitle);

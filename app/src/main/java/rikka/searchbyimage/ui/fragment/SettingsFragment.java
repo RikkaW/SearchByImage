@@ -10,23 +10,19 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
 
 import me.qixingchen.settings.DropDownPreference;
+import me.qixingchen.settings.PreferenceFragment;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -35,7 +31,6 @@ import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
-import me.qixingchen.settings.BaseRecyclerViewItemDecoration;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -69,25 +64,6 @@ public class SettingsFragment extends PreferenceFragment implements
             click = 0;
         }
     };
-
-    private RecyclerView mList;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        mList = getListView();
-        mList.addItemDecoration(new BaseRecyclerViewItemDecoration(mActivity) {
-            @Override
-            public boolean canDraw(RecyclerView parent, View child, int childCount, int position) {
-                return ((position < childCount - 1)
-                        && parent.getChildAt(position + 1).findViewById(android.R.id.summary) != null
-                        && child.findViewById(android.R.id.summary) != null);
-            }
-        });
-
-        return view;
-    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -123,7 +99,7 @@ public class SettingsFragment extends PreferenceFragment implements
         mNotice = (Preference) findPreference("preference_notice");
 
         setCustomGoogleUriHide();
-        setSearchEngineHide();
+        //setSearchEngineHide();
 
         if (BuildConfig.hideOtherEngine) {
             mSafeSearch.setEnabled(false);
@@ -186,6 +162,8 @@ public class SettingsFragment extends PreferenceFragment implements
                         .putString("search_engine_id", (String) value)
                         .apply();
 
+                setSearchEngineHide(Integer.parseInt((String) value));
+
                 return true;
             }
         });
@@ -210,7 +188,7 @@ public class SettingsFragment extends PreferenceFragment implements
         mSearchEngine.setSelectedItem(0);
         mSearchEngine.setSelectedValue(sharedPreferences.getString("search_engine_id", "0"));
 
-        setSearchEngineHide();
+        setSearchEngineHide(Integer.parseInt((String) mSearchEngine.getSelectedValue()));
     }
 
     @Override
@@ -224,9 +202,9 @@ public class SettingsFragment extends PreferenceFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("search_engine_preference")) {
+        /*if (key.equals("search_engine_preference")) {
             setSearchEngineHide();
-        }
+        }*/
 
         if (key.equals("google_region_preference")) {
             setCustomGoogleUriHide();
@@ -245,11 +223,7 @@ public class SettingsFragment extends PreferenceFragment implements
         }
     }
 
-    private void setSearchEngineHide() {
-        SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-
-        int siteId = Integer.parseInt(sharedPreferences.getString("search_engine_preference", "0"));
-
+    private void setSearchEngineHide(int siteId) {
         switch (siteId) {
             case UploadActivity.SITE_GOOGLE:
                 mScreen.addPreference(mCategoryGoogle);
