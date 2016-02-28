@@ -269,7 +269,8 @@ public class WebViewActivity extends AppCompatActivity {
 
             return true;
         }
-        return super.onKeyDown(keyCode, event);
+        finish();
+        return true;
     }
 
     private static final int REQUEST_CODE = 0;

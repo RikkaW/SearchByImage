@@ -24,6 +24,12 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chrome_custom_tabs);
 
+        if (mIsURLOpened) {
+            finish();
+
+            return;
+        }
+
         Intent intent = getIntent();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -62,6 +68,10 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        if (mIsURLOpened) {
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int siteId = intent.getIntExtra(EXTRA_SITE_ID, 2);

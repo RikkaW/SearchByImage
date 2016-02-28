@@ -4,4 +4,8 @@
         <attr name="myEntries" format="reference"/>
         <attr name="myEntryValues" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="MyPreference">
+        <attr name="showValueSummary" format="boolean"/>
+    </declare-styleable>
 </resources>

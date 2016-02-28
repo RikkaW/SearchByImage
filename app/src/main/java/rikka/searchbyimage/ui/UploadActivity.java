@@ -169,7 +169,15 @@ public class UploadActivity extends AppCompatActivity {
             return mHttpUpload;
         }
 
+        private void dismissDialog() {
+            if (UploadActivity.this.isFinishing()) {
+                return;
+            }
 
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        }
 
         protected void onProgressUpdate(Integer... values) {
             Toast.makeText(mActivity, "Retry: " + Integer.toString(values[0]), Toast.LENGTH_SHORT).show();
@@ -196,7 +204,7 @@ public class UploadActivity extends AppCompatActivity {
 
                 builder.show();
 
-                mProgressDialog.dismiss();
+                dismissDialog();
                 return;
             }
 
@@ -213,11 +221,8 @@ public class UploadActivity extends AppCompatActivity {
                     break;
             }
 
-            try {
-                mProgressDialog.dismiss();
-            } finally {
-                finish();
-            }
+            dismissDialog();
+            finish();
         }
     }
 
