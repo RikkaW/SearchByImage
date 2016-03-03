@@ -10,7 +10,7 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.utils.URLUtils;
 
-public class ChromeCustomTabsActivity extends AppCompatActivity {
+public class ChromeCustomTabsActivity extends BaseActivity {
     public static final String EXTRA_URL =
             "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_URL";
 

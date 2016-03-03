@@ -27,7 +27,7 @@ import rikka.searchbyimage.database.table.CustomEngineTable;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.ui.apdater.SearchEngineAdapter;
 
-public class EditSitesActivity extends AppCompatActivity {
+public class EditSitesActivity extends BaseActivity {
     Activity mActivity;
 
     DatabaseHelper mDbHelper;

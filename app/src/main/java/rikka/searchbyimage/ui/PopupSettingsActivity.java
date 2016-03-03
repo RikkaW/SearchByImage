@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.fragment.SettingsFragment;
 
-public class PopupSettingsActivity extends AppCompatActivity {
+public class PopupSettingsActivity extends BaseActivity {
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.ResultActivity.EXTRA_URI";
 

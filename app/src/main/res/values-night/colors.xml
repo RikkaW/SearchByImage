@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_item_background">#212121</color>
+    <color name="backgourd">@color/material_grey_850</color>
+    <color name="dividerSearchEngineList">#20ffffff</color>
+    <color name="contextMenuTitle">#FFF</color>
+
+</resources>

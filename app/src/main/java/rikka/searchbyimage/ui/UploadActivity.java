@@ -37,7 +37,7 @@ import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.ResponseUtils;
 import rikka.searchbyimage.utils.Utils;
 
-public class UploadActivity extends AppCompatActivity {
+public class UploadActivity extends BaseActivity {
     public final static int SITE_GOOGLE = 0;
     public final static int SITE_BAIDU = 1;
     public final static int SITE_IQDB = 2;
@@ -325,7 +325,7 @@ public class UploadActivity extends AppCompatActivity {
         ProgressDialog progressDialog;
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1)
-            progressDialog = new ProgressDialog(this, R.style.DialogStyle);
+            progressDialog = new ProgressDialog(this, R.style.ProgressDialog);
         else
             progressDialog = new ProgressDialog(this);
 

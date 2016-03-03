@@ -38,7 +38,7 @@ import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
-public class EditSiteInfoActivity extends AppCompatActivity {
+public class EditSiteInfoActivity extends BaseActivity {
     public static final String EXTRA_EDIT_LOCATION =
             "rikka.searchbyimage.ui.EditSiteInfoActivity.EXTRA_EDIT_LOCATION";
 

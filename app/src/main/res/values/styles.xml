@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="preferenceTheme">@style/PreferenceTheme.Material</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,16 +10,19 @@
         <!--<item name="android:windowContentTransitions">true</item>-->
     </style>
 
-    <style name="AppTheme.UseColorControlActivated" parent="AppTheme">
+    <style name="AppTheme.UseColorControlActivated" parent="AppTheme.NoActionBar">
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="titleTextColor">#FFFFFF</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="PopupTheme" parent="Theme.AppCompat.Light.Dialog">
+    <style name="PopupTheme" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="preferenceTheme">@style/PreferenceTheme.Material</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -27,17 +30,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-
-    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
     <style name="Transparent" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowIsFloating">true</item>
-
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
