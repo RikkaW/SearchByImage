@@ -4,5 +4,7 @@
     <color name="backgourd">@color/material_grey_850</color>
     <color name="dividerSearchEngineList">#20ffffff</color>
     <color name="contextMenuTitle">#FFF</color>
+    <color name="colorAccent">#FF80AB</color>
+
 
 </resources>

@@ -233,9 +233,10 @@ public class EditSiteInfoActivity extends BaseActivity {
      */
     private void setFormTitleColor(boolean hasFocus) {
         if (hasFocus) {
-            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+            //mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
         } else {
-            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, android.R.color.primary_text_light));
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_text));
         }
     }
 
