@@ -236,7 +236,7 @@ public class EditSiteInfoActivity extends BaseActivity {
             //mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
             mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
         } else {
-            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_text));
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_text  ));
         }
     }
 

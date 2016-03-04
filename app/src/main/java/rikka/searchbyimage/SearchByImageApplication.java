@@ -26,7 +26,7 @@ public class SearchByImageApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        DayNightMode.setDefaultNightMode(this, DayNightMode.MODE_NIGHT_AUTO);
+        DayNightMode.setDefaultNightMode(DayNightMode.MODE_NIGHT_AUTO);
 
         if (!BuildConfig.hideOtherEngine && !BuildConfig.DEBUG) {
             CrashHandler.init(getApplicationContext());

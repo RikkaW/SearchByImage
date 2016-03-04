@@ -221,7 +221,7 @@ public class UploadActivity extends BaseActivity {
                     break;
             }
 
-            dismissDialog();
+            //dismissDialog();
             finish();
         }
     }

@@ -101,10 +101,10 @@ public class SettingsFragment extends PreferenceFragment implements
         setCustomGoogleUriHide();
         //setSearchEngineHide();
 
-        if (BuildConfig.hideOtherEngine) {
+        /*if (BuildConfig.hideOtherEngine) {
             mSafeSearch.setEnabled(false);
             mSafeSearch.setChecked(true);
-        }
+        }*/
 
         if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
             DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
@@ -303,7 +303,7 @@ public class SettingsFragment extends PreferenceFragment implements
                     Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
                 else if (click == 40) {
                     Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
-
+/*
                     int color[][] = {
                             {
                                     ContextCompat.getColor(getActivity(), R.color.colorPrimary),
@@ -351,7 +351,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
 
                     }
-                    mIsRed = 1 - mIsRed;
+                    mIsRed = 1 - mIsRed;*/
                     click = -10;
 
                     /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();

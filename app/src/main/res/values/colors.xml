@@ -18,5 +18,5 @@
     <color name="preference_fallback_accent_color">@color/colorAccent</color>
 
     <color name="list_item_background">#FFF</color>
-    <color name="backgourd">@color/material_grey_50</color>
+    <color name="background">@color/material_grey_50</color>
 </resources>
