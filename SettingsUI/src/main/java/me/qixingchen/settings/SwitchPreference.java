@@ -188,7 +188,6 @@ public class SwitchPreference extends TwoStatePreference {
         if (view instanceof SwitchCompat) {
             if (!mSetInPost) {
                 ((SwitchCompat) view).setChecked(mChecked);
-                mSetInPost = true;
             } else {
                 view.post(new Runnable() {
                     @Override
