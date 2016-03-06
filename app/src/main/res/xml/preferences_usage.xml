@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="screen">
 
     <Preference
         android:summary="@string/hello"
         android:title="@string/usage"
-        android:order="0"
-        android:layout="@layout/preference_material"/>
+        android:order="0"/>
 
 </PreferenceScreen>

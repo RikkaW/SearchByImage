@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -38,7 +41,7 @@ import rikka.searchbyimage.ui.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
 import rikka.searchbyimage.utils.URLUtils;
 
-public class EditSiteInfoActivity extends AppCompatActivity {
+public class EditSiteInfoActivity extends BaseActivity {
     public static final String EXTRA_EDIT_LOCATION =
             "rikka.searchbyimage.ui.EditSiteInfoActivity.EXTRA_EDIT_LOCATION";
 
@@ -77,6 +80,12 @@ public class EditSiteInfoActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(ContextCompat.getColor(this, android.R.color.white), PorterDuff.Mode.SRC_ATOP);
+            mToolbar.setNavigationIcon(upArrow);
+        }
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
@@ -233,9 +242,10 @@ public class EditSiteInfoActivity extends AppCompatActivity {
      */
     private void setFormTitleColor(boolean hasFocus) {
         if (hasFocus) {
-            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+            //mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.colorAccent));
         } else {
-            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, android.R.color.primary_text_light));
+            mFormTitle.setTextColor(ContextCompat.getColor(mActivity, R.color.primary_text  ));
         }
     }
 

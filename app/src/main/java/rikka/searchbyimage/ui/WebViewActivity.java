@@ -54,7 +54,7 @@ import rikka.searchbyimage.view.ContextMenuTitleView;
 import rikka.searchbyimage.view.WebViewToolBar;
 import rikka.searchbyimage.widget.InfoBar;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends BaseActivity {
     public static final String EXTRA_URL =
             "rikka.searchbyimage.ui.WebViewActivity.EXTRA_URL";
 
@@ -269,7 +269,8 @@ public class WebViewActivity extends AppCompatActivity {
 
             return true;
         }
-        return super.onKeyDown(keyCode, event);
+        finish();
+        return true;
     }
 
     private static final int REQUEST_CODE = 0;

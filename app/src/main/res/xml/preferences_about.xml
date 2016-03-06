@@ -6,34 +6,28 @@
     <PreferenceCategory
         android:key="category_advance"
         android:title="@string/advance"
-        android:order="8"
-        android:layout="@layout/preference_category_material">
+        android:order="8">
 
         <Preference
             android:title="@string/custom_search_engine"
-            android:key="advance"
-            android:layout="@layout/preference_material">
-
+            android:key="advance">
         </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="about"
         android:title="@string/about"
-        android:order="9"
-        android:layout="@layout/preference_category_material">
+        android:order="9">
 
         <Preference
             android:title="@string/build_version"
-            android:key="version"
-            android:layout="@layout/preference_material">
+            android:key="version">
 
         </Preference>
 
         <Preference
             android:title="@string/rate"
-            android:summary="@string/rate_summary"
-            android:layout="@layout/preference_material">
+            android:summary="@string/rate_summary">
 
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
@@ -42,13 +36,11 @@
         <Preference
             android:key="donate"
             android:title="@string/donate"
-            android:summary="@string/donate_summary"
-            android:layout="@layout/preference_material"/>
+            android:summary="@string/donate_summary"/>
 
         <Preference
             android:summary="https://github.com/RikkaW/SearchByImage"
             android:title="@string/open_source"
-            android:layout="@layout/preference_material"
             android:key="open_source">
         </Preference>
 

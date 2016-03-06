@@ -56,7 +56,10 @@ public class ResponseUtils {
         boolean noRedirect = sharedPref.getString("google_region_preference", "0").equals("1");
         boolean customRedirect = sharedPref.getString("google_region_preference", "0").equals("2");
 
-        url += safeSearch ? "&safe=active" : "&safe=off";
+        if (BuildConfig.hideOtherEngine)
+            url += safeSearch ? "&safe=active" : "&safe=image";
+        else
+            url += safeSearch ? "&safe=active" : "&safe=off";
 
         if (noRedirect || customRedirect) {
             url += "?gws_rd=cr";

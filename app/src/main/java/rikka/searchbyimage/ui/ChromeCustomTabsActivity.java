@@ -10,7 +10,7 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.utils.URLUtils;
 
-public class ChromeCustomTabsActivity extends AppCompatActivity {
+public class ChromeCustomTabsActivity extends BaseActivity {
     public static final String EXTRA_URL =
             "rikka.searchbyimage.ui.ChromeCustomTabsActivity.EXTRA_URL";
 
@@ -23,6 +23,12 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chrome_custom_tabs);
+
+        if (mIsURLOpened) {
+            finish();
+
+            return;
+        }
 
         Intent intent = getIntent();
 
@@ -62,6 +68,10 @@ public class ChromeCustomTabsActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        if (mIsURLOpened) {
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int siteId = intent.getIntExtra(EXTRA_SITE_ID, 2);

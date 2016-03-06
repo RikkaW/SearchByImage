@@ -7,28 +7,24 @@
     <PreferenceCategory
         android:title="@string/general"
         android:key="category_general"
-        android:order="1"
-        android:layout="@layout/preference_category_material">
+        android:order="1">
 
-        <android.support.v14.preference.SwitchPreference
+        <me.qixingchen.settings.SwitchPreference
             android:defaultValue="false"
             android:key="setting_each_time"
-            android:title="@string/setting_each_time"
-            android:layout="@layout/preference_material"/>
+            android:title="@string/setting_each_time"/>
 
-        <android.support.v14.preference.SwitchPreference
+        <me.qixingchen.settings.SwitchPreference
             android:defaultValue="true"
             android:key="resize_image"
-            android:title="@string/resize_image"
-            android:layout="@layout/preference_material"/>
+            android:title="@string/resize_image"/>
 
         <me.qixingchen.settings.DropDownPreference
             android:defaultValue="0"
             android:key="show_result_in"
             android:title="@string/show_result_in"
             app:myEntries="@array/open_with"
-            app:myEntryValues="@array/open_with_value"
-            android:layout="@layout/preference_material"/>
+            app:myEntryValues="@array/open_with_value"/>
 
         <!--<SwitchPreference
             android:defaultValue="true"

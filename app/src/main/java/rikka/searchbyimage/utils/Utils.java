@@ -24,7 +24,11 @@ public class Utils {
     public static File streamToCacheFile(Context context, InputStream inputStream, String path, String name) {
         String FilePath = context.getCacheDir().getAbsolutePath() + "/" + path + "/" + name;
 
-        File file = new File(FilePath);
+        return streamToFile(inputStream, FilePath);
+    }
+
+    public static File streamToFile(InputStream inputStream, String path) {
+        File file = new File(path);
         if (!file.getParentFile().exists()) {
             //noinspection ResultOfMethodCallIgnored
             file.getParentFile().mkdirs();
@@ -33,7 +37,7 @@ public class Utils {
             //noinspection ResultOfMethodCallIgnored
             file.createNewFile();
 
-            FileOutputStream outputStream = new FileOutputStream(FilePath);
+            FileOutputStream outputStream = new FileOutputStream(path);
 
             int bytesRead;
             byte[] buffer = new byte[1024];

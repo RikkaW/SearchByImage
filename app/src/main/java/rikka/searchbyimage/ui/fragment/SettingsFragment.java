@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import me.qixingchen.settings.DropDownPreference;
 import me.qixingchen.settings.PreferenceFragment;
+import me.qixingchen.settings.SwitchPreference;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -101,10 +101,10 @@ public class SettingsFragment extends PreferenceFragment implements
         setCustomGoogleUriHide();
         //setSearchEngineHide();
 
-        if (BuildConfig.hideOtherEngine) {
+        /*if (BuildConfig.hideOtherEngine) {
             mSafeSearch.setEnabled(false);
             mSafeSearch.setChecked(true);
-        }
+        }*/
 
         if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
             DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
@@ -303,7 +303,7 @@ public class SettingsFragment extends PreferenceFragment implements
                     Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
                 else if (click == 40) {
                     Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
-
+/*
                     int color[][] = {
                             {
                                     ContextCompat.getColor(getActivity(), R.color.colorPrimary),
@@ -351,7 +351,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
 
                     }
-                    mIsRed = 1 - mIsRed;
+                    mIsRed = 1 - mIsRed;*/
                     click = -10;
 
                     /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();

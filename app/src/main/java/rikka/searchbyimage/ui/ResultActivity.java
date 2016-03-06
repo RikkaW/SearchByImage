@@ -28,7 +28,7 @@ import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
 import me.qixingchen.settings.BaseRecyclerViewItemDecoration;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends BaseActivity {
 
     public static final String EXTRA_FILE =
             "rikka.searchbyimage.ui.ResultActivity.EXTRA_FILE";

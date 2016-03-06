@@ -1,0 +1,19 @@
+<resources>
+    <style name="PreferenceTheme.Material" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen.Material</item>
+        <item name="preferenceCategoryStyle">@style/PreferenceCategory.Material</item>
+        <item name="preferenceStyle">@style/Preference.Material</item>
+        <item name="preferenceInformationStyle">@style/Preference.Information.Material</item>
+        <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference.Material</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material</item>
+        <item name="switchPreferenceStyle">@style/Preference.SwitchPreference.Material</item>
+        <item name="dialogPreferenceStyle">@style/Preference.DialogPreference.Material</item>
+        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference.Material</item>
+        <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList.Material</item>
+    </style>
+
+    <style name="PreferenceCategory.Material" parent="@style/Preference.Category.Material">
+        <item name="android:layout">@layout/preference_category_material</item>
+    </style>
+
+</resources>

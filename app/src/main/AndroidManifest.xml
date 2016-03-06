@@ -52,6 +52,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.EditSitesActivity"
+                  android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/edit_sites"/>
         <activity android:name=".ui.EditSiteInfoActivity"
             android:windowSoftInputMode="adjustResize"

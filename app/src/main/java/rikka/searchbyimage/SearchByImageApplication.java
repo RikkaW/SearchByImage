@@ -4,6 +4,7 @@ import android.app.Application;
 
 import java.io.InputStream;
 
+import moe.xing.daynightmode.DayNightMode;
 import rikka.searchbyimage.support.CrashHandler;
 
 /**
@@ -24,6 +25,8 @@ public class SearchByImageApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        DayNightMode.setDefaultNightMode(DayNightMode.MODE_NIGHT_AUTO);
 
         if (!BuildConfig.hideOtherEngine && !BuildConfig.DEBUG) {
             CrashHandler.init(getApplicationContext());
