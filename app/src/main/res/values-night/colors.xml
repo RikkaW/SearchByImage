@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#212121</color>
+    <color name="background">@color/material_grey_850</color>
+    <color name="background_list">#212121</color>
     <color name="list_item_background">@color/material_grey_850</color>
     <color name="dividerSearchEngineList">#20ffffff</color>
     <color name="contextMenuTitle">#FFF</color>

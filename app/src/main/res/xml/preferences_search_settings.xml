@@ -44,7 +44,7 @@
         android:key="category_iqdb"
         android:order="3">
 
-        <android.support.v14.preference.MultiSelectListPreference
+        <me.qixingchen.settings.MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"

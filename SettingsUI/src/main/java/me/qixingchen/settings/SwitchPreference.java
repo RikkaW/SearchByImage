@@ -102,6 +102,13 @@ public class SwitchPreference extends TwoStatePreference {
         syncSwitchView(switchView);
         syncSummaryView(holder);
     }
+
+    @Override
+    protected void onClick() {
+        super.onClick();
+        mSetInPost = true;
+    }
+
     /**
      * Set the text displayed on the switch widget in the on state.
      * This should be a very short string; one word if possible.
@@ -155,7 +162,7 @@ public class SwitchPreference extends TwoStatePreference {
     /**
      * @hide
      */
-    private boolean mFirstShown;
+    private boolean mSetInPost;
 
     @Override
     protected void performClick(View view) {
@@ -179,14 +186,14 @@ public class SwitchPreference extends TwoStatePreference {
             switchView.setOnCheckedChangeListener(null);
         }
         if (view instanceof SwitchCompat) {
-            if (!mFirstShown) {
+            if (!mSetInPost) {
                 ((SwitchCompat) view).setChecked(mChecked);
-                mFirstShown = true;
             } else {
                 view.post(new Runnable() {
                     @Override
                     public void run() {
                         ((SwitchCompat) view).setChecked(mChecked);
+                        mSetInPost = false;
                     }
                 });
             }
@@ -198,4 +205,6 @@ public class SwitchPreference extends TwoStatePreference {
             switchView.setOnCheckedChangeListener(mListener);
         }
     }
+
+
 }
