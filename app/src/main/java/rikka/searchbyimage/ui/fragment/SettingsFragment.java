@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import me.qixingchen.settings.DropDownPreference;
 import me.qixingchen.settings.PreferenceFragment;
+import me.qixingchen.settings.SwitchPreference;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;

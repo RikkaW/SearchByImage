@@ -16,12 +16,12 @@
             app:myEntries="@array/search_engines"
             app:myEntryValues="@array/search_engines_value"/>
 
-        <android.support.v14.preference.SwitchPreference
+        <me.qixingchen.settings.SwitchPreference
             android:defaultValue="false"
             android:key="setting_each_time"
             android:title="@string/setting_each_time"/>
 
-        <android.support.v14.preference.SwitchPreference
+        <me.qixingchen.settings.SwitchPreference
             android:defaultValue="true"
             android:key="resize_image"
             android:title="@string/resize_image"/>
