@@ -47,6 +47,7 @@ import java.nio.charset.Charset;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.Utils;
@@ -296,8 +297,20 @@ public class WebViewActivity extends BaseActivity {
 
     private void startDownload() {
         final Uri uri = Uri.parse(mImageUrl);
+        String fileName = uri.getLastPathSegment();
+        if (fileName == null) {
+            fileName = "image.png";
+
+            Settings.instance(this)
+                    .edit()
+                    .putBoolean(Settings.DOWNLOAD_FILE_CRASH, true)
+                    .putString(Settings.DOWNLOAD_URL, mImageUrl)
+                    .putString(Settings.DOWNLOAD_IMAGE, fileName)
+                    .apply();
+        }
+
         final File destinationFile = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                + "/SearchByImage", uri.getLastPathSegment());
+                + "/SearchByImage", fileName);
 
         if (!destinationFile.getParentFile().exists()) {
             if (!destinationFile.getParentFile().mkdirs()) {

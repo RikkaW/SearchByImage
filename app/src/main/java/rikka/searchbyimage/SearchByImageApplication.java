@@ -2,6 +2,9 @@ package rikka.searchbyimage;
 
 import android.app.Application;
 
+import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVOSCloud;
+
 import java.io.InputStream;
 
 import moe.xing.daynightmode.DayNightMode;
@@ -31,6 +34,11 @@ public class SearchByImageApplication extends Application {
         if (!BuildConfig.hideOtherEngine && !BuildConfig.DEBUG) {
             CrashHandler.init(getApplicationContext());
             CrashHandler.register();
+        }
+
+        if (!BuildConfig.hideOtherEngine) {
+            AVOSCloud.initialize(this, "jn5rOQdydwKneRsJUxR8UXzv-gzGzoHsz", "fw3fTe1JtGn8ockywhkoWIEq");
+            AVAnalytics.enableCrashReport(this, false);
         }
     }
 }

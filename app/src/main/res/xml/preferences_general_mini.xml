@@ -9,14 +9,14 @@
         android:key="category_general"
         android:order="1">
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:defaultValue="0"
             android:key="search_engine_preference"
             android:title="@string/search_engine"
             app:myEntries="@array/search_engines"
             app:myEntryValues="@array/search_engines_value"/>
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:defaultValue="0"
             android:key="show_result_in"
             android:title="@string/show_result_in"
