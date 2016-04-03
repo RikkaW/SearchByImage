@@ -67,7 +67,7 @@ public class DropDown extends FrameLayout {
             }
         });
 
-        LayoutInflater.from(context).inflate(me.qixingchen.settings.R.layout.drop_down, this);
+        LayoutInflater.from(context).inflate(R.layout.drop_down, this);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DropDown);
         mTitle = a.getString(R.styleable.DropDown_myTitle);

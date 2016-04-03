@@ -84,6 +84,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         sb.append("Device Model: ").append(MODEL).append("\n");
         sb.append("Device Manufacturer: ").append(MANUFACTURER).append("\n");
         sb.append("App Version: ").append(VERSION).append("\n");
+
+        if (Settings.instance(mContext)
+                .getBoolean(Settings.DOWNLOAD_FILE_CRASH, false)) {
+            sb.append('\n');
+            sb.append("Download image url: ").append(Settings.instance(mContext).getString(Settings.DOWNLOAD_URL, "")).append("\n");
+            sb.append("Download image name: ").append(Settings.instance(mContext).getString(Settings.DOWNLOAD_IMAGE, "")).append("\n");
+        }
+
         sb.append("*********************\n");
         StringWriter sw = new StringWriter();
         throwable.printStackTrace(new PrintWriter(sw));

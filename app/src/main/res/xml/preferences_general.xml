@@ -9,19 +9,19 @@
         android:key="category_general"
         android:order="1">
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:defaultValue="0"
             android:key="search_engine_preference"
             android:title="@string/search_engine"
             app:myEntries="@array/search_engines"
             app:myEntryValues="@array/search_engines_value"/>
 
-        <me.qixingchen.settings.SwitchPreference
+        <rikka.materialpreference.SwitchPreference
             android:defaultValue="false"
             android:key="setting_each_time"
             android:title="@string/setting_each_time"/>
 
-        <me.qixingchen.settings.SwitchPreference
+        <rikka.materialpreference.SwitchPreference
             android:defaultValue="true"
             android:key="resize_image"
             android:title="@string/resize_image"/>
@@ -33,7 +33,7 @@
             android:summary="@string/use_chrome_custom_tabs_summary"
             android:layout="@layout/preference_material"/>-->
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:defaultValue="0"
             android:key="show_result_in"
             android:title="@string/show_result_in"

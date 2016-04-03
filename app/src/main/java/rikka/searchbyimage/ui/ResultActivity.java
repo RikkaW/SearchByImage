@@ -6,9 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,12 +20,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import rikka.materialpreference.BaseRecyclerViewItemDecoration;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.apdater.ResultAdapter;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
-import me.qixingchen.settings.BaseRecyclerViewItemDecoration;
 
 public class ResultActivity extends BaseActivity {
 

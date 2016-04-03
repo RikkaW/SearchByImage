@@ -19,20 +19,20 @@
         android:key="category_google"
         android:order="3">
 
-        <me.qixingchen.settings.SwitchPreference
+        <rikka.materialpreference.SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
             android:defaultValue="false"/>
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
             app:myEntries="@array/google_region_redirects"
             app:myEntryValues="@array/google_region_redirect_value"
             android:defaultValue="0"/>
 
-        <me.qixingchen.settings.EditTextPreference
+        <rikka.materialpreference.EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
             android:defaultValue= "www.google.com"/>
@@ -44,14 +44,14 @@
         android:key="category_iqdb"
         android:order="3">
 
-        <me.qixingchen.settings.MultiSelectListPreference
+        <rikka.materialpreference.MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
             android:defaultValue="@array/iqdb_service_id_default"/>
 
-        <me.qixingchen.settings.SwitchPreference
+        <rikka.materialpreference.SwitchPreference
             android:key="iqdb_forcegray"
             android:title="@string/iqdb_forcegray"
             android:defaultValue="false"/>
@@ -63,14 +63,14 @@
         android:key="category_saucenao"
         android:order="3">
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:key="saucenao_hide"
             android:title="@string/saucenao_hide_title"
             app:myEntries="@array/saucenao_hide"
             app:myEntryValues="@array/saucenao_hide_value"
             android:defaultValue="0"/>
 
-        <me.qixingchen.settings.DropDownPreference
+        <rikka.materialpreference.DropDownPreference
             android:key="saucenao_database"
             android:title="@string/saucenao_database_title"
             app:myEntries="@array/saucenao_database"

@@ -32,6 +32,7 @@ import java.util.Set;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.HttpUtils;
 import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.ResponseUtils;
@@ -67,6 +68,11 @@ public class UploadActivity extends BaseActivity {
 
             SearchByImageApplication application = (SearchByImageApplication) getApplication();
             InputStream inputStream = application.getImageInputStream();
+
+            if (inputStream == null) {
+                mHttpUpload.error = new ResponseUtils.ErrorMessage("Error", "File == null?\nPlease try again.");
+                return mHttpUpload;
+            }
 
             if (mSharedPref.getBoolean("resize_image", false)) {
                 inputStream = ImageUtils.ResizeImage(inputStream);
@@ -139,6 +145,10 @@ public class UploadActivity extends BaseActivity {
                                         Utils.streamToCacheFile(mActivity, stream, "html", "result.html");
                                         mHttpUpload.html = mActivity.getCacheDir().getAbsolutePath() + "/" + "html" + "/" + "result.html";
                                         break;
+                                    default:
+                                        Utils.streamToCacheFile(mActivity, stream, "html", "result.html");
+                                        mHttpUpload.html = mActivity.getCacheDir().getAbsolutePath() + "/" + "html" + "/" + "result.html";
+                                        break;
                                 }
 
                                 mHttpUpload.url = url;
@@ -175,7 +185,12 @@ public class UploadActivity extends BaseActivity {
             }
 
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+                try {
+                    mProgressDialog.dismiss();
+                } catch (Exception ignored) {
+
+                }
+
             }
         }
 
@@ -186,23 +201,26 @@ public class UploadActivity extends BaseActivity {
 
         protected void onPostExecute(ResponseUtils.HttpUpload result) {
             if (result.error != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setMessage(result.error.message);
-                builder.setTitle(result.error.title);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        finish();
-                    }
-                });
+                if (UploadActivity.this.isFinishing()) {
+                    return;
+                }
 
-                builder.show();
+                new AlertDialog.Builder(mActivity)
+                        .setMessage(result.error.message)
+                        .setTitle(result.error.title)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                finish();
+                            }
+                        })
+                        .show();
 
                 dismissDialog();
                 return;
@@ -240,6 +258,9 @@ public class UploadActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_upload);
+
+        Settings.instance(this)
+                .putBoolean(Settings.DOWNLOAD_FILE_CRASH, false);
 
         mIntent = getIntent();
         String action = mIntent.getAction();

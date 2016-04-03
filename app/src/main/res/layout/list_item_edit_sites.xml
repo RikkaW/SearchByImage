@@ -49,7 +49,7 @@
                 android:layout_height="64dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
                 android:onClick="@{Listener.viewOnClick}"
                 android:onLongClick="@{Listener.viewOnLongClick}"
                 android:orientation="horizontal"

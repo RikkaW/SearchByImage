@@ -79,7 +79,7 @@
                 android:id="@+id/dropDown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?attr/selectableItemBackground"
                 android:layout_below="@+id/textInput_url"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
