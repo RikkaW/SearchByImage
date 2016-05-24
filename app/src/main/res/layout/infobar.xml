@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rikka.searchbyimage.view.InfoBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<rikka.searchbyimage.view.InfoBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/infobar_width"
     android:layout_height="160dp"
-    android:layout_gravity="bottom"
+    android:layout_gravity="bottom|center_horizontal"
     android:clickable="true"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    android:elevation="12dp">
 
     <ImageButton
         android:id="@+id/infobar_close"
@@ -59,9 +62,10 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored" />
 
     <TextView
-        android:layout_width="240dp"
+        android:layout_width="@dimen/infobar_text_width"
         android:layout_height="wrap_content"
-        android:text="Do you want to replace the existing file poi.png?"
+        android:maxHeight="80dp"
+        tools:text="Do you want to replace the existing file poi.png?\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n"
         android:id="@+id/infobar_text"
         android:layout_alignTop="@+id/item_icon"
         android:layout_toRightOf="@+id/item_icon"

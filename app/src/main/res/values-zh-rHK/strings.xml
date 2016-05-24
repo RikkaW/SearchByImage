@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">以圖搜圖</string>
     <string name="share_action_name">圖片搜尋</string>
-    <string name="hello">在分享選單選擇該應用將圖片上傳至選擇的搜尋引擎</string>
-    <string name="hello_gp">在分享選單選擇該應用將圖片上傳至 Google 圖片搜尋</string>
+    <string name="hello">在分享選單選擇該應用將圖片上傳至選擇的搜尋引擎\n或者直接按下上傳按鈕來選擇圖片</string>
+    <string name="hello_gp">在分享選單選擇該應用將圖片上傳至 Google 圖片搜尋\n或者直接按下上傳按鈕來選擇圖片</string>
     <string name="uploading">上傳中…</string>
 
     <string-array name="search_engines">

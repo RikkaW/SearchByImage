@@ -250,6 +250,9 @@ public class UploadActivity extends BaseActivity {
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
 
+    public static final String EXTRA_URI2 =
+            "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI2";
+
     private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 0;
 
     private Intent mIntent;
@@ -296,6 +299,10 @@ public class UploadActivity extends BaseActivity {
 
         if (mIntent.hasExtra(EXTRA_URI)) {
             handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI));
+        }
+
+        if (mIntent.hasExtra(EXTRA_URI2)) {
+            handleSendImageUri(Uri.parse("image.png"));
         }
     }
 
