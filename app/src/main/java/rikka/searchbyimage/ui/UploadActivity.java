@@ -275,7 +275,7 @@ public class UploadActivity extends BaseActivity {
                     getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
 
                     handleSendImage(mIntent);
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException | SecurityException e) {
                     new AlertDialog.Builder(this)
                             .setTitle(R.string.permission_require)
                             .setMessage(R.string.permission_require_detail)
