@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT <= 19) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -50,16 +50,22 @@ public class MainActivity extends BaseActivity {
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(intent, 1);
                     }
-                } else if (Build.VERSION.SDK_INT > 19) {
+                } else {
                     /*Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(intent, 1);
                     }*/
 
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, 1);*/
+
+                    Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
+                    intentFromGallery.setType("image/*");
+                    intentFromGallery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                    startActivityForResult(intentFromGallery, 1);
+
                 }
             }
         });
