@@ -23,7 +23,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -94,7 +93,7 @@ public class WebViewActivity extends BaseActivity {
 
     private boolean mNormalMode = true;
 
-    private DownloadManager downloadManager;
+    private DownloadManager mDownloadManager;
     private long downloadReference;
 
     private int intentActivitiesSize;
@@ -154,11 +153,22 @@ public class WebViewActivity extends BaseActivity {
         }
 
 
-        registerReceiver(new DownloadBroadcastReceiver(), new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
+        registerReceiver(mDownloadBroadcastReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
-        Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-        intentActivitiesSize = IntentUtils.getSize(this, intent1);
+        mDownloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+
+        intentActivitiesSize = IntentUtils.getSize(this, new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")));
+    }
+
+    private DownloadBroadcastReceiver mDownloadBroadcastReceiver;
+
+    @Override
+    protected void onDestroy() {
+        if (mDownloadBroadcastReceiver != null) {
+            unregisterReceiver(mDownloadBroadcastReceiver);
+        }
+        super.onDestroy();
     }
 
     private void handleSendFile(Intent intent) {
@@ -356,7 +366,7 @@ public class WebViewActivity extends BaseActivity {
         //request.setTitle("poi");
         //request.setDescription("aaaa00");
         request.setDestinationUri(Uri.fromFile(file));
-        downloadReference = downloadManager.enqueue(request);
+        downloadReference = mDownloadManager.enqueue(request);
     }
 
 
@@ -646,7 +656,7 @@ public class WebViewActivity extends BaseActivity {
             if (downloadReference == reference) {
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(downloadReference);
-                Cursor cursor = downloadManager.query(query);
+                Cursor cursor = mDownloadManager.query(query);
 
                 if (cursor.moveToFirst()) {
                     final String fileName = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
