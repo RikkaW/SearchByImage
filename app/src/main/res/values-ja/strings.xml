@@ -140,4 +140,5 @@
     <string name="post_form">Form</string>
     <string name="not_empty">Should not be empty</string>
     <string name="invalid_web_url">不正なURL</string>
+    <string name="target_app_not_found">このアクションを処理するためのアプリを発見していません</string>
 </resources>

@@ -1,6 +1,5 @@
 package rikka.searchbyimage.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -136,14 +135,14 @@ public class ResponseUtils {
         return "http://image.baidu.com/n/mo_search?guess=1&rn=30&appid=0&tag=1&isMobile=0" + "&queryImageUrl=" + obj_url + "&querySign=" + contsign + "&simid=" + simid;
     }
 
-    public static void openURL(Activity activity, HttpUpload result) {
+    public static void openURL(Context context, HttpUpload result) {
         Intent intent;
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         switch (sharedPref.getString("show_result_in", URLUtils.SHOW_IN_WEBVIEW)) {
             case URLUtils.SHOW_IN_WEBVIEW:
             case URLUtils.SHOW_IN_CHROME:
-                intent = new Intent(activity, ChromeCustomTabsActivity.class);
+                intent = new Intent(context, ChromeCustomTabsActivity.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 } else {
@@ -152,18 +151,18 @@ public class ResponseUtils {
                 intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
                 intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
 
-                activity.startActivity(intent);
+                context.startActivity(intent);
                 break;
             case URLUtils.SHOW_IN_BROWSER:
-                URLUtils.OpenBrowser(activity, Uri.parse(result.url));
+                URLUtils.OpenBrowser(context, Uri.parse(result.url));
                 break;
         }
     }
 
-    public static void openIqdbResult(Activity activity, HttpUpload result) {
+    public static void openIqdbResult(Context context, HttpUpload result) {
         Intent intent;
 
-        intent = new Intent(activity, ResultActivity.class);
+        intent = new Intent(context, ResultActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         } else {
@@ -172,12 +171,12 @@ public class ResponseUtils {
         intent.putExtra(ResultActivity.EXTRA_FILE, result.html);
         intent.putExtra(ResultActivity.EXTRA_SITE_ID, result.siteId);
 
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void openHTMLinWebView(Activity activity, HttpUpload result) {
+    public static void openHTMLinWebView(Context context, HttpUpload result) {
         Intent intent;
-        intent = new Intent(activity, WebViewActivity.class);
+        intent = new Intent(context, WebViewActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         } else {
@@ -186,7 +185,7 @@ public class ResponseUtils {
         intent.putExtra(WebViewActivity.EXTRA_FILE, result.html);
         intent.putExtra(WebViewActivity.EXTRA_SITE_ID, result.siteId);
 
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static String getExceptionText(Exception e) {

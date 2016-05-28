@@ -2,6 +2,7 @@ package rikka.searchbyimage.utils;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,8 +11,8 @@ import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.ui.WebViewActivity;
 import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
+import rikka.searchbyimage.ui.WebViewActivity;
 
 /**
  * Created by Rikka on 2015/12/21.
@@ -92,10 +93,10 @@ public class URLUtils {
         activity.startActivity(intent);
     }
 
-    public static void OpenBrowser(Activity activity, Uri uri) {
+    public static void OpenBrowser(Context context, Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
+        IntentUtils.startOtherActivity(context, intent);
     }
 }

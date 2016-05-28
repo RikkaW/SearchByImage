@@ -1,42 +1,34 @@
 package rikka.searchbyimage.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.SocketTimeoutException;
-import java.net.URLDecoder;
-import java.net.UnknownHostException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.tbruyelle.rxpermissions.RxPermissions;
+
+import java.io.File;
+import java.util.Locale;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.SearchByImageApplication;
-import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.service.UploadService;
 import rikka.searchbyimage.support.Settings;
-import rikka.searchbyimage.utils.HttpUtils;
-import rikka.searchbyimage.utils.ImageUtils;
-import rikka.searchbyimage.utils.ResponseUtils;
-import rikka.searchbyimage.utils.Utils;
+import rikka.searchbyimage.utils.UriUtils;
+import rx.functions.Action1;
 
 public class UploadActivity extends BaseActivity {
     public final static int SITE_GOOGLE = 0;
@@ -46,216 +38,7 @@ public class UploadActivity extends BaseActivity {
     public final static int SITE_SAUCENAO = 4;
     public final static int SITE_ASCII2D = 5;
 
-    private class UploadTask extends AsyncTask<Uri, Integer, ResponseUtils.HttpUpload> {
 
-        private Activity mActivity;
-        private SharedPreferences mSharedPref;
-
-        private ResponseUtils.HttpUpload mHttpUpload;
-
-        private List<CustomEngine> mData;
-
-        public UploadTask(Activity activity) {
-            mActivity = activity;
-        }
-
-        protected ResponseUtils.HttpUpload doInBackground(Uri... imageUrl) {
-            mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
-            mData = CustomEngine.getList(mActivity);
-
-            mHttpUpload = new ResponseUtils.HttpUpload();
-            mHttpUpload.siteId = Integer.parseInt(mSharedPref.getString("search_engine_preference", "0"));
-
-            SearchByImageApplication application = (SearchByImageApplication) getApplication();
-            InputStream inputStream = application.getImageInputStream();
-
-            if (inputStream == null) {
-                mHttpUpload.error = new ResponseUtils.ErrorMessage("Error", "File == null?\nPlease try again.");
-                return mHttpUpload;
-            }
-
-            if (mSharedPref.getBoolean("resize_image", false)) {
-                try {
-                    inputStream = ImageUtils.ResizeImage(inputStream);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (inputStream == null) {
-                    mHttpUpload.error = new ResponseUtils.ErrorMessage("Error", "stream is null");
-                    return mHttpUpload;
-                }
-            }
-
-
-
-            String uploadUri;
-            String key;
-
-            HttpUtils.Body body = new HttpUtils.Body();
-
-            CustomEngine item = CustomEngine.getItemById(mHttpUpload.siteId);
-            uploadUri = item.getUpload_url();
-            key = item.getPost_file_key();
-
-            switch (mHttpUpload.siteId) {
-                case SITE_IQDB:
-                    Set<String> iqdb_service = mSharedPref.getStringSet("iqdb_service", new HashSet<String>());
-                    String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
-
-                    for (String aSelected : selected) {
-                        body.add("service[]", aSelected);
-                    }
-
-                    if (mSharedPref.getBoolean("iqdb_forcegray", false)) {
-                        body.add("forcegray", "on");
-                    }
-                    break;
-                case SITE_SAUCENAO:
-                    body.add("hide", mSharedPref.getString("saucenao_hide", "0"));
-                    body.add("database", mSharedPref.getString("saucenao_database", "999"));
-                    break;
-                default:
-                    if (item.post_text_key.size() > 0) {
-                        for (int i = 0; i < item.post_text_key.size(); i++) {
-                            body.add(item.post_text_key.get(i), item.post_text_value.get(i));
-                        }
-                    }
-                    break;
-            }
-
-            body.add(key, getImageFileName(imageUrl[0]), Utils.streamToCacheFile(mActivity, inputStream, "image.png"));
-
-            try {
-                HttpUtils.postForm(uploadUri,
-                        new HttpUtils.Header()
-                                .add("accept", "*/*")
-                                .add("accept-encoding", "deflate")
-                                .add("cache-control", "no-cache")
-                                .add("connection", "close")
-                                .add("user-agent",
-                                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36")
-                        ,
-                        body,
-                        new HttpUtils.Callback() {
-                            @Override
-                            public void onSuccess(String url, int code, InputStream stream) {
-                                switch (mHttpUpload.siteId) {
-                                    case SITE_GOOGLE:
-                                        url = ResponseUtils.getModifiedGoogleUrl(mActivity, url);
-                                        break;
-                                    case SITE_BAIDU:
-                                        try {
-                                            url = ResponseUtils.getUrlFromBaiduJSON(mActivity, stream);
-                                        } catch (Exception e) {
-                                            mHttpUpload.error = new ResponseUtils.ErrorMessage("Message from image.baidu.com:", e.getMessage());
-                                        }
-                                        break;
-                                    case SITE_IQDB:
-                                    case SITE_SAUCENAO:
-                                        Utils.streamToCacheFile(mActivity, stream, "html", "result.html");
-                                        mHttpUpload.html = mActivity.getCacheDir().getAbsolutePath() + "/" + "html" + "/" + "result.html";
-                                        break;
-                                    default:
-                                        Utils.streamToCacheFile(mActivity, stream, "html", "result.html");
-                                        mHttpUpload.html = mActivity.getCacheDir().getAbsolutePath() + "/" + "html" + "/" + "result.html";
-                                        break;
-                                }
-
-                                mHttpUpload.url = url;
-                            }
-
-                            @Override
-                            public void onFail(int code) {
-                                mHttpUpload.error = new ResponseUtils.ErrorMessage(getString(R.string.socket_exception), Integer.toString(code));
-                            }
-
-                            @Override
-                            public void onRetry(int retry) {
-                                publishProgress(retry);
-                            }
-                        }
-                );
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-                mHttpUpload.error = new ResponseUtils.ErrorMessage(e, mActivity.getString(R.string.unknown_host_exception));
-            } catch (SocketTimeoutException e) {
-                e.printStackTrace();
-                mHttpUpload.error = new ResponseUtils.ErrorMessage(e, mActivity.getString(R.string.timeout_exception));
-            } catch (IOException e) {
-                e.printStackTrace();
-                mHttpUpload.error = new ResponseUtils.ErrorMessage(e, mActivity.getString(R.string.socket_exception));
-            }
-
-            return mHttpUpload;
-        }
-
-        private void dismissDialog() {
-            if (UploadActivity.this.isFinishing()) {
-                return;
-            }
-
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                try {
-                    mProgressDialog.dismiss();
-                } catch (Exception ignored) {
-
-                }
-
-            }
-        }
-
-        protected void onProgressUpdate(Integer... values) {
-            Toast.makeText(mActivity, "Retry: " + Integer.toString(values[0]), Toast.LENGTH_SHORT).show();
-            mProgressDialog.setMessage("Retrying: " + Integer.toString(values[0]));
-        }
-
-        protected void onPostExecute(ResponseUtils.HttpUpload result) {
-            if (result.error != null) {
-                if (UploadActivity.this.isFinishing()) {
-                    return;
-                }
-
-                new AlertDialog.Builder(mActivity)
-                        .setMessage(result.error.message)
-                        .setTitle(result.error.title)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
-                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                finish();
-                            }
-                        })
-                        .show();
-
-                dismissDialog();
-                return;
-            }
-
-            CustomEngine item = CustomEngine.getItemById(mHttpUpload.siteId);
-            switch (item.getResult_open_action()) {
-                case CustomEngine.RESULT_OPEN_ACTION.BUILD_IN_IQDB:
-                    ResponseUtils.openIqdbResult(mActivity, result);
-                    break;
-                case CustomEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE:
-                    ResponseUtils.openHTMLinWebView(mActivity, result);
-                    break;
-                case CustomEngine.RESULT_OPEN_ACTION.DEFAULT:
-                    ResponseUtils.openURL(mActivity, result);
-                    break;
-            }
-
-            //dismissDialog();
-            finish();
-        }
-    }
-
-    UploadTask mUploadTask;
     ProgressDialog mProgressDialog;
 
     public static final String EXTRA_URI =
@@ -264,9 +47,25 @@ public class UploadActivity extends BaseActivity {
     public static final String EXTRA_URI2 =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI2";
 
-    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 0;
-
     private Intent mIntent;
+
+    private UploadService.UploadBinder uploadBinder;
+
+    //if activity has paused,and not uploading image when resume or not show error,finish it
+    private boolean paused = false;
+    private boolean isError = false;
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            uploadBinder = (UploadService.UploadBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,29 +81,7 @@ public class UploadActivity extends BaseActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/") && mIntent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
-                try {
-                    getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
-
-                    handleSendImage(mIntent);
-                } catch (FileNotFoundException | SecurityException e) {
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.permission_require)
-                            .setMessage(R.string.permission_require_detail)
-                            .setPositiveButton(R.string.get_permission, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
-                                            REQUEST_CODE_READ_EXTERNAL_STORAGE);
-                                }
-                            })
-                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    finish();
-                                }
-                            })
-                            .show();
-                }
+                handleSendImage(mIntent);
             }
         }
 
@@ -313,34 +90,11 @@ public class UploadActivity extends BaseActivity {
         }
 
         if (mIntent.hasExtra(EXTRA_URI2)) {
-            handleSendImageUri(Uri.parse("image.png"));
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    handleSendImage(mIntent);
-                } else {
-                    finish();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI2));
         }
     }
 
     private void handleSendImage(Intent intent) {
-        SearchByImageApplication application = (SearchByImageApplication) getApplication();
-        try {
-            application.setImageInputStream(getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-
-            finish();
-        }
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -348,16 +102,45 @@ public class UploadActivity extends BaseActivity {
             Intent newIntent = new Intent(this, PopupSettingsActivity.class);
             newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
             startActivity(newIntent);
-
             finish();
         } else {
             handleSendImageUri((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
         }
     }
 
-    private void handleSendImageUri(Uri uri) {
+    private void handleSendImageUri(final Uri uri) {
         mProgressDialog = showDialog();
-        mUploadTask = (UploadTask) new UploadTask(this).execute(uri);
+        File file = UriUtils.storageImageShared(this, uri);
+        if (file == null) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.permission_require)
+                    .setMessage(R.string.permission_require_detail)
+                    .setPositiveButton(R.string.get_permission, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            RxPermissions.getInstance(mActivity).request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    .subscribe(new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean granted) {
+                                            if (granted) {
+                                                handleSendImageUri(uri);
+                                            }
+                                        }
+                                    });
+                        }
+                    })
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            finish();
+                        }
+                    })
+                    .show();
+            return;
+        }
+        Intent upload = new Intent(this, UploadService.class);
+        upload.putExtra(UploadService.INTENT_FILE_PATH, file.getPath());
+        bindService(upload, serviceConnection, Service.BIND_AUTO_CREATE);
     }
 
     private ProgressDialog showDialog() {
@@ -376,7 +159,9 @@ public class UploadActivity extends BaseActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                mUploadTask.cancel(true);
+                if (uploadBinder != null) {
+                    uploadBinder.cancel();
+                }
                 finish();
             }
         });
@@ -386,26 +171,77 @@ public class UploadActivity extends BaseActivity {
         return progressDialog;
     }
 
-    private static String getImageFileName(Uri uri) {
-        String decodeUri = "/image";
-        try {
-            decodeUri = URLDecoder.decode(uri.toString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        int last = decodeUri.lastIndexOf("/");
-        String fileName = decodeUri.substring(last + 1);
-        if (!fileName.contains(".")) {
-            fileName += ".jpg";
-        }
-        return fileName;
-    }
-
-    private void getPermission(String permission, int requestCode)
-    {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serviceConnection != null) {
+            unbindService(serviceConnection);
         }
     }
 
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mProgressDialog == null) {
+                return;
+            }
+            switch (intent.getAction()) {
+                case UploadService.INTENT_ACTION_RETRY:
+                    int times = intent.getIntExtra(UploadService.INTENT_RETRY_TIMES, 0);
+                    mProgressDialog.setMessage(String.format(Locale.getDefault(), "Retrying:%d times", times));
+                    break;
+                case UploadService.INTENT_ACTION_SUCCESS:
+                    mProgressDialog.dismiss();
+                    finish();
+                    break;
+                case UploadService.INTENT_ACTION_ERROR:
+                    mProgressDialog.dismiss();
+                    isError = true;
+                    String title = intent.getStringExtra(UploadService.INTENT_ERROR_TITLE);
+                    String message = intent.getStringExtra(UploadService.INTENT_ERROR_MESSAGE);
+                    new AlertDialog.Builder(mActivity)
+                            .setMessage(message)
+                            .setTitle(title)
+                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    finish();
+                                }
+                            }).show();
+                default:
+                    break;
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UploadService.INTENT_ACTION_ERROR);
+        intentFilter.addAction(UploadService.INTENT_ACTION_SUCCESS);
+        intentFilter.addAction(UploadService.INTENT_ACTION_RETRY);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+        if (uploadBinder != null && uploadBinder.isUploading() && mProgressDialog != null) {
+            mProgressDialog.show();
+        } else if (paused && !isError) {
+            finish();
+        }
+    }
+
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+        paused = true;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+    }
 }
