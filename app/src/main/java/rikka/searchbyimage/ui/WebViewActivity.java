@@ -36,6 +36,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -210,6 +211,7 @@ public class WebViewActivity extends BaseActivity {
 
 
     private boolean toolBarVisibility = true;
+
     private void setToolBarVisibility(boolean visible) {
         if (visible == toolBarVisibility)
             return;
@@ -246,8 +248,7 @@ public class WebViewActivity extends BaseActivity {
 
                 Intent chooserIntent = Intent.createChooser(shareIntent, mContext.getString(R.string.share_url));
                 chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                mContext.startActivity(chooserIntent);
+                IntentUtils.startOtherActivity(mContext,chooserIntent);
                 return true;
             case R.id.menu_item_copy_link:
                 ClipBoardUtils.putTextIntoClipboard(mContext, mWebView.getUrl());
@@ -297,7 +298,12 @@ public class WebViewActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startDownload();
+                    try {
+                        startDownload();
+                    } catch (NullPointerException npe) {
+                        npe.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             default:
@@ -305,7 +311,7 @@ public class WebViewActivity extends BaseActivity {
         }
     }
 
-    private void startDownload() {
+    private void startDownload() throws NullPointerException {
         final Uri uri = Uri.parse(mImageUrl);
         String fileName = uri.getLastPathSegment();
         if (fileName == null) {
@@ -319,7 +325,7 @@ public class WebViewActivity extends BaseActivity {
                     .apply();
         }
 
-        final File destinationFile = new File (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        final File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + "/SearchByImage", fileName);
 
         if (!destinationFile.getParentFile().exists()) {
@@ -661,7 +667,7 @@ public class WebViewActivity extends BaseActivity {
                 if (cursor.moveToFirst()) {
                     final String fileName = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
 
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName) , Snackbar.LENGTH_LONG);
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName), Snackbar.LENGTH_LONG);
                     snackbar.setActionTextColor(getResources().getColor(R.color.openAction));
 
                     snackbar.setAction(R.string.open, new View.OnClickListener() {

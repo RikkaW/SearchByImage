@@ -141,4 +141,5 @@
     <string name="not_empty">Should not be empty</string>
 
     <string name="invalid_web_url">Url is invalid</string>
+    <string name="target_app_not_found">don\'t have apps to handle this action</string>
 </resources>

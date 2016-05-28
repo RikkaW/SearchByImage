@@ -2,14 +2,10 @@ package rikka.searchbyimage.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import java.io.FileNotFoundException;
@@ -17,6 +13,7 @@ import java.io.FileNotFoundException;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.ui.fragment.SettingsFragment;
+import rikka.searchbyimage.utils.IntentUtils;
 
 
 public class MainActivity extends BaseActivity {
@@ -64,7 +61,7 @@ public class MainActivity extends BaseActivity {
                     Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
                     intentFromGallery.setType("image/*");
                     intentFromGallery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                    startActivityForResult(intentFromGallery, 1);
+                    IntentUtils.startOtherActivity(activity, intentFromGallery);
 
                 }
             }
