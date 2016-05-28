@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -21,6 +22,7 @@ import rikka.materialpreference.SwitchPreference;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.support.CrashHandler;
 import rikka.searchbyimage.ui.EditSitesActivity;
 import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
@@ -93,6 +95,7 @@ public class SettingsFragment extends PreferenceFragment implements
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
         mNotice = (Preference) findPreference("preference_notice");
 
+
         setCustomGoogleUriHide();
         //setSearchEngineHide();
 
@@ -119,6 +122,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
             Preference githubPref = findPreference("open_source");
             githubPref.setOnPreferenceClickListener(this);
+
+            findPreference("contact").setOnPreferenceClickListener(this);
 
             Preference advancePref = findPreference("advance");
             if (advancePref != null) {
@@ -374,6 +379,13 @@ public class SettingsFragment extends PreferenceFragment implements
                 ClipBoardUtils.putTextIntoClipboard(mActivity, "rikka@xing.moe");
                 Toast.makeText(mActivity, String.format(getString(R.string.copy_to_clipboard), "rikka@xing.moe"), Toast.LENGTH_SHORT).show();
 
+                break;
+            case "contact":
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikka@xing.moe", null));
+                intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchFeedback@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage Feedback");
+                intent.putExtra(Intent.EXTRA_TEXT, CrashHandler.getAppInfo(mActivity).toString());
+                startActivity(Intent.createChooser(intent, "Send feedback by Email"));
                 break;
         }
 

@@ -25,7 +25,7 @@ public class SearchByImageApplication extends Application {
 
         if (!BuildConfig.hideOtherEngine) {
             AVOSCloud.initialize(this, "jn5rOQdydwKneRsJUxR8UXzv-gzGzoHsz", "fw3fTe1JtGn8ockywhkoWIEq");
-            AVAnalytics.enableCrashReport(this, false);
+            AVAnalytics.enableCrashReport(this, true);
         }
     }
 }
