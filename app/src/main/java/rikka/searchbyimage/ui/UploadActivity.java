@@ -63,7 +63,7 @@ public class UploadActivity extends BaseActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            serviceConnection = null;
         }
     };
 
@@ -175,7 +175,11 @@ public class UploadActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (serviceConnection != null) {
-            unbindService(serviceConnection);
+            try {
+                unbindService(serviceConnection);
+            } catch (IllegalArgumentException ignore) {
+            }
+            serviceConnection = null;
         }
     }
 
