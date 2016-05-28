@@ -75,8 +75,19 @@ public class UploadActivity extends BaseActivity {
             }
 
             if (mSharedPref.getBoolean("resize_image", false)) {
-                inputStream = ImageUtils.ResizeImage(inputStream);
+                try {
+                    inputStream = ImageUtils.ResizeImage(inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (inputStream == null) {
+                    mHttpUpload.error = new ResponseUtils.ErrorMessage("Error", "stream is null");
+                    return mHttpUpload;
+                }
             }
+
+
 
             String uploadUri;
             String key;
@@ -250,6 +261,9 @@ public class UploadActivity extends BaseActivity {
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
 
+    public static final String EXTRA_URI2 =
+            "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI2";
+
     private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 0;
 
     private Intent mIntent;
@@ -272,7 +286,7 @@ public class UploadActivity extends BaseActivity {
                     getContentResolver().openInputStream((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
 
                     handleSendImage(mIntent);
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException | SecurityException e) {
                     new AlertDialog.Builder(this)
                             .setTitle(R.string.permission_require)
                             .setMessage(R.string.permission_require_detail)
@@ -296,6 +310,10 @@ public class UploadActivity extends BaseActivity {
 
         if (mIntent.hasExtra(EXTRA_URI)) {
             handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI));
+        }
+
+        if (mIntent.hasExtra(EXTRA_URI2)) {
+            handleSendImageUri(Uri.parse("image.png"));
         }
     }
 

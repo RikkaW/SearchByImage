@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="32dp"
-    android:background="@android:color/white"
-    android:elevation="0dp">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="32dp"
+              android:background="@android:color/white"
+              android:elevation="0dp">
 
     <TextView
         android:id="@+id/item_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="New Text"
+        tools:text="New Text"
         android:gravity="bottom"
-        android:layout_marginLeft="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_marginBottom="2dp"
         android:textSize="14sp"
         android:fontFamily="sans-serif-medium"/>

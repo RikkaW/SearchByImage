@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Search By Image</string>
     <string name="share_action_name">Image Search</string>
-    <string name="hello">Select this app in share menu to upload image to selected search engine</string>
-    <string name="hello_gp">Select this app in share menu to upload image to Google image search</string>
+    <string name="hello">Select this app in share menu to upload image to selected search engine\nOr just click upload button to select image</string>
+    <string name="hello_gp">Select this app in share menu to upload image to Google image search\nOr just click upload button to select image</string>
     <string name="uploading">Uploading…</string>
 
     <string-array name="search_engines">

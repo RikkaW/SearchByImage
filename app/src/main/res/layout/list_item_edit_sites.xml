@@ -36,6 +36,7 @@
                 android:layout_height="32dp"
                 android:layout_marginBottom="2dp"
                 android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="bottom"
                 android:text="@{LayoutStyle.headText}"
@@ -54,7 +55,7 @@
                 android:onLongClick="@{Listener.viewOnLongClick}"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
-                android:paddingRight="0dp">
+                android:paddingRight="16dp">
 
                 <ImageView
                     android:id="@+id/item_icon"
@@ -67,16 +68,16 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="26dp"
+                    android:layout_marginStart="26dp"
                     android:layout_toEndOf="@id/item_icon"
                     android:layout_toRightOf="@id/item_icon"
-                    android:orientation="vertical"
-                    android:paddingRight="56dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -108,7 +109,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="12dp"
                     android:checked="@{engine.enabled==1?true:false}"
                     app:OnCheckedChangeListener="@{Listener.switchCheckedChangeListener}" />
             </RelativeLayout>
@@ -118,6 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="74dp"
+                android:layout_marginStart="74dp"
                 android:background="@color/dividerSearchEngineList"
                 android:visibility="@{LayoutStyle.needDivider?View.VISIBLE:View.GONE}" />
 

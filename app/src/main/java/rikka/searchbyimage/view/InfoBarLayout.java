@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -51,7 +52,9 @@ public class InfoBarLayout extends RelativeLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        mLineDrawable.setBounds(0, 0, canvas.getWidth(), 2);
-        mLineDrawable.draw(canvas);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mLineDrawable.setBounds(0, 0, canvas.getWidth(), 2);
+            mLineDrawable.draw(canvas);
+        }
     }
 }

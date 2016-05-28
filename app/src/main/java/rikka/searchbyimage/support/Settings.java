@@ -14,7 +14,6 @@ public class Settings {
 
     private static Settings sInstance;
     private SharedPreferences mPrefs;
-    private SharedPreferences.Editor mEditor;
 
     private Settings(Context context) {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context)/*context.getSharedPreferences(XML_NAME, Context.MODE_PRIVATE)*/;
@@ -29,7 +28,7 @@ public class Settings {
     }
 
     public SharedPreferences.Editor edit() {
-        return mEditor;
+        return mPrefs.edit();
     }
 
     public Settings putBoolean(String key, boolean value) {
