@@ -1,6 +1,5 @@
 package rikka.searchbyimage.ui;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import rikka.materialpreference.BaseRecyclerViewItemDecoration;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.apdater.ResultAdapter;
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.IqdbResultCollecter;
 import rikka.searchbyimage.utils.URLUtils;
 
@@ -37,14 +37,11 @@ public class ResultActivity extends BaseActivity {
 
     RecyclerView mRecyclerView;
     ResultAdapter mAdapter;
-    Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-
-        mActivity = this;
 
         ArrayList<IqdbResultCollecter.IqdbItem> list;
 
@@ -86,15 +83,14 @@ public class ResultActivity extends BaseActivity {
                 public void onItemLongClick(View view, int position, final IqdbResultCollecter.IqdbItem item) {
                     new AlertDialog.Builder(mActivity)
                             .setItems(
-                                    new CharSequence[] {getString(R.string.open_with), getString(R.string.copy_link)},
-                                    new DialogInterface.OnClickListener()
-                                    {
+                                    new CharSequence[]{getString(R.string.open_with), getString(R.string.copy_link)},
+                                    new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which) {
                                                 case 0:
                                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.imageURL));
-                                                    mActivity.startActivity(intent);
+                                                    IntentUtils.startOtherActivity(mActivity, intent);
                                                     break;
                                                 case 1:
                                                     ClipBoardUtils.putTextIntoClipboard(mActivity, item.imageURL);
@@ -140,6 +136,6 @@ public class ResultActivity extends BaseActivity {
                 }
         }
 
-       return IqdbResultCollecter.getItemList(sb.toString());
+        return IqdbResultCollecter.getItemList(sb.toString());
     }
 }

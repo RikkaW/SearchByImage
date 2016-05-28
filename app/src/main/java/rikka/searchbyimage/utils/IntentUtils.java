@@ -35,10 +35,14 @@ public class IntentUtils {
      * may not found
      */
     public static void startOtherActivity(Context context, Intent intent) {
+        startOtherActivity(context, intent, context.getString(R.string.target_app_not_found));
+    }
+
+    public static void startOtherActivity(Context context, Intent intent, String notFoundMessage) {
         if (canOpenWith(context, intent)) {
             context.startActivity(intent);
         } else {
-            Toast.makeText(context, R.string.target_app_not_found, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, notFoundMessage, Toast.LENGTH_LONG).show();
         }
     }
 }

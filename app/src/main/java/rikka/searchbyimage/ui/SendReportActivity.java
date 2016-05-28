@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.utils.IntentUtils;
@@ -64,11 +63,6 @@ public class SendReportActivity extends AppCompatActivity {
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setData(Uri.parse("mailto:?subject=" + "SearchByImage crash log" + "&body=" + body + "&to=" + "rikka@xing.moe"));
         intent = Intent.createChooser(intent, getString(R.string.send_via));
-        if (IntentUtils.canOpenWith(this, intent)) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, R.string.app_crash_no_email_client, Toast.LENGTH_SHORT).show();
-        }
-
+        IntentUtils.startOtherActivity(this,intent,getString(R.string.app_crash_no_email_client));
     }
 }

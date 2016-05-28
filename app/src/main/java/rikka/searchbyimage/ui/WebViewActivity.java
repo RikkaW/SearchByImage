@@ -2,7 +2,6 @@ package rikka.searchbyimage.ui;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -77,7 +76,6 @@ public class WebViewActivity extends BaseActivity {
     private WebView mWebView;
     private WebSettings mWebSettings;
     private Context mContext;
-    private Activity mActivity;
     private WebViewToolBar mToolbar;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
@@ -107,7 +105,6 @@ public class WebViewActivity extends BaseActivity {
         setContentView(R.layout.activity_webview);
 
         mContext = this;
-        mActivity = this;
 
         mToolbar = (WebViewToolBar) findViewById(R.id.toolbar);
         //mToolbar.setTitle("");
@@ -256,7 +253,7 @@ public class WebViewActivity extends BaseActivity {
                 return true;
             case R.id.menu_item_open_in:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mWebView.getUrl()));
-                mActivity.startActivity(intent);
+                IntentUtils.startOtherActivity(mActivity,intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -400,7 +397,7 @@ public class WebViewActivity extends BaseActivity {
                     }
                     case 2: {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
-                        mActivity.startActivity(intent);
+                        IntentUtils.startOtherActivity(mActivity,intent);
 
                         break;
                     }
@@ -676,7 +673,7 @@ public class WebViewActivity extends BaseActivity {
                             Intent intent1 = new Intent(Intent.ACTION_VIEW);
                             intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            mActivity.startActivity(intent1);
+                            IntentUtils.startOtherActivity(mActivity,intent1);
                         }
                     });
                     snackbar.show();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.utils.IntentUtils;
 
 /**
  * Created by Rikka on 2015/12/21.
@@ -22,8 +23,7 @@ public class ShareBroadcastReceiver extends BroadcastReceiver {
 
             Intent chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_url));
             chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            context.startActivity(chooserIntent);
+            IntentUtils.startOtherActivity(context,intent);
         }
     }
 }

@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
                     Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
                     intentFromGallery.setType("image/*");
                     intentFromGallery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                    IntentUtils.startOtherActivity(activity, intentFromGallery);
+                    IntentUtils.startOtherActivity(mActivity, intentFromGallery);
 
                 }
             }

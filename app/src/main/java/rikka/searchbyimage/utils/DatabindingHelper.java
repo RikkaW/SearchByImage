@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
  */
 public class DatabindingHelper {
 
-    @BindingAdapter("bind:imageUrl")
+    @BindingAdapter("imageUrl")
     public static void setimageUrl(ImageView imageView, String imageUrl) {
         Glide.with(imageView.getContext())
                 .load(imageUrl)
@@ -19,7 +19,7 @@ public class DatabindingHelper {
                 .into(imageView);
     }
 
-    @BindingAdapter("bind:OnCheckedChangeListener")
+    @BindingAdapter("OnCheckedChangeListener")
     public static void setOnCheckedChangeListener(SwitchCompat switchCompat, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
         switchCompat.setOnCheckedChangeListener(onCheckedChangeListener);
     }

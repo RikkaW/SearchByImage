@@ -10,8 +10,8 @@ import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.ui.WebViewActivity;
 import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
+import rikka.searchbyimage.ui.WebViewActivity;
 
 /**
  * Created by Rikka on 2015/12/21.
@@ -96,6 +96,6 @@ public class URLUtils {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
+        IntentUtils.startOtherActivity(activity, intent);
     }
 }
