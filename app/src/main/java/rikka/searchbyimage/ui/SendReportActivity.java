@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.utils.IntentUtils;
 
 public class SendReportActivity extends AppCompatActivity {
     public static final String EXTRA_EMAIL_BODY =
@@ -59,10 +58,5 @@ public class SendReportActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage crash log");
         intent.putExtra(Intent.EXTRA_TEXT, body);
         startActivity(Intent.createChooser(intent, "Send crash log by Email"));
-
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setData(Uri.parse("mailto:?subject=" + "SearchByImage crash log" + "&body=" + body + "&to=" + "rikka@xing.moe"));
-        intent = Intent.createChooser(intent, getString(R.string.send_via));
-        IntentUtils.startOtherActivity(this,intent,getString(R.string.app_crash_no_email_client));
     }
 }

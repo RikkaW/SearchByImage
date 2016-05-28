@@ -5,43 +5,50 @@
 
     <PreferenceCategory
         android:key="category_advance"
-        android:title="@string/advance"
-        android:order="8">
+        android:order="8"
+        android:title="@string/advance">
 
         <Preference
-            android:title="@string/custom_search_engine"
-            android:key="advance">
+            android:key="advance"
+            android:title="@string/custom_search_engine">
         </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="about"
-        android:title="@string/about"
-        android:order="9">
+        android:order="9"
+        android:title="@string/about">
 
         <Preference
-            android:title="@string/build_version"
-            android:key="version">
+            android:key="version"
+            android:title="@string/build_version">
 
         </Preference>
 
         <Preference
-            android:title="@string/rate"
-            android:summary="@string/rate_summary">
+            android:key="contact"
+            android:summary="@string/contact_detail"
+            android:title="@string/contact">
+        </Preference>
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2" />
+        <Preference
+            android:summary="@string/rate_summary"
+            android:title="@string/rate">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://play.google.com/store/apps/details?id=rikka.searchbyimage2"/>
         </Preference>
 
         <Preference
             android:key="donate"
-            android:title="@string/donate"
-            android:summary="@string/donate_summary"/>
+            android:summary="@string/donate_summary"
+            android:title="@string/donate"/>
 
         <Preference
+            android:key="open_source"
             android:summary="https://github.com/RikkaW/SearchByImage"
-            android:title="@string/open_source"
-            android:key="open_source">
+            android:title="@string/open_source">
         </Preference>
 
     </PreferenceCategory>
