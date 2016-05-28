@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="rikka.searchbyimage">
+<manifest package="rikka.searchbyimage"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
@@ -19,11 +19,11 @@
             android:label="@string/share_action_name"
             android:theme="@style/Transparent">
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:mimeType="image/*" />
+                <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>
         <activity
@@ -31,36 +31,49 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.WebViewActivity" />
-        <activity android:name=".ui.ResultActivity" />
-        <activity android:name=".ui.ChromeCustomTabsActivity" />
+        <activity android:name=".ui.WebViewActivity"/>
+        <activity android:name=".ui.ResultActivity"/>
+        <activity android:name=".ui.ChromeCustomTabsActivity"/>
         <activity
             android:name=".ui.PopupSettingsActivity"
             android:label="@string/app_name"
-            android:theme="@style/PopupTheme" />
+            android:theme="@style/PopupTheme"/>
         <activity
             android:name=".ui.SendReportActivity"
             android:theme="@style/Transparent">
             <intent-filter>
-                <action android:name="rikka.searchbyimage.SEND_LOG" />
+                <action android:name="rikka.searchbyimage.SEND_LOG"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.EditSitesActivity"
-                  android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/edit_sites"/>
-        <activity android:name=".ui.EditSiteInfoActivity"
-            android:windowSoftInputMode="adjustResize"
+        <activity
+            android:name=".ui.EditSitesActivity"
+            android:label="@string/edit_sites"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.EditSiteInfoActivity"
+            android:label="@string/edit_site"
             android:theme="@style/AppTheme.UseColorControlActivated"
-            android:label="@string/edit_site"/>
+            android:windowSoftInputMode="adjustResize"/>
 
-        <receiver android:name=".receiver.ShareBroadcastReceiver" />
+        <receiver android:name=".receiver.ShareBroadcastReceiver"/>
+        <receiver
+            android:name=".receiver.UploadMessageReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="rikka.searchbyimage2.intent_action_retry"/>
+                <action android:name="rikka.searchbyimage2.intent_action_success"/>
+                <action android:name="rikka.searchbyimage2.intent_action_error"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.UploadService"/>
 
     </application>
 

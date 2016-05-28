@@ -7,13 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
-import java.io.FileNotFoundException;
+import android.widget.Toast;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.ui.fragment.SettingsFragment;
-import rikka.searchbyimage.utils.IntentUtils;
 
 
 public class MainActivity extends BaseActivity {
@@ -39,14 +36,11 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, 1);
-                    }
                 } else {
                     /*Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     if (intent.resolveActivity(getPackageManager()) != null) {
@@ -57,12 +51,12 @@ public class MainActivity extends BaseActivity {
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
                     startActivityForResult(intent, 1);*/
-
-                    Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
-                    intentFromGallery.setType("image/*");
-                    intentFromGallery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                    IntentUtils.startOtherActivity(mActivity, intentFromGallery);
-
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                }
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, 1);
+                } else {
+                    Toast.makeText(mActivity, R.string.target_app_not_found, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -75,17 +69,9 @@ public class MainActivity extends BaseActivity {
 
             if (requestCode == 1) {
                 Uri uri = data.getData();
-
-                SearchByImageApplication application = (SearchByImageApplication) getApplication();
-                try {
-                    application.setImageInputStream(getContentResolver().openInputStream(uri));
-
-                    Intent intent = new Intent(this, UploadActivity.class);
-                    intent.putExtra(UploadActivity.EXTRA_URI2, uri);
-                    startActivity(intent);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                Intent intent = new Intent(this, UploadActivity.class);
+                intent.putExtra(UploadActivity.EXTRA_URI2, uri);
+                startActivity(intent);
             }
         }
     }

@@ -2,6 +2,7 @@ package rikka.searchbyimage.utils;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -92,10 +93,10 @@ public class URLUtils {
         activity.startActivity(intent);
     }
 
-    public static void OpenBrowser(Activity activity, Uri uri) {
+    public static void OpenBrowser(Context context, Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        IntentUtils.startOtherActivity(activity, intent);
+        IntentUtils.startOtherActivity(context, intent);
     }
 }

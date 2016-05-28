@@ -1,5 +1,6 @@
 package rikka.searchbyimage.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +41,9 @@ public class IntentUtils {
 
     public static void startOtherActivity(Context context, Intent intent, String notFoundMessage) {
         if (canOpenWith(context, intent)) {
+            if (!(context instanceof Activity)) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             context.startActivity(intent);
         } else {
             Toast.makeText(context, notFoundMessage, Toast.LENGTH_LONG).show();

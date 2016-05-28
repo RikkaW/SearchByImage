@@ -142,4 +142,5 @@
 
     <string name="invalid_web_url">Url is invalid</string>
     <string name="target_app_not_found">don\'t have apps to handle this action</string>
+    <string name="file_not_found">File not found.\nPlease try again.</string>
 </resources>
