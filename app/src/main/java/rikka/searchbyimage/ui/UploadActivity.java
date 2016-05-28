@@ -75,8 +75,19 @@ public class UploadActivity extends BaseActivity {
             }
 
             if (mSharedPref.getBoolean("resize_image", false)) {
-                inputStream = ImageUtils.ResizeImage(inputStream);
+                try {
+                    inputStream = ImageUtils.ResizeImage(inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (inputStream == null) {
+                    mHttpUpload.error = new ResponseUtils.ErrorMessage("Error", "stream is null");
+                    return mHttpUpload;
+                }
             }
+
+
 
             String uploadUri;
             String key;
