@@ -1,7 +1,5 @@
 package rikka.searchbyimage.ui.fragment;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +22,16 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.support.CrashHandler;
 import rikka.searchbyimage.ui.EditSitesActivity;
-import rikka.searchbyimage.ui.UploadActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
+
+import static rikka.searchbyimage.staticdata.EngineId.SITE_ASCII2D;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_BAIDU;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_GOOGLE;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_IQDB;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_SAUCENAO;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_TINEYE;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -41,7 +45,6 @@ public class SettingsFragment extends PreferenceFragment implements
     PreferenceCategory mCategoryGoogle;
     PreferenceCategory mCategoryIqdb;
     PreferenceCategory mCategoryBaidu;
-    PreferenceCategory mCategoryNotice;
     PreferenceCategory mCategoryAdvance;
 
     SwitchPreference mSafeSearch;
@@ -69,13 +72,12 @@ public class SettingsFragment extends PreferenceFragment implements
         boolean popup = getArguments().getBoolean("popup");
 
         if (popup) {
-            //if (!BuildConfig.hideOtherEngine)
             addPreferencesFromResource(R.xml.preferences_general_mini);
 
             addPreferencesFromResource(R.xml.preferences_search_settings);
         } else {
             addPreferencesFromResource(R.xml.preferences_usage);
-            addPreferencesFromResource(/*BuildConfig.hideOtherEngine ? R.xml.preferences_general_gp : */R.xml.preferences_general);
+            addPreferencesFromResource(R.xml.preferences_general);
             addPreferencesFromResource(R.xml.preferences_search_settings);
             addPreferencesFromResource(R.xml.preferences_about);
         }
@@ -93,16 +95,10 @@ public class SettingsFragment extends PreferenceFragment implements
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
-        mNotice = (Preference) findPreference("preference_notice");
+        mNotice = findPreference("preference_notice");
 
 
         setCustomGoogleUriHide();
-        //setSearchEngineHide();
-
-        /*if (BuildConfig.hideOtherEngine) {
-            mSafeSearch.setEnabled(false);
-            mSafeSearch.setChecked(true);
-        }*/
 
         if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
             DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
@@ -110,13 +106,6 @@ public class SettingsFragment extends PreferenceFragment implements
         }
 
         if (!popup) {
-            /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-            if (sharedPreferences.getBoolean("developer", false)) {
-                mScreen.addPreference(mCategoryAdvance);
-            } else {
-                mScreen.removePreference(mCategoryAdvance);
-            }*/
-
             Preference versionPref = findPreference("version");
             versionPref.setOnPreferenceClickListener(this);
 
@@ -170,11 +159,6 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     private void addCustomEngines() {
-        /*int count = mSearchEngine.getItemCount();
-        for (int i = 6; i < count; i++) {
-            mSearchEngine.removeItem(6);
-        }*/
-
         mSearchEngine.clearItems();
 
         for (CustomEngine item : mData) {
@@ -225,32 +209,32 @@ public class SettingsFragment extends PreferenceFragment implements
 
     private void setSearchEngineHide(int siteId) {
         switch (siteId) {
-            case UploadActivity.SITE_GOOGLE:
+            case SITE_GOOGLE:
                 mScreen.addPreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
                 mScreen.removePreference(mCategoryBaidu);
                 break;
-            case UploadActivity.SITE_IQDB:
+            case SITE_IQDB:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.addPreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
                 mScreen.removePreference(mCategoryBaidu);
                 break;
-            case UploadActivity.SITE_SAUCENAO:
+            case SITE_SAUCENAO:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.addPreference(mCategorySauceNAO);
                 mScreen.removePreference(mCategoryBaidu);
                 break;
-            case UploadActivity.SITE_BAIDU:
+            case SITE_BAIDU:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
                 mScreen.removePreference(mCategorySauceNAO);
                 mScreen.addPreference(mCategoryBaidu);
                 break;
-            case UploadActivity.SITE_ASCII2D:
-            case UploadActivity.SITE_TINEYE:
+            case SITE_ASCII2D:
+            case SITE_TINEYE:
             default:
                 mScreen.removePreference(mCategoryGoogle);
                 mScreen.removePreference(mCategoryIqdb);
@@ -258,23 +242,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 mScreen.removePreference(mCategoryBaidu);
                 break;
         }
-
-        /*switch (siteId) {
-            case UploadActivity.SITE_BAIDU:
-                mScreen.addPreference(mCategoryNotice);
-                mNotice.setSummary(R.string.notice_baidu);
-                break;
-            case UploadActivity.SITE_GOOGLE:
-            case UploadActivity.SITE_IQDB:
-            case UploadActivity.SITE_SAUCENAO:
-            case UploadActivity.SITE_ASCII2D:
-            case UploadActivity.SITE_TINEYE:
-                mScreen.removePreference(mCategoryNotice);
-                break;
-        }*/
     }
-
-    int mIsRed = 0;
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
@@ -290,9 +258,6 @@ public class SettingsFragment extends PreferenceFragment implements
 
                 click++;
 
-
-                //startActivity(new Intent(mActivity, EditSitesActivity.class));
-
                 if (click == 5)
                     Toast.makeText(mActivity, "OAO", Toast.LENGTH_SHORT).show();
                 else if (click == 10)
@@ -303,71 +268,8 @@ public class SettingsFragment extends PreferenceFragment implements
                     Toast.makeText(mActivity, "QAQ", Toast.LENGTH_SHORT).show();
                 else if (click == 40) {
                     Toast.makeText(mActivity, "2333", Toast.LENGTH_SHORT).show();
-/*
-                    int color[][] = {
-                            {
-                                    ContextCompat.getColor(getActivity(), R.color.colorPrimary),
-                                    Color.parseColor("#F44336")
-                            },
-                            {
-                                    ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark),
-                                    Color.parseColor("#D32F2F")
-                            }
-                    };
 
-
-                    final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
-                    colorAnimation(
-                            color[0][mIsRed],
-                            color[0][1 - mIsRed],
-                            250,
-                            new ValueAnimator.AnimatorUpdateListener() {
-
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator animator) {
-                                    toolbar.setBackgroundColor((int) animator.getAnimatedValue());
-                                }
-                            });
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        colorAnimation(
-                                color[1][mIsRed],
-                                color[1][1 - mIsRed],
-                                250,
-                                new ValueAnimator.AnimatorUpdateListener() {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator animator) {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                            getActivity().getWindow().setStatusBarColor((int) animator.getAnimatedValue());
-                                        }
-                                    }
-                                });
-
-                        getActivity().setTaskDescription(new ActivityManager.TaskDescription(
-                                getActivity().getTitle().toString(),
-                                null,
-                                color[1][1 - mIsRed]));
-
-
-                    }
-                    mIsRed = 1 - mIsRed;*/
                     click = -10;
-
-                    /*SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-                    sharedPreferences.edit().putBoolean("developer", true).apply();
-
-                    mScreen.addPreference(mCategoryAdvance);
-                    Preference advancePref = findPreference("advance");
-                    if (advancePref != null) {
-                        advancePref.setOnPreferenceClickListener(this);
-                    }*/
-                    /*View view = mActivity.findViewById(R.id.settings_container);
-                    view.animate()
-                            .rotation(view.getRotation() + 180 + 360)
-                            .setDuration(3000)
-                            .setInterpolator(new FastOutSlowInInterpolator())
-                            .start();*/
                 }
 
                 break;
@@ -390,12 +292,5 @@ public class SettingsFragment extends PreferenceFragment implements
         }
 
         return false;
-    }
-
-    void colorAnimation(int colorFrom, int colorTo, int duration, ValueAnimator.AnimatorUpdateListener listener) {
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(duration);
-        colorAnimation.addUpdateListener(listener);
-        colorAnimation.start();
     }
 }

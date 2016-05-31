@@ -10,6 +10,7 @@ import android.support.v7.app.NotificationCompat;
 
 import java.util.Locale;
 
+import rikka.searchbyimage.R;
 import rikka.searchbyimage.service.UploadService;
 
 /**
@@ -32,8 +33,12 @@ public class UploadMessageReceiver extends BroadcastReceiver {
         switch (intent.getAction()) {
             case UploadService.INTENT_ACTION_RETRY:
                 int times = intent.getIntExtra(UploadService.INTENT_RETRY_TIMES, 0);
-                notification = new NotificationCompat.Builder(context).setContentTitle("Retrying")
-                        .setContentText(String.format(Locale.getDefault(), "Retrying:%d times", times)).build();
+                notification = new NotificationCompat.Builder(context)
+                        .setColor(0xFF3F51B5)
+                        .setSmallIcon(R.drawable.ic_stat)
+                        .setContentTitle("Retrying")
+                        .setContentText(String.format(Locale.getDefault(), "Retrying:%d times", times))
+                        .build();
                 notificationManager.notify(NOTIFICATION_ID, notification);
                 break;
             case UploadService.INTENT_ACTION_SUCCESS:
@@ -42,8 +47,13 @@ public class UploadMessageReceiver extends BroadcastReceiver {
             case UploadService.INTENT_ACTION_ERROR:
                 String title = intent.getStringExtra(UploadService.INTENT_ERROR_TITLE);
                 String message = intent.getStringExtra(UploadService.INTENT_ERROR_MESSAGE);
-                notification = new NotificationCompat.Builder(context).setContentTitle(title)
-                        .setContentText(message).build();
+                notification = new NotificationCompat.Builder(context)
+                        .setContentTitle(title == null ? context.getString(R.string.upload_form_add) : title)
+                        .setContentText(message)
+                        .setColor(0xFF3F51B5)
+                        .setSmallIcon(R.drawable.ic_stat)
+                        .setAutoCancel(true)
+                        .build();
                 notificationManager.notify(NOTIFICATION_ID, notification);
             default:
                 break;

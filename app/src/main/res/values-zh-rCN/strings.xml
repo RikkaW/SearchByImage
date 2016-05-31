@@ -66,7 +66,7 @@
     <string name="donate">捐赠</string>
     <string name="donate_summary">Google Wallet/支付宝: rikka@xing.moe</string>
 
-    <string name="something_wrong">出错了 OAO</string>
+    <string name="something_wrong">出错了</string>
 
 
     <string name="saucenao_settings">SauceNAO 设置</string>
@@ -140,4 +140,9 @@
     <string name="not_empty">不能为空</string>
     <string name="invalid_web_url">网址不合法</string>
     <string name="target_app_not_found">没找到可以使用的应用</string>
+
+    <string name="upload_failed">上传失败</string>
+    <string name="contact">联系我</string>
+    <string name="contact_detail">如果您遇到问题，请联系我</string>
+    <string name="file_not_found">没有找到文件\n请重试</string>
 </resources>

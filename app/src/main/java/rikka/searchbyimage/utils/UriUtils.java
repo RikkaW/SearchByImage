@@ -37,7 +37,7 @@ public class UriUtils {
                     folder = context.getCacheDir();
                 }
                 String RootPath = folder.toString();
-                String FilePath = RootPath + "/image/" + getFileName(uri);
+                String FilePath = RootPath + "/image/" + "image"/*getFileName(uri)*/;
                 file = new File(FilePath);
                 if (!file.getParentFile().exists()) {
                     //noinspection ResultOfMethodCallIgnored

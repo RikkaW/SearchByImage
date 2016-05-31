@@ -21,7 +21,7 @@
     <string name="open_source">Open source</string>
     <string name="general">General</string>
     <string name="rate">Rate me</string>
-    <string name="rate_summary">I\'ll be happy if you give me 5 stars. >﹏&lt; </string>
+    <string name="rate_summary">I\'ll be happy if you give me 5 stars</string>
     <string name="build_version">Build version</string>
 
     <string name="safe_search_summary">Block inappropriate or explicit images</string>
@@ -141,9 +141,10 @@
     <string name="not_empty">Should not be empty</string>
 
     <string name="invalid_web_url">Url is invalid</string>
-    <string name="target_app_not_found">don\'t have apps to handle this action</string>
+    <string name="target_app_not_found">Don\'t have apps to handle this action.</string>
     <string name="file_not_found">File not found.\nPlease try again.</string>
 
+    <string name="upload_failed">Upload failed</string>
     <string name="contact">Contact me</string>
     <string name="contact_detail">If you meet problems, please contact me</string>
 </resources>

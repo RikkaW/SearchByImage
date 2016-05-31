@@ -138,4 +138,8 @@
     <string name="not_empty">不能為空</string>
     <string name="invalid_web_url">網址不正確</string>
     <string name="target_app_not_found">沒找到可以使用的應用</string>
+    <string name="upload_failed">上傳失敗</string>
+    <string name="file_not_found">沒有找到文件\n請重試</string>
+    <string name="contact_detail">如果您遇到问题，请联系我</string>
+    <string name="contact">聯繫我</string>
 </resources>

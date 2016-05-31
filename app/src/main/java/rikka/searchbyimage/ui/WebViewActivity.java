@@ -253,7 +253,7 @@ public class WebViewActivity extends BaseActivity {
                 return true;
             case R.id.menu_item_open_in:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mWebView.getUrl()));
-                IntentUtils.startOtherActivity(mActivity,intent);
+                IntentUtils.startOtherActivity(this, intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -372,44 +372,43 @@ public class WebViewActivity extends BaseActivity {
         downloadReference = mDownloadManager.enqueue(request);
     }
 
+    MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case 0: {
+                    ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
+                    Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
+                    break;
+                }
+                case 1: {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                            ContextCompat.checkSelfPermission(WebViewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        break;
+                    }
+
+                    startDownload();
+                    break;
+                }
+                case 2: {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
+                    IntentUtils.startOtherActivity(WebViewActivity.this,intent);
+
+                    break;
+                }
+                case 3: {
+                    mWebView.loadUrl("https://www.google.com/searchbyimage?image_url=" + mImageUrl);
+
+                    break;
+                }
+            }
+            return true;
+        }
+    };
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
-
-        MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case 0: {
-                        ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
-                        Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
-                        break;
-                    }
-                    case 1: {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                                ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                            break;
-                        }
-
-                        startDownload();
-                        break;
-                    }
-                    case 2: {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
-                        IntentUtils.startOtherActivity(mActivity,intent);
-
-                        break;
-                    }
-                    case 3: {
-                        mWebView.loadUrl("https://www.google.com/searchbyimage?image_url=" + mImageUrl);
-
-                        break;
-                    }
-                }
-                return true;
-            }
-        };
 
         WebView.HitTestResult result = mWebView.getHitTestResult();
 
@@ -492,8 +491,8 @@ public class WebViewActivity extends BaseActivity {
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
-            if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
-                mActivity.startActivity(intent);
+            if (IntentUtils.canOpenWith(WebViewActivity.this, intent, intentActivitiesSize)) {
+                WebViewActivity.this.startActivity(intent);
 
                 return true;
             } else {
@@ -673,7 +672,7 @@ public class WebViewActivity extends BaseActivity {
                             Intent intent1 = new Intent(Intent.ACTION_VIEW);
                             intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            IntentUtils.startOtherActivity(mActivity,intent1);
+                            IntentUtils.startOtherActivity(WebViewActivity.this,intent1);
                         }
                     });
                     snackbar.show();

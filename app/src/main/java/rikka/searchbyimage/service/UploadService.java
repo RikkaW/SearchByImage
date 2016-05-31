@@ -5,12 +5,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,17 +26,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import okhttp3.Call;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.HttpUtils;
 import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.ResponseUtils;
 import rikka.searchbyimage.utils.Utils;
 
-import static rikka.searchbyimage.ui.UploadActivity.SITE_BAIDU;
-import static rikka.searchbyimage.ui.UploadActivity.SITE_GOOGLE;
-import static rikka.searchbyimage.ui.UploadActivity.SITE_IQDB;
-import static rikka.searchbyimage.ui.UploadActivity.SITE_SAUCENAO;
+import static rikka.searchbyimage.staticdata.EngineId.*;
 
 /**
  * Created by Yulan on 2016/5/28.
@@ -60,11 +62,8 @@ public class UploadService extends Service {
     private class UploadTask extends AsyncTask<String, Integer, ResponseUtils.HttpUpload> {
 
         private Context mContext;
-        private SharedPreferences mSharedPref;
 
         private ResponseUtils.HttpUpload mHttpUpload;
-
-        private List<CustomEngine> mData;
 
         public UploadTask(Context context) {
             mContext = context;
@@ -73,17 +72,18 @@ public class UploadService extends Service {
         protected ResponseUtils.HttpUpload doInBackground(String... filePath) {
             isUploading = true;
 
+            mHttpUpload = new ResponseUtils.HttpUpload();
+
             File image = new File(filePath[0]);
             if (!image.exists()) {
-                mHttpUpload.error = new ResponseUtils.ErrorMessage(new FileNotFoundException(""),
+                mHttpUpload.error = new ResponseUtils.ErrorMessage(new FileNotFoundException(filePath[0]),
                         mContext.getString(R.string.something_wrong));
                 return mHttpUpload;
             }
-            mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-            mData = CustomEngine.getList(mContext);
 
-            mHttpUpload = new ResponseUtils.HttpUpload();
-            mHttpUpload.siteId = Integer.parseInt(mSharedPref.getString("search_engine_preference", "0"));
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+            mHttpUpload.siteId = Integer.parseInt(preferences.getString("search_engine_preference", "0"));
 
             InputStream inputStream = null;
             try {
@@ -94,14 +94,15 @@ public class UploadService extends Service {
                         getString(R.string.file_not_found));
             }
 
-            if (mSharedPref.getBoolean("resize_image", false)) {
+            byte[] content = null;
+            if (preferences.getBoolean("resize_image", false)) {
                 try {
-                    inputStream = ImageUtils.ResizeImage(inputStream);
+                    content = ImageUtils.ResizeImage(inputStream);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                if (inputStream == null) {
+                if (content == null) {
                     mHttpUpload.error = new ResponseUtils.ErrorMessage("Error", "stream is null");
                     return mHttpUpload;
                 }
@@ -119,20 +120,20 @@ public class UploadService extends Service {
 
             switch (mHttpUpload.siteId) {
                 case SITE_IQDB:
-                    Set<String> iqdb_service = mSharedPref.getStringSet("iqdb_service", new HashSet<String>());
+                    Set<String> iqdb_service = preferences.getStringSet("iqdb_service", new HashSet<String>());
                     String[] selected = iqdb_service.toArray(new String[iqdb_service.size()]);
 
                     for (String aSelected : selected) {
                         body.add("service[]", aSelected);
                     }
 
-                    if (mSharedPref.getBoolean("iqdb_forcegray", false)) {
+                    if (preferences.getBoolean("iqdb_forcegray", false)) {
                         body.add("forcegray", "on");
                     }
                     break;
                 case SITE_SAUCENAO:
-                    body.add("hide", mSharedPref.getString("saucenao_hide", "0"));
-                    body.add("database", mSharedPref.getString("saucenao_database", "999"));
+                    body.add("hide", preferences.getString("saucenao_hide", "0"));
+                    body.add("database", preferences.getString("saucenao_database", "999"));
                     break;
                 default:
                     if (item.post_text_key.size() > 0) {
@@ -142,8 +143,13 @@ public class UploadService extends Service {
                     }
                     break;
             }
+            String fileName = Settings.instance(mContext).getString(Settings.STORAGE_IMAGE_NAME, "image.jpg");
+            if (content == null) {
+                body.add(key, fileName, image);
+            } else {
+                body.add(key, fileName, content);
+            }
 
-            body.add(key, image.getName(), image);
             upload(uploadUri, body);
             return mHttpUpload;
         }
@@ -211,7 +217,6 @@ public class UploadService extends Service {
             }
         }
 
-
         protected void onProgressUpdate(Integer... values) {
             Intent intent = new Intent(INTENT_ACTION_RETRY);
             intent.putExtra(INTENT_RETRY_TIMES, values[0]);
@@ -221,11 +226,14 @@ public class UploadService extends Service {
         protected void onPostExecute(ResponseUtils.HttpUpload result) {
             isUploading = false;
             stopForeground(true);
+
             if (result.error != null) {
                 Intent intent = new Intent(INTENT_ACTION_ERROR);
                 intent.putExtra(INTENT_ERROR_MESSAGE, result.error.message);
                 intent.putExtra(INTENT_ERROR_TITLE, result.error.title);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
+                Log.d(getClass().getSimpleName(), "Broadcast error");
                 return;
             }
 
@@ -251,14 +259,24 @@ public class UploadService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(getClass().getSimpleName(), "onBind");
+
         uploadTask.execute(intent.getStringExtra(INTENT_FILE_PATH));
-        Notification notification = new NotificationCompat.Builder(this).setContentTitle(getString(R.string.uploading)).build();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle(getString(R.string.uploading))
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setSmallIcon(R.drawable.ic_stat)
+                .setProgress(100, 0, true)
+                .setColor(0xFF3F51B5)
+                .build();
+
         startForeground(NOTIFICATION_ID, notification);
         return uploadBinder;
     }
 
     private void cancelTask() {
-        uploadTask.cancel(true);
+        HttpUtils.cancel();
+        uploadTask.cancel(false);
         isUploading = false;
     }
 

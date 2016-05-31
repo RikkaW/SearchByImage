@@ -12,10 +12,11 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.fragment.SettingsFragment;
 
 public class PopupSettingsActivity extends BaseActivity {
+
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.ResultActivity.EXTRA_URI";
 
-    private static Uri uri;
+    private Uri mUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,7 @@ public class PopupSettingsActivity extends BaseActivity {
                     fragment).commit();
         }
 
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_URI)) {
-            uri = intent.getParcelableExtra(EXTRA_URI);
-        }
+        mUri = getIntent().getParcelableExtra(EXTRA_URI);
     }
 
     @Override
@@ -54,14 +52,15 @@ public class PopupSettingsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             case R.id.ok:
                 Intent intent = new Intent(this, UploadActivity.class);
-                intent.putExtra(UploadActivity.EXTRA_URI, uri);
+                intent.putExtra(UploadActivity.EXTRA_URI, mUri);
+                intent.putExtra(UploadActivity.EXTRA_OPEN_SETTING, false);
                 startActivity(intent);
 
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
