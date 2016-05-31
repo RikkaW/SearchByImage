@@ -87,13 +87,18 @@ public class UploadActivity extends BaseActivity {
             return;
         }
 
-        boolean shouldSaveFile = intent.getBooleanExtra(EXTRA_OPEN_SETTING, true);
+        boolean shouldSaveFile = true;
+        boolean shouldCheckOpenSetting = true;
+        if (intent.hasExtra(EXTRA_OPEN_SETTING)) {
+            shouldSaveFile = false;
+            shouldCheckOpenSetting = false;
+        }
 
         if (shouldSaveFile) {
             storageImageFile(uri);
         }
 
-        if (shouldSaveFile && Settings.instance(this).getBoolean("setting_each_time", true)) {
+        if (shouldCheckOpenSetting && Settings.instance(this).getBoolean("setting_each_time", true)) {
             Intent newIntent = new Intent(this, PopupSettingsActivity.class);
             newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, uri);
 

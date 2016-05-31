@@ -72,6 +72,8 @@ public class UploadService extends Service {
         protected ResponseUtils.HttpUpload doInBackground(String... filePath) {
             isUploading = true;
 
+            CustomEngine.getList(mContext);
+
             mHttpUpload = new ResponseUtils.HttpUpload();
 
             File image = new File(filePath[0]);
