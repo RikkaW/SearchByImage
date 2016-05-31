@@ -21,6 +21,7 @@ import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.support.CrashHandler;
+import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.ui.EditSitesActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;

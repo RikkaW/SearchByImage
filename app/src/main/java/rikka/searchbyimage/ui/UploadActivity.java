@@ -10,15 +10,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +31,6 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.service.UploadService;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.UriUtils;
-import rx.functions.Action1;
 
 public class UploadActivity extends BaseActivity {
 
@@ -57,6 +59,8 @@ public class UploadActivity extends BaseActivity {
     };
 
     private ProgressDialog mProgressDialog;
+
+    private Uri mUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,13 +114,14 @@ public class UploadActivity extends BaseActivity {
 
             Log.d(getClass().getSimpleName(), uri.toString() + " saved");
         } catch (FileNotFoundException | SecurityException ignored) {
+            mUri = uri;
             new AlertDialog.Builder(this)
                     .setTitle(R.string.permission_require)
                     .setMessage(R.string.permission_require_detail)
                     .setPositiveButton(R.string.get_permission, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            RxPermissions
+                            /*RxPermissions
                                     .getInstance(UploadActivity.this)
                                     .request(Manifest.permission.READ_EXTERNAL_STORAGE)
                                     .subscribe(new Action1<Boolean>() {
@@ -126,7 +131,10 @@ public class UploadActivity extends BaseActivity {
                                                 storageImageFile(uri);
                                             }
                                         }
-                                    });
+                                    });*/
+                            if (ContextCompat.checkSelfPermission(UploadActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(UploadActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                            }
                         }
                     })
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -136,6 +144,20 @@ public class UploadActivity extends BaseActivity {
                         }
                     })
                     .show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (mUri != null)
+                        storageImageFile(mUri);
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

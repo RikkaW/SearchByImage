@@ -142,7 +142,7 @@
     <string name="target_app_not_found">没找到可以使用的应用</string>
 
     <string name="upload_failed">上传失败</string>
-    <string name="contact">联系我</string>
+    <string name="contact">反馈</string>
     <string name="contact_detail">如果您遇到问题，请联系我</string>
     <string name="file_not_found">没有找到文件\n请重试</string>
 </resources>

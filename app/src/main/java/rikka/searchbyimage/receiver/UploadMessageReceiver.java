@@ -48,9 +48,11 @@ public class UploadMessageReceiver extends BroadcastReceiver {
                 String title = intent.getStringExtra(UploadService.INTENT_ERROR_TITLE);
                 String message = intent.getStringExtra(UploadService.INTENT_ERROR_MESSAGE);
                 notification = new NotificationCompat.Builder(context)
-                        .setContentTitle(title == null ? context.getString(R.string.upload_form_add) : title)
+                        .setContentTitle(title == null ? context.getString(R.string.upload_failed) : title)
                         .setContentText(message)
                         .setColor(0xFF3F51B5)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setVibrate(new long[]{0})
                         .setSmallIcon(R.drawable.ic_stat)
                         .setAutoCancel(true)
                         .build();
