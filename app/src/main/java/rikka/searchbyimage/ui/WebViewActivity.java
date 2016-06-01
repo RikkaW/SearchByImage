@@ -698,7 +698,7 @@ public class WebViewActivity extends BaseActivity {
                             .setSmallIcon(android.R.drawable.stat_sys_download_done)
                             .setAutoCancel(true)
                             .setContentIntent(PendingIntent.getActivity(WebViewActivity.this, 0, intent1, PendingIntent.FLAG_ONE_SHOT))
-                            .setColor(0xFF3F51B5)
+                            //.setColor(0xFF3F51B5)
                             .build();
 
                     NotificationManager notificationManager =

@@ -145,4 +145,5 @@
     <string name="upload_failed">アップロードに失敗しました</string>
     <string name="file_not_found">もう一度やり直してください見つからない\nをファイル</string>
     <string name="contact_detail">If you meet problems, please contact me</string>
+    <string name="download_complete">ダウンロードが完了しました</string>
 </resources>
