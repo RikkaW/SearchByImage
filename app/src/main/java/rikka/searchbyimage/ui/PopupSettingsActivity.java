@@ -2,7 +2,6 @@ package rikka.searchbyimage.ui;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -57,7 +56,7 @@ public class PopupSettingsActivity extends BaseActivity {
             case R.id.ok:
                 Intent intent = new Intent(this, UploadActivity.class);
                 intent.putExtra(UploadActivity.EXTRA_URI, mUri);
-                intent.putExtra(UploadActivity.EXTRA_OPEN_SETTING, false);
+                intent.putExtra(UploadActivity.EXTRA_SAVE_FILE, false);
                 startActivity(intent);
 
                 onBackPressed();

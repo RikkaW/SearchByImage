@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
@@ -63,7 +62,7 @@ public class MainActivity extends BaseActivity {
                 Uri uri = data.getData();
                 Intent intent = new Intent(this, UploadActivity.class);
                 intent.putExtra(UploadActivity.EXTRA_URI, uri);
-                intent.putExtra(UploadActivity.EXTRA_OPEN_SETTING, false);
+                intent.putExtra(UploadActivity.EXTRA_SAVE_FILE, true);
                 startActivity(intent);
             }
         }

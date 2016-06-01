@@ -12,11 +12,11 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,8 +37,8 @@ public class UploadActivity extends BaseActivity {
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
 
-    public static final String EXTRA_OPEN_SETTING =
-            "rikka.searchbyimage.ui.UploadActivity.EXTRA_OPEN_SETTING";
+    public static final String EXTRA_SAVE_FILE =
+            "rikka.searchbyimage.ui.UploadActivity.EXTRA_SAVE_FILE";
 
     private UploadService.UploadBinder uploadBinder;
 
@@ -77,6 +77,7 @@ public class UploadActivity extends BaseActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/") && intent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
                 uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                storageImageFile(uri);
             }
         } else if (intent.hasExtra(EXTRA_URI)) {
             uri = intent.getParcelableExtra(EXTRA_URI);
@@ -87,15 +88,15 @@ public class UploadActivity extends BaseActivity {
             return;
         }
 
-        boolean shouldSaveFile = true;
         boolean shouldCheckOpenSetting = true;
-        if (intent.hasExtra(EXTRA_OPEN_SETTING)) {
-            shouldSaveFile = false;
+        if (intent.hasExtra(EXTRA_SAVE_FILE)) {
             shouldCheckOpenSetting = false;
-        }
 
-        if (shouldSaveFile) {
-            storageImageFile(uri);
+            if (intent.getBooleanExtra(EXTRA_SAVE_FILE, true)) {
+                storageImageFile(uri);
+            } else {
+                startService();
+            }
         }
 
         if (shouldCheckOpenSetting && Settings.instance(this).getBoolean("setting_each_time", true)) {
@@ -105,19 +106,36 @@ public class UploadActivity extends BaseActivity {
             startActivity(newIntent);
             finish();
         } else {
-            startService();
+            mProgressDialog = showDialog();
         }
     }
 
     private void storageImageFile(final Uri uri) {
         try {
             getContentResolver().openInputStream(uri);
-            UriUtils.storageImageShared(this, uri);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    UriUtils.storageImageShared(UploadActivity.this, uri);
+                    return null;
+                }
 
-            Settings.instance(this)
-                    .putString(Settings.STORAGE_IMAGE_NAME, UriUtils.getFileName(uri));
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    Settings.instance(UploadActivity.this)
+                            .putString(Settings.STORAGE_IMAGE_NAME, UriUtils.getFileName(uri));
 
-            Log.d(getClass().getSimpleName(), uri.toString() + " saved");
+                    Log.d("Upload", uri.toString() + " saved");
+                    if (!isFinishing()) {
+                        startService();
+                        Log.d("Upload",  "startService");
+                    }
+
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+
+
         } catch (FileNotFoundException | SecurityException ignored) {
             mUri = uri;
             new AlertDialog.Builder(this)
@@ -167,8 +185,6 @@ public class UploadActivity extends BaseActivity {
     }
 
     private void startService() {
-        mProgressDialog = showDialog();
-
         File folder = getExternalCacheDir();
         if (folder == null) {
             folder = getCacheDir();
