@@ -46,7 +46,6 @@ public class UploadService extends Service {
 
     private static final int NOTIFICATION_ID = 0x10;
 
-    public static final String INTENT_FILE_PATH = "intent_file_path";
     public static final String INTENT_ACTION_RETRY = "rikka.searchbyimage2.intent_action_retry";
     public static final String INTENT_ACTION_SUCCESS = "rikka.searchbyimage2.intent_action_success";
     public static final String INTENT_ACTION_ERROR = "rikka.searchbyimage2.intent_action_error";
@@ -70,6 +69,8 @@ public class UploadService extends Service {
         }
 
         protected ResponseUtils.HttpUpload doInBackground(String... filePath) {
+            Log.d("UploadService", "doInBackground");
+
             isUploading = true;
 
             CustomEngine.getList(mContext);
@@ -263,7 +264,6 @@ public class UploadService extends Service {
     public IBinder onBind(Intent intent) {
         Log.d(getClass().getSimpleName(), "onBind");
 
-        uploadTask.execute(intent.getStringExtra(INTENT_FILE_PATH));
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle(getString(R.string.uploading))
                 .setPriority(NotificationCompat.PRIORITY_MIN)
@@ -282,6 +282,15 @@ public class UploadService extends Service {
         isUploading = false;
     }
 
+    private void startTask() {
+        File folder = getExternalCacheDir();
+        if (folder == null) {
+            folder = getCacheDir();
+        }
+
+        uploadTask.execute(folder.toString() + "/image/image");
+    }
+
     private boolean isServiceUploading() {
         return isUploading;
     }
@@ -289,6 +298,10 @@ public class UploadService extends Service {
     public class UploadBinder extends Binder {
         public void cancel() {
             cancelTask();
+        }
+
+        public void startUpload() {
+            startTask();
         }
 
         public boolean isUploading() {

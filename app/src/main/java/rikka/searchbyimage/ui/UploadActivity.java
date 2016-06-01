@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -23,16 +22,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Locale;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.service.UploadService;
+import rikka.searchbyimage.staticdata.StaticData;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.UriUtils;
 
-public class UploadActivity extends BaseActivity {
+public class UploadActivity extends BaseActivity implements UriUtils.StoreImageFileListener {
 
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
@@ -45,11 +44,17 @@ public class UploadActivity extends BaseActivity {
     // if activity has paused, and not uploading image when resume or not show error, finish it
     private boolean paused = false;
     private boolean isError = false;
+    private boolean requestingPermission = false;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             uploadBinder = (UploadService.UploadBinder) service;
+            Log.d("UploadActivity", "onServiceConnected");
+
+            if (StaticData.instance().fileIsReady) {
+                uploadBinder.startUpload();
+            }
         }
 
         @Override
@@ -66,6 +71,8 @@ public class UploadActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d("UploadActivity", "onCreate");
+
         Settings.instance(this)
                 .putBoolean(Settings.DOWNLOAD_FILE_CRASH, false);
 
@@ -73,88 +80,78 @@ public class UploadActivity extends BaseActivity {
         String action = intent.getAction();
         String type = intent.getType();
 
-        Uri uri = null;
+        boolean shouldSaveFile = false;
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/") && intent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
-                uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                storageImageFile(uri);
+                mUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                shouldSaveFile = true;
             }
         } else if (intent.hasExtra(EXTRA_URI)) {
-            uri = intent.getParcelableExtra(EXTRA_URI);
+            mUri = intent.getParcelableExtra(EXTRA_URI);
         }
 
-        if (uri == null) {
+        if (mUri == null) {
             finish();
             return;
         }
 
+        if (shouldSaveFile || intent.getBooleanExtra(EXTRA_SAVE_FILE, false)) {
+            if (checkPermission(mUri)) {
+                StaticData.instance().fileIsReady = false;
+                UriUtils.storageImageFileAsync(this, mUri, this);
+                requestingPermission = false;
+                Log.d("UploadActivity", "storageImageFileAsync");
+            } else {
+                return;
+            }
+        }
+
+        postStartStorageFile();
+    }
+
+    private void postStartStorageFile() {
+        Intent intent = getIntent();
+
         boolean shouldCheckOpenSetting = true;
         if (intent.hasExtra(EXTRA_SAVE_FILE)) {
             shouldCheckOpenSetting = false;
-
-            if (intent.getBooleanExtra(EXTRA_SAVE_FILE, true)) {
-                storageImageFile(uri);
-            } else {
-                startService();
-            }
         }
 
         if (shouldCheckOpenSetting && Settings.instance(this).getBoolean("setting_each_time", true)) {
             Intent newIntent = new Intent(this, PopupSettingsActivity.class);
-            newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, uri);
+            newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, mUri);
 
             startActivity(newIntent);
             finish();
         } else {
-            mProgressDialog = showDialog();
+            startService();
         }
     }
 
-    private void storageImageFile(final Uri uri) {
+    @Override
+    public void onFinish(Uri uri) {
+        Log.d("UploadActivity", "storageImageFile onFinish");
+        requestingPermission = false;
+        StaticData.instance().fileIsReady = true;
+
+        if (uploadBinder != null && !uploadBinder.isUploading()) {
+            uploadBinder.startUpload();
+        }
+    }
+
+    private boolean checkPermission(final Uri uri) {
         try {
             getContentResolver().openInputStream(uri);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    UriUtils.storageImageShared(UploadActivity.this, uri);
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    Settings.instance(UploadActivity.this)
-                            .putString(Settings.STORAGE_IMAGE_NAME, UriUtils.getFileName(uri));
-
-                    Log.d("Upload", uri.toString() + " saved");
-                    if (!isFinishing()) {
-                        startService();
-                        Log.d("Upload",  "startService");
-                    }
-
-                    super.onPostExecute(aVoid);
-                }
-            }.execute();
-
-
+            return true;
         } catch (FileNotFoundException | SecurityException ignored) {
-            mUri = uri;
+            requestingPermission = true;
+
             new AlertDialog.Builder(this)
                     .setTitle(R.string.permission_require)
                     .setMessage(R.string.permission_require_detail)
                     .setPositiveButton(R.string.get_permission, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            /*RxPermissions
-                                    .getInstance(UploadActivity.this)
-                                    .request(Manifest.permission.READ_EXTERNAL_STORAGE)
-                                    .subscribe(new Action1<Boolean>() {
-                                        @Override
-                                        public void call(Boolean granted) {
-                                            if (granted) {
-                                                storageImageFile(uri);
-                                            }
-                                        }
-                                    });*/
                             if (ContextCompat.checkSelfPermission(UploadActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(UploadActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
                             }
@@ -167,6 +164,8 @@ public class UploadActivity extends BaseActivity {
                         }
                     })
                     .show();
+
+            return false;
         }
     }
 
@@ -175,8 +174,11 @@ public class UploadActivity extends BaseActivity {
         switch (requestCode) {
             case 0:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (mUri != null)
-                        storageImageFile(mUri);
+                    StaticData.instance().fileIsReady = false;
+                    UriUtils.storageImageFileAsync(this, mUri, this);
+                    postStartStorageFile();
+                } else {
+                    finish();
                 }
                 break;
             default:
@@ -185,17 +187,21 @@ public class UploadActivity extends BaseActivity {
     }
 
     private void startService() {
-        File folder = getExternalCacheDir();
-        if (folder == null) {
-            folder = getCacheDir();
-        }
+        Log.d("UploadActivity", "startService");
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mProgressDialog = showDialog();
+            }
+        }, 10);
 
         Intent upload = new Intent(this, UploadService.class);
-        upload.putExtra(UploadService.INTENT_FILE_PATH, folder.toString() + "/image/image");
         bindService(upload, serviceConnection, Service.BIND_AUTO_CREATE);
     }
 
     private ProgressDialog showDialog() {
+        Log.d("UploadActivity", "showDialog");
+
         ProgressDialog progressDialog;
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -285,10 +291,10 @@ public class UploadActivity extends BaseActivity {
         intentFilter.addAction(UploadService.INTENT_ACTION_RETRY);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
 
-        Log.d(getClass().getSimpleName(), "registerReceiver");
+        Log.d("UploadActivity", "registerReceiver");
         if (uploadBinder != null && uploadBinder.isUploading() && mProgressDialog != null) {
             mProgressDialog.show();
-        } else if (paused && !isError) {
+        } else if (paused && !isError && !requestingPermission) {
             finish();
         }
     }
@@ -306,4 +312,23 @@ public class UploadActivity extends BaseActivity {
         paused = true;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        Log.d("UploadActivity", "finish");
+    }
 }
+
+
+/*RxPermissions
+                                    .getInstance(UploadActivity.this)
+                                    .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    .subscribe(new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean granted) {
+                                            if (granted) {
+                                                storageImageFile(uri);
+                                            }
+                                        }
+                                    });*/

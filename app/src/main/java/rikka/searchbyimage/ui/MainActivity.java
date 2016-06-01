@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.fragment.SettingsFragment;
+import rikka.searchbyimage.utils.UriUtils;
 
 
 public class MainActivity extends BaseActivity {
@@ -64,7 +65,16 @@ public class MainActivity extends BaseActivity {
                 intent.putExtra(UploadActivity.EXTRA_URI, uri);
                 intent.putExtra(UploadActivity.EXTRA_SAVE_FILE, true);
                 startActivity(intent);
+
+                /*UriUtils.storageImageFileAsync(this, uri, new UriUtils.StoreImageFileListener() {
+                    @Override
+                    public void onFinish(Uri uri) {
+
+                    }
+                });*/
             }
+        } else {
+            finish();
         }
     }
 }

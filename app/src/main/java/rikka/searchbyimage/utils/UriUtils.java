@@ -2,6 +2,7 @@ package rikka.searchbyimage.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -10,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import rikka.searchbyimage.support.Settings;
+import rikka.searchbyimage.ui.UploadActivity;
 
 /**
  * Created by Yulan on 2016/5/28.
@@ -113,5 +117,27 @@ public class UriUtils {
             file = file.substring(0, file.lastIndexOf(".") + 1) + type;
         }
         return file;
+    }
+
+    public interface StoreImageFileListener {
+        void onFinish(Uri uri);
+    }
+
+    public static void storageImageFileAsync(final Context context, final Uri uri, final StoreImageFileListener callback) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                UriUtils.storageImageShared(context, uri);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                if (callback != null)
+                    callback.onFinish(uri);
+            }
+        }.execute();
     }
 }
