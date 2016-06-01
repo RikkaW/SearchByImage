@@ -36,7 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.WebViewActivity"/>
+        <activity
+            android:name=".ui.WebViewActivity"
+            android:theme="@style/AppTheme.WebViewActivity"/>
         <activity android:name=".ui.ResultActivity"/>
         <activity android:name=".ui.ChromeCustomTabsActivity"/>
         <activity

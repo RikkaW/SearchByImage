@@ -45,6 +45,7 @@
             android:id="@+id/infobar_negative"
             android:theme="@style/InfoBarButton"
             android:layout_marginBottom="8dp"
+            android:textColor="#FF4081"
             style="@style/Widget.AppCompat.Button.Borderless.Colored" />
 
         <Button
@@ -54,6 +55,7 @@
             android:id="@+id/infobar_positive"
             android:theme="@style/InfoBarButton"
             android:layout_marginBottom="8dp"
+            android:textColor="#FFF"
             style="@style/Widget.AppCompat.Button.Colored" />
 
     </LinearLayout>

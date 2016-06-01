@@ -4,6 +4,10 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +23,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,6 +48,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -320,6 +326,11 @@ public class WebViewActivity extends BaseActivity {
                     .putString(Settings.DOWNLOAD_URL, mImageUrl)
                     .putString(Settings.DOWNLOAD_IMAGE, fileName)
                     .apply();
+        }
+
+        int dot = fileName.lastIndexOf(".");
+        if (dot == -1) {
+            fileName += ".jpg";
         }
 
         final File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -672,10 +683,28 @@ public class WebViewActivity extends BaseActivity {
                             Intent intent1 = new Intent(Intent.ACTION_VIEW);
                             intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            IntentUtils.startOtherActivity(WebViewActivity.this,intent1);
+                            IntentUtils.startOtherActivity(WebViewActivity.this, intent1);
                         }
                     });
                     snackbar.show();
+
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                    intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    Notification notification = new NotificationCompat.Builder(WebViewActivity.this)
+                            .setContentTitle(fileName)
+                            .setContentText(getString(R.string.download_complete))
+                            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                            .setAutoCancel(true)
+                            .setContentIntent(PendingIntent.getActivity(WebViewActivity.this, 0, intent1, PendingIntent.FLAG_ONE_SHOT))
+                            .setColor(0xFF3F51B5)
+                            .build();
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+
+                    notificationManager.notify(((int)(new Date().getTime() / 1000L) % Integer.MAX_VALUE), notification);
                 }
             }
         }

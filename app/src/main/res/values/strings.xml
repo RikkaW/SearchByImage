@@ -103,6 +103,7 @@
 
     <string name="save_failed">Save failed</string>
     <string name="downloaded">%s downloaded</string>
+    <string name="download_complete">Download complete.</string>
     <string name="download_failed">Download failed</string>
 
     <string name="send_via">Send via</string>
