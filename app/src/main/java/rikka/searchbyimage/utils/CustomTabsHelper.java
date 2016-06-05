@@ -91,11 +91,6 @@ public class CustomTabsHelper {
         } else if (packagesSupportingCustomTabs.contains(LOCAL_PACKAGE)) {
             sPackageNameToUse = LOCAL_PACKAGE;
         }
-
-        List<String> list = getInstalledChromePackageName(context);
-        if (sPackageNameToUse == null && !list.isEmpty()) {
-            sPackageNameToUse = list.get(0);
-        }
         return sPackageNameToUse;
     }
 

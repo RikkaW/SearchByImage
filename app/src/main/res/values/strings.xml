@@ -148,4 +148,5 @@
     <string name="upload_failed">Upload failed</string>
     <string name="contact">Contact me</string>
     <string name="contact_detail">If you meet problems, please contact me</string>
+    <string name="no_chrome_available">use webview due to no available Chrome installed</string>
 </resources>
