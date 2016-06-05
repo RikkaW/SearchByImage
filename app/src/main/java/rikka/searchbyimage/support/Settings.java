@@ -23,7 +23,7 @@ public class Settings {
 
     public static synchronized Settings instance(Context context) {
         if (sInstance == null) {
-            sInstance = new Settings(context);
+            sInstance = new Settings(context.getApplicationContext());
         }
 
         return sInstance;

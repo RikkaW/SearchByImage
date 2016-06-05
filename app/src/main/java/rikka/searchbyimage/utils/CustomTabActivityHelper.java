@@ -2,15 +2,18 @@ package rikka.searchbyimage.utils;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.util.List;
+
+import rikka.searchbyimage.R;
 
 public class CustomTabActivityHelper {
     private CustomTabsSession mCustomTabsSession;
@@ -34,8 +37,9 @@ public class CustomTabActivityHelper {
 
         //If we cant find a package name, it means there's no browser that supports
         //Chrome Custom Tabs installed. So, we fallback to the webview
-        if (packageName == null) {
+        if (TextUtils.isEmpty(packageName)) {
             if (fallback != null) {
+                Toast.makeText(activity, R.string.no_chrome_available,Toast.LENGTH_SHORT).show();
                 fallback.openUri(activity, uri);
             }
         } else {

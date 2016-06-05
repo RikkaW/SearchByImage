@@ -92,8 +92,6 @@ public class MainActivity extends BaseActivity {
                     }
                 });*/
             }
-        } else {
-            finish();
         }
     }
 }

@@ -47,10 +47,11 @@ import android.widget.Toast;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -271,7 +272,7 @@ public class WebViewActivity extends BaseActivity {
 
                 Intent chooserIntent = Intent.createChooser(shareIntent, mContext.getString(R.string.share_url));
                 chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                IntentUtils.startOtherActivity(mContext,chooserIntent);
+                IntentUtils.startOtherActivity(mContext, chooserIntent);
                 return true;
             case R.id.menu_item_copy_link:
                 ClipBoardUtils.putTextIntoClipboard(mContext, mWebView.getUrl());
@@ -370,7 +371,7 @@ public class WebViewActivity extends BaseActivity {
             mInfoBar = new InfoBar(mCoordinatorLayout);
             mInfoBar.setMessage(Html.fromHtml(String.format(
                     mContext.getString(R.string.file_overwrite),
-                    uri.getLastPathSegment(),
+                    fileName,
                     "Pictures/SearchByImage")));
             mInfoBar.setNegativeButton(R.string.create_new_file, new View.OnClickListener() {
                 @Override
@@ -395,12 +396,27 @@ public class WebViewActivity extends BaseActivity {
 
     private void downloadFile(Uri uri, File file) {
         savedFile = file.getAbsoluteFile();
-
+        String BASE64_HEAD = "base64,";
+        if (uri.toString().contains(BASE64_HEAD)) {
+            String[] uriPart = uri.toString().split(",");
+            saveBase64File(uriPart[1], file);
+            return;
+        }
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        //request.setTitle("poi");
-        //request.setDescription("aaaa00");
         request.setDestinationUri(Uri.fromFile(file));
         downloadReference = mDownloadManager.enqueue(request);
+    }
+
+    private void saveBase64File(String base64, File file) {
+        byte[] decodedString = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
+        try {
+            OutputStream stream = new FileOutputStream(file);
+            stream.write(decodedString);
+            downloadSuccessful(file.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, R.string.save_failed, Toast.LENGTH_SHORT).show();
+        }
     }
 
     MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
@@ -423,7 +439,7 @@ public class WebViewActivity extends BaseActivity {
                 }
                 case 2: {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
-                    IntentUtils.startOtherActivity(WebViewActivity.this,intent);
+                    IntentUtils.startOtherActivity(WebViewActivity.this, intent);
 
                     break;
                 }
@@ -498,6 +514,42 @@ public class WebViewActivity extends BaseActivity {
                 "text/html",
                 "utf-8",
                 baseUrl);
+    }
+
+    private void downloadSuccessful(final String fileName) {
+        /*set notification*/
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Notification notification = new NotificationCompat.Builder(WebViewActivity.this)
+                .setContentTitle(fileName)
+                .setContentText(getString(R.string.download_complete))
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(WebViewActivity.this, 0, intent, PendingIntent.FLAG_ONE_SHOT))
+                //.setColor(0xFF3F51B5)
+                .build();
+
+        final NotificationManager notificationManager =
+                (NotificationManager) this.getSystemService(Service.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(fileName.hashCode(), notification);
+
+        /*set snackbar*/
+        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName), Snackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(getResources().getColor(R.color.openAction));
+
+        snackbar.setAction(R.string.open, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                IntentUtils.startOtherActivity(WebViewActivity.this, intent1);
+                notificationManager.cancel(fileName.hashCode());
+            }
+        });
+        snackbar.show();
     }
 
     private class MyWebChromeClient extends WebChromeClient {
@@ -693,38 +745,8 @@ public class WebViewActivity extends BaseActivity {
 
                 if (cursor.moveToFirst()) {
                     final String fileName = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
+                    downloadSuccessful(fileName);
 
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.downloaded), fileName), Snackbar.LENGTH_LONG);
-                    snackbar.setActionTextColor(getResources().getColor(R.color.openAction));
-
-                    snackbar.setAction(R.string.open, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                            intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
-                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            IntentUtils.startOtherActivity(WebViewActivity.this, intent1);
-                        }
-                    });
-                    snackbar.show();
-
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    Notification notification = new NotificationCompat.Builder(WebViewActivity.this)
-                            .setContentTitle(fileName)
-                            .setContentText(getString(R.string.download_complete))
-                            .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                            .setAutoCancel(true)
-                            .setContentIntent(PendingIntent.getActivity(WebViewActivity.this, 0, intent1, PendingIntent.FLAG_ONE_SHOT))
-                            //.setColor(0xFF3F51B5)
-                            .build();
-
-                    NotificationManager notificationManager =
-                            (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
-
-                    notificationManager.notify(((int)(new Date().getTime() / 1000L) % Integer.MAX_VALUE), notification);
                 }
             }
         }
