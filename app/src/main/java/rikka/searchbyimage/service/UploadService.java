@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class UploadService extends Service {
 
     private UploadBinder uploadBinder = new UploadBinder();
 
-    private UploadTask uploadTask = new UploadTask(this);
+    private List<UploadTask> uploadList = new ArrayList<>();
     private boolean isUploading = false;
 
     private class UploadTask extends AsyncTask<String, Integer, ResponseUtils.HttpUpload> {
@@ -227,8 +228,11 @@ public class UploadService extends Service {
         }
 
         protected void onPostExecute(ResponseUtils.HttpUpload result) {
-            isUploading = false;
-            stopForeground(true);
+            uploadList.remove(this);
+            if (uploadList.size() == 0) {
+                stopForeground(true);
+                isUploading = false;
+            }
 
             if (result.error != null) {
                 Intent intent = new Intent(INTENT_ACTION_ERROR);
@@ -277,9 +281,12 @@ public class UploadService extends Service {
     }
 
     private void cancelTask() {
-        HttpUtils.cancel();
-        uploadTask.cancel(false);
         isUploading = false;
+
+        for (UploadTask task :
+                uploadList) {
+            task.cancel(true);
+        }
     }
 
     private void startTask() {
@@ -288,7 +295,9 @@ public class UploadService extends Service {
             folder = getCacheDir();
         }
 
-        uploadTask.execute(folder.toString() + "/image/image");
+        UploadTask task = new UploadTask(this);
+        task.execute(folder.toString() + "/image/image");
+        uploadList.add(task);
     }
 
     private boolean isServiceUploading() {
