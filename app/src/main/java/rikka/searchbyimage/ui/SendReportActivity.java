@@ -53,7 +53,7 @@ public class SendReportActivity extends AppCompatActivity {
     }
 
     private void sendEmail(String body) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikka@xing.moe", null));
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikkanyaaa+imageSearchBugReport@gmail.com", null));
         intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchBugReport@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage crash log");
         intent.putExtra(Intent.EXTRA_TEXT, body);

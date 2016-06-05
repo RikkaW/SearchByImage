@@ -12,6 +12,8 @@ public class Settings {
     public static final String DOWNLOAD_URL = "download_url";
     public static final String DOWNLOAD_IMAGE = "download_image";
 
+    public static final String STORAGE_IMAGE_NAME = "image_file_name";
+
     private static Settings sInstance;
     private SharedPreferences mPrefs;
 

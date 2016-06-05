@@ -2,6 +2,7 @@ package rikka.searchbyimage.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,7 +13,7 @@ import java.io.InputStream;
  * Created by Rikka on 2016/1/6.
  */
 public class ImageUtils {
-    public static InputStream ResizeImage(InputStream inputStream) throws IOException {
+    public static byte[] ResizeImage(InputStream inputStream) throws IOException {
         if (inputStream == null) {
             return null;
         }
@@ -25,7 +26,9 @@ public class ImageUtils {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bytes = bos.toByteArray();
 
-        return new ByteArrayInputStream(bytes);
+        Log.d("ResizeImage", "inSampleSize = " + options.inSampleSize);
+
+        return bytes/*new ByteArrayInputStream(bytes)*/;
     }
 
     private static int calculateInSampleSize(int size, int maxSize) {

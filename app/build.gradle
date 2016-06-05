@@ -11,7 +11,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 15002
+        versionCode 15105
     }
 
     buildTypes {
@@ -22,7 +22,7 @@ android {
     }
 
     productFlavors {
-        def String name = "1.5"
+        def String name = "1.5.1"
 
         coolapk {
             applicationId "rikka.searchbyimage"
@@ -55,12 +55,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile "com.android.support:customtabs:23.4.0"
     compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.okhttp3:okhttp:3.3.0'
-    compile 'io.reactivex:rxjava:1.1.5'
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    //compile 'io.reactivex:rxjava:1.1.5'
+    //compile 'io.reactivex:rxandroid:1.2.0'
+    //compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
     compile 'com.github.RikkaW:DayNight-Theme:v1.0.13'
     compile 'com.github.RikkaW:MaterialPreference:v0.0.7'
 

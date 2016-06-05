@@ -34,7 +34,7 @@
             android:layout="@layout/preference_material"/>-->
 
         <rikka.materialpreference.DropDownPreference
-            android:defaultValue="2"
+            android:defaultValue="0"
             android:key="show_result_in"
             android:title="@string/show_result_in"
             app:myEntries="@array/open_with"

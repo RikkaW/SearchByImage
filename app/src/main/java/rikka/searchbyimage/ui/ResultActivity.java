@@ -76,12 +76,12 @@ public class ResultActivity extends BaseActivity {
                     intent.setData(Uri.parse(item.imageURL));
                     startActivity(intent);*/
 
-                    URLUtils.Open(item.imageURL, mActivity);
+                    URLUtils.Open(item.imageURL, ResultActivity.this);
                 }
 
                 @Override
                 public void onItemLongClick(View view, int position, final IqdbResultCollecter.IqdbItem item) {
-                    new AlertDialog.Builder(mActivity)
+                    new AlertDialog.Builder(ResultActivity.this)
                             .setItems(
                                     new CharSequence[]{getString(R.string.open_with), getString(R.string.copy_link)},
                                     new DialogInterface.OnClickListener() {
@@ -90,11 +90,11 @@ public class ResultActivity extends BaseActivity {
                                             switch (which) {
                                                 case 0:
                                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.imageURL));
-                                                    IntentUtils.startOtherActivity(mActivity, intent);
+                                                    IntentUtils.startOtherActivity(ResultActivity.this, intent);
                                                     break;
                                                 case 1:
-                                                    ClipBoardUtils.putTextIntoClipboard(mActivity, item.imageURL);
-                                                    Toast.makeText(mActivity, String.format(getString(R.string.copy_to_clipboard), item.imageURL), Toast.LENGTH_SHORT).show();
+                                                    ClipBoardUtils.putTextIntoClipboard(ResultActivity.this, item.imageURL);
+                                                    Toast.makeText(ResultActivity.this, String.format(getString(R.string.copy_to_clipboard), item.imageURL), Toast.LENGTH_SHORT).show();
                                                     break;
                                             }
                                         }

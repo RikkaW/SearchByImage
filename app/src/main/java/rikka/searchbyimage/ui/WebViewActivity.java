@@ -4,8 +4,13 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -19,9 +24,11 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -43,6 +50,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
@@ -102,6 +110,24 @@ public class WebViewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            Class.forName("android.support.v7.view.menu.MenuBuilder");
+        } catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Sorry, your device is not supported.\nIt seems only happened in some Samsung devices running Android 4.2")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            finish();
+                        }
+                    })
+                    .show();
+
+            return;
+        }
+
         setContentView(R.layout.activity_webview);
 
         mContext = this;
@@ -253,7 +279,7 @@ public class WebViewActivity extends BaseActivity {
                 return true;
             case R.id.menu_item_open_in:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mWebView.getUrl()));
-                IntentUtils.startOtherActivity(mActivity,intent);
+                IntentUtils.startOtherActivity(this, intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -322,6 +348,11 @@ public class WebViewActivity extends BaseActivity {
                     .apply();
         }
 
+        int dot = fileName.lastIndexOf(".");
+        if (dot == -1) {
+            fileName += ".jpg";
+        }
+
         final File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + "/SearchByImage", fileName);
 
@@ -372,44 +403,43 @@ public class WebViewActivity extends BaseActivity {
         downloadReference = mDownloadManager.enqueue(request);
     }
 
+    MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case 0: {
+                    ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
+                    Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
+                    break;
+                }
+                case 1: {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                            ContextCompat.checkSelfPermission(WebViewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        break;
+                    }
+
+                    startDownload();
+                    break;
+                }
+                case 2: {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
+                    IntentUtils.startOtherActivity(WebViewActivity.this,intent);
+
+                    break;
+                }
+                case 3: {
+                    mWebView.loadUrl("https://www.google.com/searchbyimage?image_url=" + mImageUrl);
+
+                    break;
+                }
+            }
+            return true;
+        }
+    };
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
-
-        MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case 0: {
-                        ClipBoardUtils.putTextIntoClipboard(mContext, mImageUrl);
-                        Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copy_to_clipboard), mWebView.getUrl()), Snackbar.LENGTH_SHORT).show();
-                        break;
-                    }
-                    case 1: {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                                ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                            break;
-                        }
-
-                        startDownload();
-                        break;
-                    }
-                    case 2: {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUrl));
-                        IntentUtils.startOtherActivity(mActivity,intent);
-
-                        break;
-                    }
-                    case 3: {
-                        mWebView.loadUrl("https://www.google.com/searchbyimage?image_url=" + mImageUrl);
-
-                        break;
-                    }
-                }
-                return true;
-            }
-        };
 
         WebView.HitTestResult result = mWebView.getHitTestResult();
 
@@ -492,8 +522,8 @@ public class WebViewActivity extends BaseActivity {
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
-            if (IntentUtils.canOpenWith(mActivity, intent, intentActivitiesSize)) {
-                mActivity.startActivity(intent);
+            if (IntentUtils.canOpenWith(WebViewActivity.this, intent, intentActivitiesSize)) {
+                WebViewActivity.this.startActivity(intent);
 
                 return true;
             } else {
@@ -673,10 +703,28 @@ public class WebViewActivity extends BaseActivity {
                             Intent intent1 = new Intent(Intent.ACTION_VIEW);
                             intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            IntentUtils.startOtherActivity(mActivity,intent1);
+                            IntentUtils.startOtherActivity(WebViewActivity.this, intent1);
                         }
                     });
                     snackbar.show();
+
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                    intent1.setDataAndType(Uri.fromFile(new File(savedFile.getParent() + "/" + fileName)), "image/*");
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    Notification notification = new NotificationCompat.Builder(WebViewActivity.this)
+                            .setContentTitle(fileName)
+                            .setContentText(getString(R.string.download_complete))
+                            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                            .setAutoCancel(true)
+                            .setContentIntent(PendingIntent.getActivity(WebViewActivity.this, 0, intent1, PendingIntent.FLAG_ONE_SHOT))
+                            //.setColor(0xFF3F51B5)
+                            .build();
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+
+                    notificationManager.notify(((int)(new Date().getTime() / 1000L) % Integer.MAX_VALUE), notification);
                 }
             }
         }

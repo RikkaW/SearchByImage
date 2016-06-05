@@ -92,7 +92,7 @@ public class CustomTabsHelper {
             sPackageNameToUse = LOCAL_PACKAGE;
         }
 
-        List<String> list = getInstalledChromePackgeName(context);
+        List<String> list = getInstalledChromePackageName(context);
         if (sPackageNameToUse == null && !list.isEmpty()) {
             sPackageNameToUse = list.get(0);
         }
@@ -143,11 +143,10 @@ public class CustomTabsHelper {
     }
 
     public static boolean getIsChromeInstalled(Context context) {
-
-        return !getInstalledChromePackgeName(context).isEmpty();
+        return !getInstalledChromePackageName(context).isEmpty();
     }
 
-    public static List<String> getInstalledChromePackgeName(Context context) {
+    public static List<String> getInstalledChromePackageName(Context context) {
         PackageManager pm = context.getPackageManager();
         ArrayList<String> list = new ArrayList<>();
 

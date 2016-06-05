@@ -10,55 +10,51 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
-import com.tbruyelle.rxpermissions.RxPermissions;
-
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Locale;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.service.UploadService;
+import rikka.searchbyimage.staticdata.StaticData;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.UriUtils;
-import rx.functions.Action1;
 
-public class UploadActivity extends BaseActivity {
-    public final static int SITE_GOOGLE = 0;
-    public final static int SITE_BAIDU = 1;
-    public final static int SITE_IQDB = 2;
-    public final static int SITE_TINEYE = 3;
-    public final static int SITE_SAUCENAO = 4;
-    public final static int SITE_ASCII2D = 5;
-
-
-    ProgressDialog mProgressDialog;
+public class UploadActivity extends BaseActivity implements UriUtils.StoreImageFileListener {
 
     public static final String EXTRA_URI =
             "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI";
 
-    public static final String EXTRA_URI2 =
-            "rikka.searchbyimage.ui.UploadActivity.EXTRA_URI2";
-
-    private Intent mIntent;
+    public static final String EXTRA_SAVE_FILE =
+            "rikka.searchbyimage.ui.UploadActivity.EXTRA_SAVE_FILE";
 
     private UploadService.UploadBinder uploadBinder;
 
-    //if activity has paused,and not uploading image when resume or not show error,finish it
+    // if activity has paused, and not uploading image when resume or not show error, finish it
     private boolean paused = false;
     private boolean isError = false;
+    private boolean requestingPermission = false;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             uploadBinder = (UploadService.UploadBinder) service;
+            Log.d("UploadActivity", "onServiceConnected");
+
+            if (StaticData.instance().fileIsReady) {
+                uploadBinder.startUpload();
+            }
         }
 
         @Override
@@ -67,66 +63,98 @@ public class UploadActivity extends BaseActivity {
         }
     };
 
+    private ProgressDialog mProgressDialog;
+
+    private Uri mUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_upload);
+
+        Log.d("UploadActivity", "onCreate");
 
         Settings.instance(this)
                 .putBoolean(Settings.DOWNLOAD_FILE_CRASH, false);
 
-        mIntent = getIntent();
-        String action = mIntent.getAction();
-        String type = mIntent.getType();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
 
+        boolean shouldSaveFile = false;
         if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if (type.startsWith("image/") && mIntent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
-                handleSendImage(mIntent);
+            if (type.startsWith("image/") && intent.getParcelableExtra(Intent.EXTRA_STREAM) != null) {
+                mUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                shouldSaveFile = true;
+            }
+        } else if (intent.hasExtra(EXTRA_URI)) {
+            mUri = intent.getParcelableExtra(EXTRA_URI);
+        }
+
+        if (mUri == null) {
+            finish();
+            return;
+        }
+
+        if (shouldSaveFile || intent.getBooleanExtra(EXTRA_SAVE_FILE, false)) {
+            if (checkPermission(mUri)) {
+                StaticData.instance().fileIsReady = false;
+                UriUtils.storageImageFileAsync(this, mUri, this);
+                requestingPermission = false;
+                Log.d("UploadActivity", "storageImageFileAsync");
+            } else {
+                return;
             }
         }
 
-        if (mIntent.hasExtra(EXTRA_URI)) {
-            handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI));
-        }
-
-        if (mIntent.hasExtra(EXTRA_URI2)) {
-            handleSendImageUri((Uri) mIntent.getParcelableExtra(EXTRA_URI2));
-        }
+        postStartStorageFile();
     }
 
-    private void handleSendImage(Intent intent) {
+    private void postStartStorageFile() {
+        Intent intent = getIntent();
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean shouldCheckOpenSetting = true;
+        if (intent.hasExtra(EXTRA_SAVE_FILE)) {
+            shouldCheckOpenSetting = false;
+        }
 
-        if (sharedPref.getBoolean("setting_each_time", true)) {
+        if (shouldCheckOpenSetting && Settings.instance(this).getBoolean("setting_each_time", true)) {
             Intent newIntent = new Intent(this, PopupSettingsActivity.class);
-            newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, mIntent.getParcelableExtra(Intent.EXTRA_STREAM));
+            newIntent.putExtra(PopupSettingsActivity.EXTRA_URI, mUri);
+
             startActivity(newIntent);
             finish();
         } else {
-            handleSendImageUri((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+            startService();
         }
     }
 
-    private void handleSendImageUri(final Uri uri) {
-        mProgressDialog = showDialog();
-        File file = UriUtils.storageImageShared(this, uri);
-        if (file == null) {
+    @Override
+    public void onFinish(Uri uri) {
+        Log.d("UploadActivity", "storageImageFile onFinish");
+        requestingPermission = false;
+        StaticData.instance().fileIsReady = true;
+
+        if (uploadBinder != null && !uploadBinder.isUploading()) {
+            uploadBinder.startUpload();
+        }
+    }
+
+    private boolean checkPermission(final Uri uri) {
+        try {
+            getContentResolver().openInputStream(uri);
+            return true;
+        } catch (FileNotFoundException | SecurityException ignored) {
+            requestingPermission = true;
+
             new AlertDialog.Builder(this)
                     .setTitle(R.string.permission_require)
                     .setMessage(R.string.permission_require_detail)
                     .setPositiveButton(R.string.get_permission, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            RxPermissions.getInstance(mActivity).request(Manifest.permission.READ_EXTERNAL_STORAGE)
-                                    .subscribe(new Action1<Boolean>() {
-                                        @Override
-                                        public void call(Boolean granted) {
-                                            if (granted) {
-                                                handleSendImageUri(uri);
-                                            }
-                                        }
-                                    });
+                            if (ContextCompat.checkSelfPermission(UploadActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(UploadActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                            }
                         }
                     })
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -136,14 +164,44 @@ public class UploadActivity extends BaseActivity {
                         }
                     })
                     .show();
-            return;
+
+            return false;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    StaticData.instance().fileIsReady = false;
+                    UriUtils.storageImageFileAsync(this, mUri, this);
+                    postStartStorageFile();
+                } else {
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void startService() {
+        Log.d("UploadActivity", "startService");
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mProgressDialog = showDialog();
+            }
+        }, 10);
+
         Intent upload = new Intent(this, UploadService.class);
-        upload.putExtra(UploadService.INTENT_FILE_PATH, file.getPath());
         bindService(upload, serviceConnection, Service.BIND_AUTO_CREATE);
     }
 
     private ProgressDialog showDialog() {
+        Log.d("UploadActivity", "showDialog");
+
         ProgressDialog progressDialog;
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -184,15 +242,19 @@ public class UploadActivity extends BaseActivity {
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(getClass().getSimpleName(), "onReceive");
+
             if (mProgressDialog == null) {
                 return;
             }
+
             switch (intent.getAction()) {
                 case UploadService.INTENT_ACTION_RETRY:
                     int times = intent.getIntExtra(UploadService.INTENT_RETRY_TIMES, 0);
-                    mProgressDialog.setMessage(String.format(Locale.getDefault(), "Retrying:%d times", times));
+                    mProgressDialog.setMessage(String.format(Locale.getDefault(), "Retrying: %d times", times));
                     break;
                 case UploadService.INTENT_ACTION_SUCCESS:
                     mProgressDialog.dismiss();
@@ -203,12 +265,13 @@ public class UploadActivity extends BaseActivity {
                     isError = true;
                     String title = intent.getStringExtra(UploadService.INTENT_ERROR_TITLE);
                     String message = intent.getStringExtra(UploadService.INTENT_ERROR_MESSAGE);
-                    new AlertDialog.Builder(mActivity)
+                    new AlertDialog.Builder(UploadActivity.this)
                             .setMessage(message)
                             .setTitle(title)
-                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
-                                public void onCancel(DialogInterface dialog) {
+                                public void onDismiss(DialogInterface dialog) {
                                     finish();
                                 }
                             }).show();
@@ -221,14 +284,17 @@ public class UploadActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UploadService.INTENT_ACTION_ERROR);
         intentFilter.addAction(UploadService.INTENT_ACTION_SUCCESS);
         intentFilter.addAction(UploadService.INTENT_ACTION_RETRY);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+
+        Log.d("UploadActivity", "registerReceiver");
         if (uploadBinder != null && uploadBinder.isUploading() && mProgressDialog != null) {
             mProgressDialog.show();
-        } else if (paused && !isError) {
+        } else if (paused && !isError && !requestingPermission) {
             finish();
         }
     }
@@ -242,10 +308,27 @@ public class UploadActivity extends BaseActivity {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
+
         paused = true;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        Log.d("UploadActivity", "finish");
+    }
 }
+
+
+/*RxPermissions
+                                    .getInstance(UploadActivity.this)
+                                    .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    .subscribe(new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean granted) {
+                                            if (granted) {
+                                                storageImageFile(uri);
+                                            }
+                                        }
+                                    });*/

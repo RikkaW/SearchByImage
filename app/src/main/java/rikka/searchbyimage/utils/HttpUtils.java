@@ -1,5 +1,7 @@
 package rikka.searchbyimage.utils;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -23,6 +26,7 @@ import okhttp3.Response;
  * Created by Rikka on 2016/1/22.
  */
 public class HttpUtils {
+
     public interface Callback {
         void onSuccess(String url, int code, InputStream stream);
         void onFail(int code);
@@ -47,6 +51,15 @@ public class HttpUtils {
         return contentTypeFor;
     }
 
+    private static Call sCall;
+
+    public static void cancel() {
+        if (sCall != null && sCall.isExecuted()) {
+            sCall.cancel();
+            Log.d("QAQ", "cancel");
+        }
+    }
+
     public static void postForm(String url, Header header, Body body, Callback callback) throws IOException {
         OkHttpClient okHttpClient = init();
 
@@ -63,9 +76,12 @@ public class HttpUtils {
         for (Body.FormData data : body.getList()) {
             if (data.value != null) {
                 bodyBuilder.addFormDataPart(data.key, data.value);
-            } else {
+            } else if (data.file != null) {
                 bodyBuilder.addFormDataPart(data.key, data.filename,
                         RequestBody.create(MediaType.parse(guessMimeType(data.filename)), data.file));
+            } else {
+                bodyBuilder.addFormDataPart(data.key, data.filename,
+                        RequestBody.create(MediaType.parse(guessMimeType(data.filename)), data.content));
             }
         }
 
@@ -73,7 +89,9 @@ public class HttpUtils {
 
         //int retry = 0;
         Response response = null;
-        response = okHttpClient.newCall(builder.build()).execute();
+        sCall = okHttpClient.newCall(builder.build());
+        response = sCall.execute();
+
         /*while (response == null) {
             try {
                 response = okHttpClient.newCall(builder.build()).execute();
@@ -123,6 +141,7 @@ public class HttpUtils {
             public String value;
             public String filename;
             public File file;
+            public byte[] content;
 
             public FormData(String key, String value) {
                 this.key = key;
@@ -133,6 +152,12 @@ public class HttpUtils {
                 this.key = key;
                 this.filename = filename;
                 this.file = file;
+            }
+
+            public FormData(String key, String filename, byte[] content) {
+                this.key = key;
+                this.filename = filename;
+                this.content = content;
             }
         }
         private List<FormData> body = new ArrayList<>();
@@ -150,6 +175,11 @@ public class HttpUtils {
         }
 
         public Body add(String key, String fileName, File file) {
+            body.add(new FormData(key, fileName, file));
+            return this;
+        }
+
+        public Body add(String key, String fileName, byte[] file) {
             body.add(new FormData(key, fileName, file));
             return this;
         }

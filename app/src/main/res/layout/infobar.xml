@@ -15,63 +15,63 @@
         android:layout_height="48dp"
         android:src="@drawable/infobar_close"
         android:background="?attr/selectableItemBackground"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_gravity="end|top|right"
         android:scaleType="centerCrop" />
 
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:id="@+id/item_icon"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
+        android:layout_gravity="start|top|left"
         android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/infobar_download"
         android:cropToPadding="true"
         android:padding="16dp"
         android:scaleType="centerCrop" />
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="replace file"
-        android:id="@+id/infobar_positive"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/infobar_close"
-        android:layout_alignEnd="@+id/infobar_close"
+        android:layout_gravity="end|bottom|right"
         android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:theme="@style/InfoBarButton"
-        style="@style/Widget.AppCompat.Button.Colored" />
+        android:layout_marginEnd="16dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="create new file"
-        android:id="@+id/infobar_negative"
-        android:layout_alignTop="@+id/infobar_positive"
-        android:layout_toLeftOf="@+id/infobar_positive"
-        android:layout_toStartOf="@+id/infobar_positive"
-        android:layout_marginRight="0dp"
-        android:layout_marginEnd="0dp"
-        android:theme="@style/InfoBarButton"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="create new file"
+            android:id="@+id/infobar_negative"
+            android:theme="@style/InfoBarButton"
+            android:layout_marginBottom="8dp"
+            android:textColor="#FF4081"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="replace file"
+            android:id="@+id/infobar_positive"
+            android:theme="@style/InfoBarButton"
+            android:layout_marginBottom="8dp"
+            android:textColor="#FFF"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+    </LinearLayout>
 
     <TextView
-        android:layout_width="@dimen/infobar_text_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxHeight="80dp"
         tools:text="Do you want to replace the existing file poi.png?\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n"
         android:id="@+id/infobar_text"
-        android:layout_alignTop="@+id/item_icon"
-        android:layout_toRightOf="@+id/item_icon"
-        android:layout_toEndOf="@+id/item_icon"
         android:textSize="16sp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="68dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginEnd="56dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat" />
 
 </rikka.searchbyimage.view.InfoBarLayout>

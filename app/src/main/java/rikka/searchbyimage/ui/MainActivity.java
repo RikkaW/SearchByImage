@@ -1,10 +1,12 @@
 package rikka.searchbyimage.ui;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
@@ -18,6 +20,24 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            Class.forName("android.support.v7.view.menu.MenuBuilder");
+        } catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Sorry, your device is not supported.\nIt seems only happened in some Samsung devices running Android 4.2")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            finish();
+                        }
+                    })
+                    .show();
+
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,21 +62,12 @@ public class MainActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                 } else {
-                    /*Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, 1);
-                    }*/
-
-                    /*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, 1);*/
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                 }
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(intent, 1);
                 } else {
-                    Toast.makeText(mActivity, R.string.target_app_not_found, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.target_app_not_found, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -65,14 +76,24 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
 
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 Uri uri = data.getData();
                 Intent intent = new Intent(this, UploadActivity.class);
-                intent.putExtra(UploadActivity.EXTRA_URI2, uri);
+                intent.putExtra(UploadActivity.EXTRA_URI, uri);
+                intent.putExtra(UploadActivity.EXTRA_SAVE_FILE, true);
                 startActivity(intent);
+
+                /*UriUtils.storageImageFileAsync(this, uri, new UriUtils.StoreImageFileListener() {
+                    @Override
+                    public void onFinish(Uri uri) {
+
+                    }
+                });*/
             }
+        } else {
+            finish();
         }
     }
 }

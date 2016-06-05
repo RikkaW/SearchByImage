@@ -1,5 +1,6 @@
 package rikka.searchbyimage.utils;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +40,14 @@ public class ResponseUtils {
                 this.title = null;
                 this.message = message;
             }
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorMessage{" +
+                    "title='" + title + '\'' +
+                    ", message='" + message + '\'' +
+                    '}';
         }
     }
 
@@ -145,9 +154,13 @@ public class ResponseUtils {
                 intent = new Intent(context, ChromeCustomTabsActivity.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    if (context instanceof Service) {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
                 } else {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
+
                 intent.putExtra(ChromeCustomTabsActivity.EXTRA_URL, result.url);
                 intent.putExtra(ChromeCustomTabsActivity.EXTRA_SITE_ID, result.siteId);
 
@@ -165,6 +178,9 @@ public class ResponseUtils {
         intent = new Intent(context, ResultActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            if (context instanceof Service) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -179,6 +195,9 @@ public class ResponseUtils {
         intent = new Intent(context, WebViewActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            if (context instanceof Service) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
