@@ -107,6 +107,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         sb.append("Device Manufacturer: ").append(MANUFACTURER).append("\n");
         sb.append("App Version: ").append(BuildConfig.VERSION_NAME).append("(")
                 .append(BuildConfig.VERSION_CODE).append(")\n");
+        sb.append("Play store version: ").append(BuildConfig.hideOtherEngine ? "Yse" : "Np").append("\n");
 
         if (Settings.instance(mContext)
                 .getBoolean(Settings.DOWNLOAD_FILE_CRASH, false)) {

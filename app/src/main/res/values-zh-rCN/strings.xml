@@ -146,5 +146,5 @@
     <string name="contact_detail">如果您遇到问题，请联系我</string>
     <string name="file_not_found">没有找到文件\n请重试</string>
     <string name="download_complete">下载完毕</string>
-    <string name="no_chrome_available">由于没有可用的Chrome,使用WebVIew替代</string>
+    <string name="no_chrome_available">由于没有可用的Chrome，使用WebView替代</string>
 </resources>

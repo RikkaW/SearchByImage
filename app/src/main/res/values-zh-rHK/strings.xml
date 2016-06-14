@@ -143,5 +143,5 @@
     <string name="contact">反饋</string>
     <string name="contact_detail">如果您遇到问题，请联系我</string>
     <string name="download_complete">下載完成</string>
-    <string name="no_chrome_available">由於沒有可用的Chrome,使用WebView替代</string>
+    <string name="no_chrome_available">由於沒有可用的Chrome，使用WebView替代</string>
 </resources>
