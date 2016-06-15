@@ -149,4 +149,6 @@
     <string name="contact">Contact me</string>
     <string name="contact_detail">If you meet problems, please contact me</string>
     <string name="no_chrome_available">Use WebView due to no available Chrome installed</string>
+    <string name="no_webview">WebView not installed in your device.</string>
+    <string name="webview_version_error">WebView version is incorrect,please reinstall webview in Google Play.</string>
 </resources>

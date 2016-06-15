@@ -129,7 +129,15 @@ public class WebViewActivity extends BaseActivity {
             return;
         }
 
-        setContentView(R.layout.activity_webview);
+        try {
+            setContentView(R.layout.activity_webview);
+        } catch (UnsatisfiedLinkError linkError) {
+            Toast.makeText(getApplicationContext(),R.string.webview_version_error,Toast.LENGTH_LONG).show();
+            finish();
+        } catch (RuntimeException runtime) {
+            Toast.makeText(getApplicationContext(),R.string.no_webview,Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         mContext = this;
 
