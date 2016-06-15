@@ -5,8 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -27,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import okhttp3.Call;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.support.Settings;
@@ -36,7 +33,10 @@ import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.ResponseUtils;
 import rikka.searchbyimage.utils.Utils;
 
-import static rikka.searchbyimage.staticdata.EngineId.*;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_BAIDU;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_GOOGLE;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_IQDB;
+import static rikka.searchbyimage.staticdata.EngineId.SITE_SAUCENAO;
 
 /**
  * Created by Yulan on 2016/5/28.

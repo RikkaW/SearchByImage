@@ -4,16 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import rikka.searchbyimage.support.Settings;
-import rikka.searchbyimage.ui.UploadActivity;
 
 /**
  * Created by Yulan on 2016/5/28.
@@ -48,15 +44,11 @@ public class UriUtils {
                     file.getParentFile().mkdirs();
                 }
                 if (file.exists()) {
+                    //noinspection ResultOfMethodCallIgnored
                     file.delete();
                 }
-                try {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.createNewFile();
-                } catch (IOException e) {
-                    Log.e("在保存图片时出错：", e.toString());
-                    throw e;
-                }
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
                 os = new FileOutputStream(file);
                 byte[] buf = new byte[1024 * 8];
                 int len;
