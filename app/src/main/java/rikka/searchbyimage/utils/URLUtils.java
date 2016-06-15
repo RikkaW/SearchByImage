@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.receiver.ShareBroadcastReceiver;
@@ -23,6 +25,10 @@ public class URLUtils {
     public static final String SHOW_IN_CHROME = "2";
 
     public static void Open(String uri, Activity activity) {
+        if (TextUtils.isEmpty(uri)) {
+            Toast.makeText(activity, R.string.something_wrong, Toast.LENGTH_SHORT).show();
+            return;
+        }
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
         switch (sharedPref.getString("show_result_in", SHOW_IN_WEBVIEW)) {
             case SHOW_IN_WEBVIEW:
