@@ -151,4 +151,5 @@
     <string name="no_chrome_available">Use WebView due to no available Chrome installed</string>
     <string name="no_webview">WebView not installed in your device.</string>
     <string name="webview_version_error">WebView version is incorrect,please reinstall webview in Google Play.</string>
+    <string name="download_manager_disabled">DownloadManager is disabled. Please enable it.</string>
 </resources>

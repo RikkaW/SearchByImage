@@ -2,9 +2,9 @@ package rikka.searchbyimage.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,8 @@ import java.io.InputStream;
  * Created by Rikka on 2016/1/6.
  */
 public class ImageUtils {
-    public static byte[] ResizeImage(InputStream inputStream) throws IOException {
+    @Nullable
+    public static byte[] ResizeImage(@Nullable InputStream inputStream) throws IOException {
         if (inputStream == null) {
             return null;
         }
@@ -22,6 +23,9 @@ public class ImageUtils {
         options.inSampleSize = calculateInSampleSize(inputStream.available(), 1024 * 1024); // 1MB
 
         Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+        if (bitmap==null){
+            return null;
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bytes = bos.toByteArray();
