@@ -147,7 +147,7 @@
     <string name="file_not_found">没有找到文件\n请重试</string>
     <string name="download_complete">下载完毕</string>
     <string name="no_chrome_available">由于没有可用的Chrome，使用WebView替代</string>
-    <string name="no_webview">设备上未安装WebVIew</string>
+    <string name="no_webview">设备上未安装WebView</string>
     <string name="webview_version_error">WebView版本错误，请在Google Play上重新安装WebVew</string>
-    <string name="download_manager_disabled">下载管理器被禁用</string>
+    <string name="download_manager_disabled">下载管理器被禁用，请启用。</string>
 </resources>
