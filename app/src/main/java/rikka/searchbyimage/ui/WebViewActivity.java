@@ -57,6 +57,7 @@ import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.ClipBoardUtils;
+import rikka.searchbyimage.utils.DownloadManagerResolver;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.Utils;
 import rikka.searchbyimage.view.ContextMenuTitleView;
@@ -129,7 +130,15 @@ public class WebViewActivity extends BaseActivity {
             return;
         }
 
-        setContentView(R.layout.activity_webview);
+        try {
+            setContentView(R.layout.activity_webview);
+        } catch (UnsatisfiedLinkError linkError) {
+            Toast.makeText(getApplicationContext(), R.string.webview_version_error, Toast.LENGTH_LONG).show();
+            finish();
+        } catch (RuntimeException runtime) {
+            Toast.makeText(getApplicationContext(), R.string.no_webview, Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         mContext = this;
 
@@ -402,9 +411,11 @@ public class WebViewActivity extends BaseActivity {
             saveBase64File(uriPart[1], file);
             return;
         }
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setDestinationUri(Uri.fromFile(file));
-        downloadReference = mDownloadManager.enqueue(request);
+        if (DownloadManagerResolver.resolve(this)) {
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setDestinationUri(Uri.fromFile(file));
+            downloadReference = mDownloadManager.enqueue(request);
+        }
     }
 
     private void saveBase64File(String base64, File file) {

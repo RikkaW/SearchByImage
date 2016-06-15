@@ -144,4 +144,7 @@
     <string name="contact_detail">如果您遇到问题，请联系我</string>
     <string name="download_complete">下載完成</string>
     <string name="no_chrome_available">由於沒有可用的Chrome，使用WebView替代</string>
+    <string name="no_webview">設備上未安裝WebView</string>
+    <string name="webview_version_error">WebView 版本錯誤，請在Google Play上重新安裝WebView。</string>
+    <string name="download_manager_disabled">下載管理器被禁用了，請啟用它。</string>
 </resources>
