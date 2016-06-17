@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">以圖搜圖</string>
     <string name="share_action_name">圖片搜尋</string>
-    <string name="hello">在分享選單選擇該應用將圖片上傳至選擇的搜尋引擎\n或者直接按下上傳按鈕來選擇圖片</string>
+    <string name="hello">在分享選單選擇該應用程式將圖片上傳至選擇的搜尋引擎\n或者直接按下上傳按鈕來選擇圖片</string>
     <string name="hello_gp">在分享選單選擇該應用將圖片上傳至 Google 圖片搜尋\n或者直接按下上傳按鈕來選擇圖片</string>
     <string name="uploading">上傳中…</string>
 
@@ -30,7 +30,7 @@
     <string name="google_region_redirect_custom">自訂 Google URL</string>
 
     <string-array name="google_region_redirects">
-        <item>默認</item>
+        <item>預設</item>
         <item>使用 google.com</item>
         <item>自訂</item>
     </string-array>
@@ -41,7 +41,7 @@
 
     <string name="copy_url">複製網址</string>
     <string name="save_image">保存圖片</string>
-    <string name="open_with">用其他軟體打開…</string>
+    <string name="open_with">使用其他軟體打開…</string>
     <string name="open">打開</string>
 
     <string name="share">分享</string>
@@ -108,7 +108,7 @@
     <string name="app_crash_message">使用Email發送錯誤報告給開發者以幫助解決問題。</string>
     <string name="app_crash_send_email">確定</string>
     <string name="app_crash_send_cancel">取消</string>
-    <string name="app_crash_no_email_client">唉..沒有Email軟體的樣子..</string>
+    <string name="app_crash_no_email_client">啊..沒有Email軟體的樣子..</string>
     <string name="baidu_settings">Baidu 設定</string>
 
     <string name="edit_sites">搜尋引擎</string>
@@ -119,15 +119,15 @@
     <string name="upload_form_value">Value</string>
     <string name="upload_form_your_image">(圖片)</string>
     <string name="upload_form_built_in_selector">(選擇)</string>
-    <string name="upload_form_add">添加表單資料</string>
+    <string name="upload_form_add">新增表單資料</string>
     <string name="built_in">內建搜尋引擎</string>
     <string name="custom">自訂</string>
-    <string name="check_your_data">請確認你的資料</string>
-    <string name="choose_one">請至少啟用一個搜尋引擎</string>
+    <string name="check_your_data">請確定是否輸入了資料...</string>
+    <string name="choose_one">請至少開啟一個搜尋引擎</string>
 
     <string name="open_url">打開URL</string>
-    <string name="open_html">在WebView中打開保存的HTML文件</string>
-    <string name="open_iqdb">內建iqdb.org結果查看器</string>
+    <string name="open_html">在WebView中打開保存的HTML檔案</string>
+    <string name="open_iqdb">內建iqdb.org結果檢視器</string>
 
     <string name="advance">高級設定</string>
     <string name="custom_search_engine">自訂搜尋引擎</string>
@@ -135,13 +135,13 @@
     <string name="delete">刪除</string>
     <string name="open_action">打開方式</string>
     <string name="post_form">表單</string>
-    <string name="not_empty">不能為空</string>
+    <string name="not_empty">不能是空的..</string>
     <string name="invalid_web_url">網址不正確</string>
-    <string name="target_app_not_found">沒找到可以使用的應用</string>
+    <string name="target_app_not_found">沒找到可以使用的應用程式</string>
     <string name="upload_failed">上傳失敗</string>
-    <string name="file_not_found">沒有找到文件\n請重試</string>
-    <string name="contact_detail">如果您遇到问题，请联系我</string>
-    <string name="contact">反饋</string>
+    <string name="file_not_found">沒有找到檔案\n請重試</string>
+    <string name="contact_detail">如果您遇到問題，麻煩請聯絡我</string>
+    <string name="contact">聯絡</string>
     <string name="download_complete">下載完成</string>
     <string name="no_chrome_available">由於沒有可用的Chrome，使用WebView替代</string>
     <string name="no_webview">設備上未安裝WebView</string>
