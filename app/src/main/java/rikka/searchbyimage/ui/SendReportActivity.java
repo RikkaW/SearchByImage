@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 
 import rikka.searchbyimage.R;
 
-public class SendReportActivity extends AppCompatActivity {
+public class SendReportActivity extends BaseActivity {
     public static final String EXTRA_EMAIL_BODY =
             "rikka.searchbyimage.ui.WebViewActivity.EXTRA_URL";
 

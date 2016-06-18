@@ -9,3 +9,4 @@
 *.apk
 .idea/
 gradle.properties
+google-services.json
