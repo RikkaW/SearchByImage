@@ -20,8 +20,6 @@ import rikka.materialpreference.SwitchPreference;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
-import rikka.searchbyimage.support.CrashHandler;
-import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.ui.EditSitesActivity;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
@@ -33,6 +31,7 @@ import static rikka.searchbyimage.staticdata.EngineId.SITE_GOOGLE;
 import static rikka.searchbyimage.staticdata.EngineId.SITE_IQDB;
 import static rikka.searchbyimage.staticdata.EngineId.SITE_SAUCENAO;
 import static rikka.searchbyimage.staticdata.EngineId.SITE_TINEYE;
+import static rikka.searchbyimage.support.GetDeviceInfo.getAppInfo;
 
 /**
  * Created by Rikka on 2015/12/23.
@@ -287,7 +286,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikka@xing.moe", null));
                 intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchFeedback@gmail.com"});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage Feedback");
-                intent.putExtra(Intent.EXTRA_TEXT, CrashHandler.getAppInfo(mActivity).toString());
+                intent.putExtra(Intent.EXTRA_TEXT, getAppInfo(mActivity).toString());
                 startActivity(Intent.createChooser(intent, "Send feedback by Email"));
                 break;
         }

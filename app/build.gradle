@@ -62,7 +62,10 @@ dependencies {
     //compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
     compile 'com.github.RikkaW:DayNight-Theme:v1.0.13'
     compile 'com.github.RikkaW:MaterialPreference:v0.0.7'
+    compile 'com.google.android.gms:play-services-analytics:9.0.0'
 
     coolapkCompile 'cn.leancloud.android:avoscloud-sdk:v3.13.8'
     coolapkCompile 'cn.leancloud.android:avoscloud-statistics:v3.13.8'
 }
+
+apply plugin: 'com.google.gms.google-services'

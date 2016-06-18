@@ -5,12 +5,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.StandardExceptionParser;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import rikka.searchbyimage.BuildConfig;
+import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.ui.SendReportActivity;
+
+import static rikka.searchbyimage.support.GetDeviceInfo.getAppInfo;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public static String CRASH_DIR;
@@ -85,6 +91,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         throwable.printStackTrace(new PrintWriter(sw));
         sb.append(sw.toString());
 
+
+        ((SearchByImageApplication) mContext.getApplicationContext()).getDefaultTracker()
+                .send(new HitBuilders.ExceptionBuilder()
+                        .setDescription(new StandardExceptionParser(mContext, null)
+                                .getDescription(thread.getName(), throwable))
+                        .setFatal(true)
+                        .build());
+
         Intent intent = new Intent();
         intent.setAction("rikka.searchbyimage.SEND_LOG");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -98,24 +112,5 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             throwable.printStackTrace();
         }
         System.exit(1);
-    }
-
-    public static StringBuilder getAppInfo(Context mContext) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Android Version: ").append(ANDROID).append("\n");
-        sb.append("Device Model: ").append(MODEL).append("\n");
-        sb.append("Device Manufacturer: ").append(MANUFACTURER).append("\n");
-        sb.append("App Version: ").append(BuildConfig.VERSION_NAME).append("(")
-                .append(BuildConfig.VERSION_CODE).append(")\n");
-        sb.append("Play store version: ").append(BuildConfig.hideOtherEngine ? "Yse" : "Np").append("\n");
-
-        if (Settings.instance(mContext)
-                .getBoolean(Settings.DOWNLOAD_FILE_CRASH, false)) {
-            sb.append('\n');
-            sb.append("Download image url: ").append(Settings.instance(mContext).getString(Settings.DOWNLOAD_URL, "")).append("\n");
-            sb.append("Download image name: ").append(Settings.instance(mContext).getString(Settings.DOWNLOAD_IMAGE, "")).append("\n");
-        }
-        sb.append("*********************\n");
-        return sb;
     }
 }
