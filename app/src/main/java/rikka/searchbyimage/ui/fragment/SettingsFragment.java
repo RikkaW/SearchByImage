@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -142,6 +143,12 @@ public class SettingsFragment extends PreferenceFragment implements
                 e.printStackTrace();
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public DividerDecoration onCreateItemDecoration() {
+        return new CategoryDivideDividerDecoration();
     }
 
     @Override
