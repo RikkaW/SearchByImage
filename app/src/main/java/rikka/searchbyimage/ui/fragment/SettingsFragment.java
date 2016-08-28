@@ -6,21 +6,24 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rikka.materialpreference.DropDownPreference;
+import rikka.materialpreference.EditTextPreference;
+import rikka.materialpreference.ListPreference;
+import rikka.materialpreference.Preference;
+import rikka.materialpreference.PreferenceCategory;
 import rikka.materialpreference.PreferenceFragment;
+import rikka.materialpreference.PreferenceScreen;
 import rikka.materialpreference.SwitchPreference;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.ui.EditSitesActivity;
+import rikka.searchbyimage.utils.ArrayUtils;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.URLUtils;
@@ -51,7 +54,7 @@ public class SettingsFragment extends PreferenceFragment implements
     PreferenceScreen mScreen;
     EditTextPreference mCustomGoogleUri;
     PreferenceCategory mCategorySauceNAO;
-    DropDownPreference mSearchEngine;
+    ListPreference mSearchEngine;
 
     Preference mNotice;
 
@@ -90,7 +93,7 @@ public class SettingsFragment extends PreferenceFragment implements
         mCategoryAdvance = (PreferenceCategory) findPreference("category_advance");
 
         mData = CustomEngine.getList(mActivity);
-        mSearchEngine = (DropDownPreference) findPreference("search_engine_preference");
+        mSearchEngine = (ListPreference) findPreference("search_engine_preference");
 
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
@@ -101,8 +104,15 @@ public class SettingsFragment extends PreferenceFragment implements
         setCustomGoogleUriHide();
 
         if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
-            DropDownPreference showResultInPreference = (DropDownPreference) findPreference("show_result_in");
-            showResultInPreference.removeItem(1);
+            ListPreference showResultInPreference = (ListPreference) findPreference("show_result_in");
+            CharSequence[] entries = ArrayUtils.remove(showResultInPreference.getEntries(), 1);
+            CharSequence[] entryValues = ArrayUtils.remove(showResultInPreference.getEntryValues(), 1);
+            showResultInPreference.setEntries(entries);
+            showResultInPreference.setEntryValues(entryValues);
+
+            if (showResultInPreference.getValue() == null || showResultInPreference.getValue().equals("2")) {
+                showResultInPreference.setValue("0");
+            }
         }
 
         if (!popup) {
@@ -141,38 +151,32 @@ public class SettingsFragment extends PreferenceFragment implements
                 .registerOnSharedPreferenceChangeListener(this);
 
         addCustomEngines();
-
-        mSearchEngine.setCallback(new DropDownPreference.Callback() {
-            @Override
-            public boolean onItemSelected(int pos, Object value) {
-                SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-
-                sharedPreferences.edit()
-                        .putString("search_engine_id", (String) value)
-                        .apply();
-
-                setSearchEngineHide(Integer.parseInt((String) value));
-
-                return true;
-            }
-        });
     }
 
     private void addCustomEngines() {
-        mSearchEngine.clearItems();
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> entryValues = new ArrayList<>();
 
+        String value = null;
         for (CustomEngine item : mData) {
             if (item.getEnabled() == 1) {
-                mSearchEngine.addItem(item.getName(), Integer.toString(item.getId()));
+                entries.add(item.getName());
+                entryValues.add(Integer.toString(item.getId()));
+
+                if (value == null) {
+                    value = Integer.toString(item.getId());
+                }
             }
         }
 
-        SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+        value = getPreferenceManager().getSharedPreferences().getString("search_engine_id", value);
 
-        mSearchEngine.setSelectedItem(0);
-        mSearchEngine.setSelectedValue(sharedPreferences.getString("search_engine_id", "0"));
+        mSearchEngine.setEntries(entries.toArray(new CharSequence[entries.size()]));
+        mSearchEngine.setEntryValues(entryValues.toArray(new CharSequence[entries.size()]));
 
-        setSearchEngineHide(Integer.parseInt((String) mSearchEngine.getSelectedValue()));
+        mSearchEngine.setValue(value);
+
+        setSearchEngineHide(Integer.parseInt(value));
     }
 
     @Override
@@ -180,19 +184,25 @@ public class SettingsFragment extends PreferenceFragment implements
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
-
-        mSearchEngine.setCallback(null);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        /*if (key.equals("search_engine_preference")) {
-            setSearchEngineHide();
-        }*/
+        switch (key) {
+            case "google_region_preference":
+                setCustomGoogleUriHide();
+                break;
+            case "search_engine_preference":
+                String value = sharedPreferences.getString(key, "0");
+                getPreferenceManager().getSharedPreferences()
+                        .edit()
+                        .putString("search_engine_id", value)
+                        .commit();
 
-        if (key.equals("google_region_preference")) {
-            setCustomGoogleUriHide();
+                setSearchEngineHide(Integer.parseInt(value));
+                break;
         }
+
     }
 
     private void setCustomGoogleUriHide() {

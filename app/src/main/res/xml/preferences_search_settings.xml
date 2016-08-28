@@ -19,23 +19,26 @@
         android:key="category_google"
         android:order="3">
 
-        <rikka.materialpreference.SwitchPreference
+        <SwitchPreference
             android:key="safe_search_preference"
             android:summary="@string/safe_search_summary"
             android:title="@string/safe_search"
             android:defaultValue="false"/>
 
-        <rikka.materialpreference.DropDownPreference
+        <SimpleMenuPreference
             android:key="google_region_preference"
             android:title="@string/google_region_redirect"
-            app:myEntries="@array/google_region_redirects"
-            app:myEntryValues="@array/google_region_redirect_value"
+            android:summary="%s"
+            android:entries="@array/google_region_redirects"
+            android:entryValues="@array/google_region_redirect_value"
             android:defaultValue="0"/>
 
-        <rikka.materialpreference.EditTextPreference
+        <EditTextPreference
             android:key="google_region"
             android:title="@string/google_region_redirect_custom"
-            android:defaultValue= "www.google.com"/>
+            android:defaultValue= "www.google.com"
+            android:singleLine="true"
+            app:commitOnEnter="true"/>
 
     </PreferenceCategory>
 
@@ -44,14 +47,14 @@
         android:key="category_iqdb"
         android:order="3">
 
-        <rikka.materialpreference.MultiSelectListPreference
+        <MultiSelectListPreference
             android:key="iqdb_service"
             android:title="@string/iqdb_service_select"
             android:entries="@array/iqdb_service_title"
             android:entryValues="@array/iqdb_service_id"
             android:defaultValue="@array/iqdb_service_id_default"/>
 
-        <rikka.materialpreference.SwitchPreference
+        <SwitchPreference
             android:key="iqdb_forcegray"
             android:title="@string/iqdb_forcegray"
             android:defaultValue="false"/>
@@ -63,18 +66,20 @@
         android:key="category_saucenao"
         android:order="3">
 
-        <rikka.materialpreference.DropDownPreference
+        <SimpleMenuPreference
             android:key="saucenao_hide"
             android:title="@string/saucenao_hide_title"
-            app:myEntries="@array/saucenao_hide"
-            app:myEntryValues="@array/saucenao_hide_value"
+            android:summary="%s"
+            android:entries="@array/saucenao_hide"
+            android:entryValues="@array/saucenao_hide_value"
             android:defaultValue="0"/>
 
-        <rikka.materialpreference.DropDownPreference
+        <SimpleMenuPreference
             android:key="saucenao_database"
             android:title="@string/saucenao_database_title"
-            app:myEntries="@array/saucenao_database"
-            app:myEntryValues="@array/saucenao_database_value"
+            android:summary="%s"
+            android:entries="@array/saucenao_database"
+            android:entryValues="@array/saucenao_database_value"
             android:defaultValue="0"/>
 
     </PreferenceCategory>

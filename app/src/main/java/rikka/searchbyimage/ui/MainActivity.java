@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity {
             bundle.putBoolean("popup", false);
             fragment.setArguments(bundle);
 
-            getFragmentManager().beginTransaction().replace(R.id.settings_container,
+            getSupportFragmentManager().beginTransaction().replace(R.id.settings_container,
                     fragment).commit();
         }
 

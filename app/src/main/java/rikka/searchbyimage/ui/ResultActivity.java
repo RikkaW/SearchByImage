@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import rikka.materialpreference.BaseRecyclerViewItemDecoration;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.ui.apdater.ResultAdapter;
 import rikka.searchbyimage.utils.ClipBoardUtils;
@@ -62,7 +61,8 @@ public class ResultActivity extends BaseActivity {
 
             mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             //mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-            mRecyclerView.addItemDecoration(new BaseRecyclerViewItemDecoration(getApplicationContext()));
+            /*mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            });*/
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setHasFixedSize(true);

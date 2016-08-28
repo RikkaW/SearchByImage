@@ -34,7 +34,7 @@ public class SearchByImageApplication extends Application {
 
         DayNightMode.setDefaultNightMode(DayNightMode.MODE_NIGHT_AUTO);
 
-        CrashHandler.init(getApplicationContext());
-        CrashHandler.register();
+        //CrashHandler.init(getApplicationContext());
+        //CrashHandler.register();
     }
 }

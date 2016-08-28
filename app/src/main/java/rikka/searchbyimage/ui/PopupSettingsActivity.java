@@ -34,7 +34,7 @@ public class PopupSettingsActivity extends BaseActivity {
             bundle.putBoolean("popup", true);
             fragment.setArguments(bundle);
 
-            getFragmentManager().beginTransaction().replace(R.id.settings_container,
+            getSupportFragmentManager().beginTransaction().replace(R.id.settings_container,
                     fragment).commit();
         }
 
