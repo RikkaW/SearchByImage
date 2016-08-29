@@ -1,6 +1,8 @@
 package rikka.searchbyimage.support;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
 import rikka.searchbyimage.BuildConfig;
@@ -15,7 +17,7 @@ public class GetDeviceInfo {
     private static String MODEL = Build.MODEL;
     private static String MANUFACTURER = Build.MANUFACTURER;
 
-    public static StringBuilder getAppInfo(Context mContext) {
+    public static StringBuilder getAppInfo(Context context) {
         StringBuilder sb = new StringBuilder();
         sb.append("Android Version: ").append(ANDROID).append("\n");
         sb.append("Device Model: ").append(MODEL).append("\n");
@@ -24,11 +26,16 @@ public class GetDeviceInfo {
                 .append(BuildConfig.VERSION_CODE).append(")\n");
         sb.append("Flavor: ").append(BuildConfig.FLAVOR).append("\n");
 
-        if (Settings.instance(mContext)
+        String installerPackageName = context.getPackageManager().getInstallerPackageName(context.getPackageName());
+        if (installerPackageName != null) {
+            sb.append("InstallerPackageName: ").append(installerPackageName).append("\n");
+        }
+
+        if (Settings.instance(context)
                 .getBoolean(Settings.DOWNLOAD_FILE_CRASH, false)) {
             sb.append('\n');
-            sb.append("Download image url: ").append(Settings.instance(mContext).getString(Settings.DOWNLOAD_URL, "")).append("\n");
-            sb.append("Download image name: ").append(Settings.instance(mContext).getString(Settings.DOWNLOAD_IMAGE, "")).append("\n");
+            sb.append("Download image url: ").append(Settings.instance(context).getString(Settings.DOWNLOAD_URL, "")).append("\n");
+            sb.append("Download image name: ").append(Settings.instance(context).getString(Settings.DOWNLOAD_IMAGE, "")).append("\n");
         }
         sb.append("*********************\n");
         return sb;
