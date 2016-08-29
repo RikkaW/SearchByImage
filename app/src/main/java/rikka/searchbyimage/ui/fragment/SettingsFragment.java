@@ -106,8 +106,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         if (!CustomTabsHelper.getIsChromeInstalled(mActivity)) {
             ListPreference showResultInPreference = (ListPreference) findPreference("show_result_in");
-            CharSequence[] entries = ArrayUtils.remove(showResultInPreference.getEntries(), 1);
-            CharSequence[] entryValues = ArrayUtils.remove(showResultInPreference.getEntryValues(), 1);
+            CharSequence[] entries = ArrayUtils.remove(showResultInPreference.getEntries(), CharSequence.class, 1);
+            CharSequence[] entryValues = ArrayUtils.remove(showResultInPreference.getEntryValues(), CharSequence.class, 1);
             showResultInPreference.setEntries(entries);
             showResultInPreference.setEntryValues(entryValues);
 
