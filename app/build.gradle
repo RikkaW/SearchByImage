@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     dataBinding {
         enabled = true
@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 24
-        versionCode 15301
+        targetSdkVersion 25
+        versionCode 20000
     }
 
     buildTypes {
@@ -22,7 +22,7 @@ android {
     }
 
     productFlavors {
-        def String name = "1.5.3"
+        def String name = "2.0.0"
 
         coolapk {
             applicationId "rikka.searchbyimage"
@@ -52,20 +52,20 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile "com.android.support:customtabs:24.2.0"
-    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile "com.android.support:customtabs:25.1.0"
+    compile 'com.android.support:design:25.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.okhttp3:okhttp:3.3.0'
     //compile 'io.reactivex:rxjava:1.1.5'
     //compile 'io.reactivex:rxandroid:1.2.0'
     //compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
-    compile 'com.github.RikkaW:DayNight-Theme:v1.0.13'
-    compile 'com.github.RikkaW:MaterialPreference:v1.2'
-    compile 'com.google.android.gms:play-services-analytics:9.4.0'
+    //compile 'com.github.RikkaW:DayNight-Theme:v1.0.13'
+    compile 'com.github.RikkaW:MaterialPreference:v1.4.2'
+    /*compile 'com.google.android.gms:play-services-analytics:9.4.0'
 
     coolapkCompile 'cn.leancloud.android:avoscloud-sdk:v3.13.8'
-    coolapkCompile 'cn.leancloud.android:avoscloud-statistics:v3.13.8'
+    coolapkCompile 'cn.leancloud.android:avoscloud-statistics:v3.13.8'*/
 }
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'

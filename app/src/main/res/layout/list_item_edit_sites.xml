@@ -35,8 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_marginBottom="2dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="@dimen/item_padding"
+                android:paddingRight="@dimen/item_padding"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="bottom"
                 android:text="@{LayoutStyle.headText}"
@@ -54,8 +54,8 @@
                 android:onClick="@{Listener.viewOnClick}"
                 android:onLongClick="@{Listener.viewOnLongClick}"
                 android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingLeft="@dimen/item_padding"
+                android:paddingRight="@dimen/item_padding">
 
                 <ImageView
                     android:id="@+id/item_icon"
@@ -84,7 +84,7 @@
                         android:layout_height="0dp"
                         android:layout_marginTop="12dp"
                         android:layout_weight="1"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:text="@{engine.name}"
                         android:textAppearance="@style/Preference_TextAppearanceMaterialBody2"
                         android:textSize="16sp"
@@ -96,7 +96,7 @@
                         android:layout_gravity="top"
                         android:layout_marginBottom="8dp"
                         android:layout_weight="1"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:text="@{engine.engineHost}"
                         android:textSize="14sp"
                         tools:text="http://example.org" />
@@ -129,6 +129,8 @@
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:visibility="@{LayoutStyle.needEmptyView?View.VISIBLE:View.GONE}" />
+
     </LinearLayout>
+
 </layout>
 

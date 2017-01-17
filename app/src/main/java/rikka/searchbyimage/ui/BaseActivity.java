@@ -2,29 +2,29 @@ package rikka.searchbyimage.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
-import moe.xing.daynightmode.BaseDayNightModeActivity;
-import rikka.searchbyimage.SearchByImageApplication;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 
 /**
  * Created by Rikka on 2016/3/3.
  */
-public abstract class BaseActivity extends BaseDayNightModeActivity {
-    private Tracker mTracker;
+public abstract class BaseActivity extends AppCompatActivity {
+    //private Tracker mTracker;
+
+    static {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTracker = ((SearchByImageApplication) getApplication()).getDefaultTracker();
+        //mTracker = ((SearchByImageApplication) getApplication()).getDefaultTracker();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mTracker.setScreenName(this.getClass().getSimpleName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        /*mTracker.setScreenName(this.getClass().getSimpleName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());*/
     }
 }

@@ -5,15 +5,11 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.StandardExceptionParser;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import rikka.searchbyimage.BuildConfig;
-import rikka.searchbyimage.SearchByImageApplication;
 import rikka.searchbyimage.ui.SendReportActivity;
 
 import static rikka.searchbyimage.support.GetDeviceInfo.getAppInfo;
@@ -92,12 +88,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         sb.append(sw.toString());
 
 
-        ((SearchByImageApplication) mContext.getApplicationContext()).getDefaultTracker()
+        /*((SearchByImageApplication) mContext.getApplicationContext()).getDefaultTracker()
                 .send(new HitBuilders.ExceptionBuilder()
                         .setDescription(new StandardExceptionParser(mContext, null)
                                 .getDescription(thread.getName(), throwable))
                         .setFatal(true)
-                        .build());
+                        .build());*/
 
         Intent intent = new Intent();
         intent.setAction("rikka.searchbyimage.SEND_LOG");

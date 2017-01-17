@@ -38,6 +38,7 @@
             android:title="@string/google_region_redirect_custom"
             android:defaultValue= "www.google.com"
             android:singleLine="true"
+            android:summary="%s"
             app:commitOnEnter="true"/>
 
     </PreferenceCategory>
@@ -80,7 +81,7 @@
             android:summary="%s"
             android:entries="@array/saucenao_database"
             android:entryValues="@array/saucenao_database_value"
-            android:defaultValue="0"/>
+            android:defaultValue="999"/>
 
     </PreferenceCategory>
 

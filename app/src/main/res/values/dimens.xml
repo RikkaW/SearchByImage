@@ -7,4 +7,6 @@
     <dimen name="infobar_width">-2px</dimen>
     <dimen name="infobar_text_width">240dp</dimen>
 
+    <dimen name="item_padding">16dp</dimen>
+
 </resources>
