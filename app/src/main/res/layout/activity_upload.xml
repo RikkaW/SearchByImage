@@ -64,6 +64,7 @@
                         android:textSize="16sp"
                         android:layout_marginLeft="16dp"
                         android:layout_marginStart="16dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         tools:text="获取图片中..."/>
 
                 </LinearLayout>
