@@ -24,6 +24,7 @@ public class CustomTabsHelper {
     static final String STABLE_PACKAGE = "com.android.chrome";
     static final String BETA_PACKAGE = "com.chrome.beta";
     static final String DEV_PACKAGE = "com.chrome.dev";
+    static final String CANARY_PACKAGE = "com.chrome.canary";
     static final String LOCAL_PACKAGE = "com.google.android.apps.chrome";
     private static final String EXTRA_CUSTOM_TABS_KEEP_ALIVE =
             "android.support.customtabs.extra.KEEP_ALIVE";
@@ -53,7 +54,7 @@ public class CustomTabsHelper {
 
         PackageManager pm = context.getPackageManager();
         // Get default VIEW intent handler.
-        Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"));
+        Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://example.org"));
         ResolveInfo defaultViewHandlerInfo = pm.resolveActivity(activityIntent, 0);
         String defaultViewHandlerPackageName = null;
         if (defaultViewHandlerInfo != null) {
@@ -88,6 +89,8 @@ public class CustomTabsHelper {
             sPackageNameToUse = BETA_PACKAGE;
         } else if (packagesSupportingCustomTabs.contains(DEV_PACKAGE)) {
             sPackageNameToUse = DEV_PACKAGE;
+        } else if (packagesSupportingCustomTabs.contains(CANARY_PACKAGE)) {
+            sPackageNameToUse = CANARY_PACKAGE;
         } else if (packagesSupportingCustomTabs.contains(LOCAL_PACKAGE)) {
             sPackageNameToUse = LOCAL_PACKAGE;
         }

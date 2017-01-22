@@ -2,7 +2,6 @@ package rikka.searchbyimage.ui;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
-import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -10,7 +9,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -28,7 +26,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -54,7 +51,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.staticdata.CustomEngine;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.DownloadManagerResolver;
@@ -64,7 +60,7 @@ import rikka.searchbyimage.view.ContextMenuTitleView;
 import rikka.searchbyimage.view.WebViewToolBar;
 import rikka.searchbyimage.widget.InfoBar;
 
-public class WebViewActivity extends BaseActivity {
+public class WebViewActivity extends BaseResultActivity {
     public static final String EXTRA_URL =
             "rikka.searchbyimage.ui.WebViewActivity.EXTRA_URL";
 
@@ -72,7 +68,7 @@ public class WebViewActivity extends BaseActivity {
             "rikka.searchbyimage.ui.WebViewActivity.EXTRA_FILE";
 
     public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_EDIT_LOCATION";
+            "rikka.searchbyimage.ui.WebViewActivity.EXTRA_SITE_ID";
 
     private static final String[] SITE_URL = {
             "", // google
@@ -112,23 +108,6 @@ public class WebViewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            Class.forName("android.support.v7.view.menu.MenuBuilder");
-        } catch (Exception e) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Sorry, your device is not supported.\nIt seems only happened in some Samsung devices running Android 4.2")
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            finish();
-                        }
-                    })
-                    .show();
-
-            return;
-        }
 
         try {
             setContentView(R.layout.activity_webview);
@@ -211,26 +190,6 @@ public class WebViewActivity extends BaseActivity {
         siteId = intent.getIntExtra(EXTRA_SITE_ID, 3);
         baseUrl = SITE_URL[siteId];
         mNormalMode = false;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String siteName;
-            if (siteId <= 5) {
-                siteName = getResources().getStringArray(R.array.search_engines)[siteId];
-            } else {
-                CustomEngine item = CustomEngine.getItemById(siteId);
-                siteName = item.getName();
-            }
-
-            String title = String.format(getString(R.string.search_result), siteName);
-
-
-            setTaskDescription(new ActivityManager.TaskDescription(
-                    title,
-                    null,
-                    ContextCompat.getColor(mContext, R.color.colorPrimary)));
-
-            getSupportActionBar().setTitle(title);
-        }
 
         loadSearchResult(intent.getStringExtra(EXTRA_FILE), baseUrl);
     }

@@ -1,42 +1,26 @@
 package rikka.searchbyimage.ui;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import rikka.searchbyimage.R;
-import rikka.searchbyimage.ui.fragment.SettingsFragment;
 
 
 public class MainActivity extends BaseActivity {
 
+    public static final String EXTRA_MINI =
+            "rikka.searchbyimage.ui.MainActivity.EXTRA_MINI";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            Class.forName("android.support.v7.view.menu.MenuBuilder");
-        } catch (Exception e) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Sorry, your device is not supported.\nIt seems only happened in some Samsung devices running Android 4.2")
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            finish();
-                        }
-                    })
-                    .show();
-
-            return;
-        }
 
         setContentView(R.layout.activity_main);
 
@@ -46,7 +30,7 @@ public class MainActivity extends BaseActivity {
         if (savedInstanceState == null) {
             SettingsFragment fragment = new SettingsFragment();
             Bundle bundle = new Bundle();
-            bundle.putBoolean("popup", false);
+            bundle.putBoolean(SettingsFragment.ARG_POPUP, getIntent().getBooleanExtra(EXTRA_MINI, false));
             fragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.settings_container,
@@ -71,6 +55,25 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+
+        if (getIntent().getBooleanExtra(EXTRA_MINI, false)) {
+            findViewById(R.id.fab).setVisibility(View.GONE);
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle(R.string.settings);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -82,15 +85,7 @@ public class MainActivity extends BaseActivity {
                 Uri uri = data.getData();
                 Intent intent = new Intent(this, UploadActivity.class);
                 intent.putExtra(UploadActivity.EXTRA_URI, uri);
-                intent.putExtra(UploadActivity.EXTRA_SAVE_FILE, true);
                 startActivity(intent);
-
-                /*UriUtils.storageImageFileAsync(this, uri, new UriUtils.StoreImageFileListener() {
-                    @Override
-                    public void onFinish(Uri uri) {
-
-                    }
-                });*/
             }
         }
     }

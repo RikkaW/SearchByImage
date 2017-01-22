@@ -99,14 +99,14 @@
     </string-array>
 
     <string-array name="open_with">
-        <item>@string/built_in_browser</item>
         <item>@string/chrome_custom_tabs</item>
+        <item>@string/built_in_browser</item>
         <item>@string/browser_app</item>
     </string-array>
 
     <string-array name="open_with_value" translatable="false">
-        <item>0</item>
         <item>2</item>
+        <item>0</item>
         <item>1</item>
     </string-array>
 

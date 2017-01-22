@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.utils.IntentUtils;
 
 public class SendReportActivity extends BaseActivity {
     public static final String EXTRA_EMAIL_BODY =
@@ -15,7 +16,6 @@ public class SendReportActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_send_report);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_EMAIL_BODY)) {
@@ -56,6 +56,6 @@ public class SendReportActivity extends BaseActivity {
         intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchBugReport@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage crash log");
         intent.putExtra(Intent.EXTRA_TEXT, body);
-        startActivity(Intent.createChooser(intent, "Send crash log by Email"));
+        IntentUtils.startOtherActivity(this, intent);
     }
 }

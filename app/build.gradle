@@ -12,6 +12,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 20000
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -56,11 +58,10 @@ dependencies {
     compile "com.android.support:customtabs:25.1.0"
     compile 'com.android.support:design:25.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.squareup.okhttp3:okhttp:3.3.0'
-    //compile 'io.reactivex:rxjava:1.1.5'
-    //compile 'io.reactivex:rxandroid:1.2.0'
-    //compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
-    //compile 'com.github.RikkaW:DayNight-Theme:v1.0.13'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'io.reactivex:rxjava:1.2.3'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'
     compile 'com.github.RikkaW:MaterialPreference:v1.4.2'
     /*compile 'com.google.android.gms:play-services-analytics:9.4.0'
 

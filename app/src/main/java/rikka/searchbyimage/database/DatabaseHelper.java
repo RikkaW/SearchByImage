@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import rikka.searchbyimage.database.table.CustomEngineTable;
-import rikka.searchbyimage.staticdata.CustomEngine;
+import rikka.searchbyimage.staticdata.SearchEngine;
 
 /**
  * Created by Rikka on 2016/1/24.
@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CustomEngineTable.SQL_CREATE_ENTRIES);
-        CustomEngine.addBuildInEngines(db);
+        SearchEngine.addBuildInEngines(db);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE " + CustomEngineTable.TABLE_NAME + " ADD " + CustomEngineTable.COLUMN_ENABLED + " integer NOT NULL DEFAULT(1)");
                 //do not add break
             case 2:
-                CustomEngine.addBuildInEngines(db);
+                SearchEngine.addBuildInEngines(db);
                 break;
             default:
                 break;

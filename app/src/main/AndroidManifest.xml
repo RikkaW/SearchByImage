@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".SearchByImageApplication"
+        android:name=".Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,7 +26,7 @@
         <activity
             android:name=".ui.UploadActivity"
             android:label="@string/share_action_name"
-            android:theme="@style/Transparent">
+            android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
 
@@ -46,17 +46,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.WebViewActivity"
-            android:theme="@style/AppTheme.WebViewActivity"/>
+            android:name=".ui.WebViewActivity"/>
+        <activity android:name=".ui.IqdbResultActivity"/>
         <activity android:name=".ui.ResultActivity"/>
-        <activity android:name=".ui.ChromeCustomTabsActivity"/>
-        <activity
-            android:name=".ui.PopupSettingsActivity"
-            android:label="@string/app_name"
-            android:theme="@style/PopupTheme"/>
         <activity
             android:name=".ui.SendReportActivity"
-            android:theme="@style/Transparent">
+            android:label="以图搜图错误回报"
+            android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="rikka.searchbyimage.SEND_LOG"/>
 
@@ -78,9 +74,7 @@
             android:name=".receiver.UploadMessageReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="rikka.searchbyimage2.intent_action_retry"/>
-                <action android:name="rikka.searchbyimage2.intent_action_success"/>
-                <action android:name="rikka.searchbyimage2.intent_action_error"/>
+                <action android:name="rikka.searchbyimage.intent.action.upload_result"/>
             </intent-filter>
         </receiver>
 

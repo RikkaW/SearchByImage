@@ -2,8 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false" android:color="#80ffffff"/>
     <item android:state_window_focused="false" android:color="#ffffffff"/>
-    <item android:state_pressed="true" android:color="#ff000000"/>
-    <item android:state_selected="true" android:color="#ff000000"/>
-    <item android:state_activated="true" android:color="#ff000000"/>
     <item android:color="#ffffffff"/> <!-- not selected -->
 </selector>

@@ -6,16 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -28,8 +23,8 @@ import java.util.List;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
-import rikka.searchbyimage.staticdata.CustomEngine;
-import rikka.searchbyimage.ui.apdater.SearchEngineAdapter;
+import rikka.searchbyimage.staticdata.SearchEngine;
+import rikka.searchbyimage.apdater.SearchEngineAdapter;
 
 public class EditSitesActivity extends BaseActivity {
     Activity mActivity;
@@ -43,7 +38,7 @@ public class EditSitesActivity extends BaseActivity {
     RecyclerView mRecyclerView;
     static SearchEngineAdapter mAdapter;
 
-    List<CustomEngine> mData;
+    List<SearchEngine> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +102,7 @@ public class EditSitesActivity extends BaseActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mData = CustomEngine.getList(this);
+        mData = SearchEngine.getList(this);
         mAdapter = getAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -145,7 +140,7 @@ public class EditSitesActivity extends BaseActivity {
         ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mAdapter.setOnItemClickListener(new SearchEngineAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, CustomEngine item) {
+            public void onItemClick(View view, int position, SearchEngine item) {
                 Intent intent = new Intent(mActivity, EditSiteInfoActivity.class);
                 intent.putExtra(EditSiteInfoActivity.EXTRA_EDIT_LOCATION, position);
                 startActivity(intent);
@@ -154,7 +149,7 @@ public class EditSitesActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemLongClick(View view, final int position, final CustomEngine item) {
+            public void onItemLongClick(View view, final int position, final SearchEngine item) {
                 if (item.getId() < 6) {
                     return;
                 }
@@ -199,7 +194,7 @@ public class EditSitesActivity extends BaseActivity {
 
     public static synchronized SearchEngineAdapter getAdapter(Context context) {
         if (mAdapter == null) {
-            mAdapter = new SearchEngineAdapter(CustomEngine.getList(context));
+            mAdapter = new SearchEngineAdapter(SearchEngine.getList(context));
         }
 
         return mAdapter;

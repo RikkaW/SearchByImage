@@ -4,17 +4,12 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -31,16 +26,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import rikka.searchbyimage.staticdata.SearchEngine;
+import rikka.searchbyimage.staticdata.SearchEngineParcelable;
+import rikka.searchbyimage.widget.MyLinearLayoutManager;
 import rikka.searchbyimage.widget.DropDown;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.database.DatabaseHelper;
 import rikka.searchbyimage.database.table.CustomEngineTable;
-import rikka.searchbyimage.staticdata.CustomEngine;
-import rikka.searchbyimage.staticdata.CustomEngineParcelable;
-import rikka.searchbyimage.ui.apdater.PostFormAdapter;
+import rikka.searchbyimage.apdater.PostFormAdapter;
 import rikka.searchbyimage.utils.ParcelableUtils;
-import rikka.searchbyimage.utils.URLUtils;
+import rikka.searchbyimage.utils.BrowsersUtils;
 
 public class EditSiteInfoActivity extends BaseActivity {
     public static final String EXTRA_EDIT_LOCATION =
@@ -61,8 +57,8 @@ public class EditSiteInfoActivity extends BaseActivity {
     DropDown mSpinner;
     RecyclerView mRecyclerView;
 
-    List<CustomEngine> mData;
-    CustomEngine mItem;
+    List<SearchEngine> mData;
+    SearchEngine mItem;
     PostFormAdapter mAdapter;
     MyLinearLayoutManager mLayoutManager;
 
@@ -104,7 +100,7 @@ public class EditSiteInfoActivity extends BaseActivity {
                 R.array.custom_open_with, android.R.layout.simple_spinner_dropdown_item));
 
         mDbHelper = DatabaseHelper.instance(this);
-        mData = CustomEngine.getList(this);
+        mData = SearchEngine.getList(this);
 
         mFAB = (FloatingActionButton) findViewById(R.id.fab);
         mFAB.setOnClickListener(new View.OnClickListener() {
@@ -174,11 +170,11 @@ public class EditSiteInfoActivity extends BaseActivity {
             mLocation = intent.getIntExtra(EXTRA_EDIT_LOCATION, -1);
             mItem = mData.get(mLocation);
             if (mItem != null) {
-                mEditTextUrl.setText(mItem.getUpload_url());
+                mEditTextUrl.setText(mItem.getUploadUrl());
                 mEditTextName.setText(mItem.getName());
-                mEditTextFileKey.setText(mItem.getPost_file_key());
-                if (mItem.getResult_open_action() <= CustomEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE) {
-                    mSpinner.setSelection(mItem.getResult_open_action());
+                mEditTextFileKey.setText(mItem.getPostFileKey());
+                if (mItem.getResultOpenAction() <= SearchEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE) {
+                    mSpinner.setSelection(mItem.getResultOpenAction());
                 }
 
                 mEnabled = (mItem.getId() > 5);
@@ -195,7 +191,7 @@ public class EditSiteInfoActivity extends BaseActivity {
                     mSpinner.setEnabled(false);
                     mSpinner.setAdapter(ArrayAdapter.createFromResource(this,
                             R.array.custom_open_with_in_app, android.R.layout.simple_spinner_dropdown_item));
-                    mSpinner.setSelection(mItem.getResult_open_action());
+                    mSpinner.setSelection(mItem.getResultOpenAction());
                 }
 
             } else {
@@ -257,9 +253,10 @@ public class EditSiteInfoActivity extends BaseActivity {
                 onBackPressed();
                 return true;
             case R.id.help:
-                URLUtils.Open(
+                BrowsersUtils.open(
+                        this,
                         "https://github.com/RikkaW/SearchByImage/wiki/%E5%B8%AE%E5%8A%A9%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E",
-                        this);
+                        false);
                 return true;
         }
 
@@ -269,7 +266,7 @@ public class EditSiteInfoActivity extends BaseActivity {
     private void modify() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        CustomEngineParcelable parcelable = new CustomEngineParcelable();
+        SearchEngineParcelable parcelable = new SearchEngineParcelable();
         parcelable.data = getData();
 
         ContentValues values = new ContentValues();
@@ -285,9 +282,9 @@ public class EditSiteInfoActivity extends BaseActivity {
                 selectionArgs);
 
         mItem.setName(parcelable.data.getName());
-        mItem.setUpload_url(parcelable.data.getUpload_url());
-        mItem.setPost_file_key(parcelable.data.getPost_file_key());
-        mItem.setResult_open_action(parcelable.data.getResult_open_action());
+        mItem.setUploadUrl(parcelable.data.getUploadUrl());
+        mItem.setPostFileKey(parcelable.data.getPostFileKey());
+        mItem.setResultOpenAction(parcelable.data.getResultOpenAction());
         mItem.post_text_key = parcelable.data.post_text_key;
         mItem.post_text_value = parcelable.data.post_text_value;
         mItem.post_text_type = parcelable.data.post_text_type;
@@ -297,8 +294,8 @@ public class EditSiteInfoActivity extends BaseActivity {
 
     private void add() {
         /*SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        CustomEngineParcelable parcelable = getParcelable();
-        parcelable.data.id = CustomEngine.getAvailableId();
+        SearchEngineParcelable parcelable = getParcelable();
+        parcelable.data.id = SearchEngine.getAvailableId();
         mData.add(parcelable.data);
 
         ContentValues values = new ContentValues();
@@ -307,27 +304,27 @@ public class EditSiteInfoActivity extends BaseActivity {
 
         db.insert(CustomEngineTable.TABLE_NAME, null, values);*/
 
-        CustomEngineParcelable parcelable = new CustomEngineParcelable();
+        SearchEngineParcelable parcelable = new SearchEngineParcelable();
         parcelable.data = getData();
-        parcelable.data.setId(CustomEngine.getAvailableId());
+        parcelable.data.setId(SearchEngine.getAvailableId());
         parcelable.data.setEnabled(1);
 
-        CustomEngine.addEngineToDb(this, parcelable, parcelable.data.getId());
-        CustomEngine.addEngineToList(parcelable.data);
+        SearchEngine.addEngineToDb(this, parcelable, parcelable.data.getId());
+        SearchEngine.addEngineToList(parcelable.data);
 
         EditSitesActivity.getAdapter(this).notifyItemInserted(mData.size() - 1);
         EditSitesActivity.getAdapter(this).notifyItemChanged(mData.size() - 2);
     }
 
-    private CustomEngine getData() {
-        CustomEngine data = new CustomEngine();
+    private SearchEngine getData() {
+        SearchEngine data = new SearchEngine();
         data.setName(mEditTextName.getText().toString());
-        data.setUpload_url(mEditTextUrl.getText().toString());
-        data.setPost_file_key(mEditTextFileKey.getText().toString());
-        data.setResult_open_action(mSpinner.getSelectedItemPosition());
+        data.setUploadUrl(mEditTextUrl.getText().toString());
+        data.setPostFileKey(mEditTextFileKey.getText().toString());
+        data.setResultOpenAction(mSpinner.getSelectedItemPosition());
 
-        if (!URLUtil.isNetworkUrl(data.getUpload_url())) {
-            data.setUpload_url("http://" + data.getUpload_url());
+        if (!URLUtil.isNetworkUrl(data.getUploadUrl())) {
+            data.setUploadUrl("http://" + data.getUploadUrl());
         }
 
         data.post_text_key.clear();

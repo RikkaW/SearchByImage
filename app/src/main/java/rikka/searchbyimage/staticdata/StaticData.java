@@ -5,7 +5,6 @@ package rikka.searchbyimage.staticdata;
  */
 public class StaticData {
     private static StaticData sInstance;
-    public boolean fileIsReady;
 
     public static synchronized StaticData instance() {
         if (sInstance == null) {

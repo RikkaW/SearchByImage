@@ -6,5 +6,6 @@
     <color name="dividerSearchEngineList">#20ffffff</color>
     <color name="colorAccent">#FF80AB</color>
 
+    <color name="upload_image_mask">#80000000</color>
 
 </resources>

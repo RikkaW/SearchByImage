@@ -23,8 +23,14 @@
             android:key="resize_image"
             android:title="@string/resize_image"/>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notification_result"
+            android:title="结果通知"
+            android:summary="后台运行时当搜索完成时显示一条通知而不是直接打开结果"/>
+
         <SimpleMenuPreference
-            android:defaultValue="0"
+            android:defaultValue="2"
             android:key="show_result_in"
             android:title="@string/show_result_in"
             android:summary="%s"

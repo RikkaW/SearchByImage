@@ -12,7 +12,9 @@ public class Settings {
     public static final String DOWNLOAD_URL = "download_url";
     public static final String DOWNLOAD_IMAGE = "download_image";
 
-    public static final String STORAGE_IMAGE_NAME = "image_file_name";
+    public static final String SETTINGS_EVERY_TIME = "setting_each_time";
+    public static final String SHOW_RESULT_IN = "show_result_in";
+    public static final String SHOW_NOTIFICATION = "notification_result";
 
     private static Settings sInstance;
     private SharedPreferences mPrefs;

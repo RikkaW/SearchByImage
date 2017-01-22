@@ -7,23 +7,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowContentOverlay">@null</item>
         <!--<item name="android:windowContentTransitions">true</item>-->
+        <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
     </style>
 
-    <style name="AppTheme.WebViewActivity" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <!--<item name="android:windowContentTransitions">true</item>-->
-    </style>
-
-    <style name="AppTheme.UseColorControlActivated" parent="AppTheme.NoActionBar">
-        <!--<item name="colorControlActivated">@color/colorPrimary</item>-->
-        <item name="colorControlActivated">@color/colorAccent</item>
-    </style>
+    <style name="AppTheme.BottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog"/>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <!-- Customize your theme here. -->
@@ -33,31 +22,25 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="PopupTheme" parent="AppTheme.NoActionBar">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:windowBackground">@color/background</item>
-
-        <item name="android:colorBackground">?attr/colorBackgroundFloating</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
-
-        <item name="android:listDivider">@null</item>
     </style>
 
-    <style name="Transparent" parent="AppTheme">
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.UseColorControlActivated" parent="AppTheme.NoActionBar">
+        <!--<item name="colorControlActivated">@color/colorPrimary</item>-->
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+
+    <style name="AppTheme.Transparent" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

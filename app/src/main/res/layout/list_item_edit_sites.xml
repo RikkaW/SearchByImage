@@ -8,15 +8,15 @@
 
         <variable
             name="engine"
-            type="rikka.searchbyimage.staticdata.CustomEngine" />
+            type="rikka.searchbyimage.staticdata.SearchEngine" />
 
         <variable
             name="Listener"
-            type="rikka.searchbyimage.ui.apdater.SearchEngineAdapter.ViewHolder.Listener" />
+            type="rikka.searchbyimage.apdater.SearchEngineAdapter.ViewHolder.Listener" />
 
         <variable
             name="LayoutStyle"
-            type="rikka.searchbyimage.ui.apdater.SearchEngineAdapter.ViewHolder.LayoutStyle" />
+            type="rikka.searchbyimage.apdater.SearchEngineAdapter.ViewHolder.LayoutStyle" />
     </data>
 
     <LinearLayout
@@ -63,7 +63,7 @@
                     android:layout_height="32dp"
                     android:layout_centerVertical="true"
                     android:padding="8dp"
-                    android:src="@drawable/ic_open_in_new_24dp"
+                    app:srcCompat="@drawable/ic_open_in_new_24dp"
                     app:imageUrl="@{engine.engineIcon}" />
 
                 <LinearLayout
@@ -105,7 +105,7 @@
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_site_enabled"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"

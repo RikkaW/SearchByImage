@@ -1,141 +1,77 @@
 package rikka.searchbyimage.ui;
 
-import android.app.ActivityManager;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+import rikka.searchbyimage.service.UploadResult;
+import rikka.searchbyimage.staticdata.SearchEngine;
+import rikka.searchbyimage.utils.BrowsersUtils;
+import rikka.searchbyimage.utils.UploadResultUtils;
 
-import rikka.searchbyimage.R;
-import rikka.searchbyimage.ui.apdater.ResultAdapter;
-import rikka.searchbyimage.utils.ClipBoardUtils;
-import rikka.searchbyimage.utils.IntentUtils;
-import rikka.searchbyimage.utils.IqdbResultCollecter;
-import rikka.searchbyimage.utils.URLUtils;
-
-public class ResultActivity extends BaseActivity {
-
-    public static final String EXTRA_FILE =
-            "rikka.searchbyimage.ui.ResultActivity.EXTRA_FILE";
-
-    public static final String EXTRA_SITE_ID =
-            "rikka.searchbyimage.ui.ResultActivity.EXTRA_EDIT_LOCATION";
-
-    RecyclerView mRecyclerView;
-    ResultAdapter mAdapter;
+public class ResultActivity extends BaseResultActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
 
-        ArrayList<IqdbResultCollecter.IqdbItem> list;
-
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_FILE)) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                int siteId = intent.getIntExtra(EXTRA_SITE_ID, 2);
-                String siteName = getResources().getStringArray(R.array.search_engines)[siteId];
-
-                setTaskDescription(new ActivityManager.TaskDescription(
-                        String.format(getString(R.string.search_result), siteName),
-                        null,
-                        getResources().getColor(R.color.colorPrimary)));
-            }
-
-            list = loadSearchResult(intent.getStringExtra(EXTRA_FILE));
-
-            mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-            //mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-            /*mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            });*/
-
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setHasFixedSize(true);
-
-            mAdapter = new ResultAdapter(list);
-            mAdapter.setOnItemClickListener(new ResultAdapter.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(View view, int position, IqdbResultCollecter.IqdbItem item) {
-                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(item.imageURL));
-                    startActivity(intent);*/
-
-                    URLUtils.Open(item.imageURL, ResultActivity.this);
-                }
-
-                @Override
-                public void onItemLongClick(View view, int position, final IqdbResultCollecter.IqdbItem item) {
-                    new AlertDialog.Builder(ResultActivity.this)
-                            .setItems(
-                                    new CharSequence[]{getString(R.string.open_with), getString(R.string.copy_link)},
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            switch (which) {
-                                                case 0:
-                                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.imageURL));
-                                                    IntentUtils.startOtherActivity(ResultActivity.this, intent);
-                                                    break;
-                                                case 1:
-                                                    ClipBoardUtils.putTextIntoClipboard(ResultActivity.this, item.imageURL);
-                                                    Toast.makeText(ResultActivity.this, String.format(getString(R.string.copy_to_clipboard), item.imageURL), Toast.LENGTH_SHORT).show();
-                                                    break;
-                                            }
-                                        }
-                                    })
-                            .show();
-                }
-            });
-
-            mRecyclerView.setAdapter(mAdapter);
+        UploadResult result = UploadResultUtils.getResultFromIntent(getIntent(), EXTRA_RESULT);
+        if (result == null) {
+            return;
         }
+
+        switch (result.getResultOpenAction()) {
+            case SearchEngine.RESULT_OPEN_ACTION.DEFAULT:
+                BrowsersUtils.open(this, result.getUrl(), true);
+                break;
+            case SearchEngine.RESULT_OPEN_ACTION.BUILD_IN_IQDB:
+                openIqdbResult(this, result);
+                break;
+            case SearchEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE:
+                openHTMLinWebView(this, result);
+                break;
+        }
+
+        setIntent(new Intent());
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+    protected void onPostResume() {
+        super.onPostResume();
+
+        if (!getIntent().hasExtra(EXTRA_RESULT)) {
+            finish();
+        }
     }
 
-    private ArrayList<IqdbResultCollecter.IqdbItem> loadSearchResult(String htmlFilePath) {
-        File file = new File(htmlFilePath);
-
-        BufferedInputStream fileStream = null;
-        StringBuilder sb = new StringBuilder();
-
-        try {
-            byte[] buffer = new byte[4096];
-
-            fileStream = new BufferedInputStream(new FileInputStream(file));
-            while ((fileStream.read(buffer)) != -1) {
-                sb.append(new String(buffer, Charset.forName("UTF-8")));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fileStream != null)
-                try {
-                    fileStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private static void openIqdbResult(Context context, UploadResult result) {
+        Intent intent = new Intent(context, IqdbResultActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(IqdbResultActivity.EXTRA_RESULT, result);
+        intent.putExtra(IqdbResultActivity.EXTRA_FILE, result.getHtmlUri());
 
-        return IqdbResultCollecter.getItemList(sb.toString());
+        context.startActivity(intent);
+    }
+
+    private static void openHTMLinWebView(Context context, UploadResult result) {
+        Intent intent = new Intent(context, WebViewActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(WebViewActivity.EXTRA_RESULT, result);
+        intent.putExtra(WebViewActivity.EXTRA_FILE, result.getHtmlUri());
+
+        context.startActivity(intent);
     }
 }
