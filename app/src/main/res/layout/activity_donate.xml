@@ -156,6 +156,7 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:fontFamily="sans-serif-medium"
+                    android:text="@string/donate_thanks"
                     tools:text="Thank you for your support."/>
 
             </android.support.v7.widget.CardView>

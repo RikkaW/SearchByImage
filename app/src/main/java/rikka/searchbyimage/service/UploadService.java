@@ -71,6 +71,7 @@ public class UploadService extends Service {
         private Context mContext;
         private String mKey;
         private String mFileUri;
+        private boolean mCanceled;
 
         public UploadTask(Context context, String key) {
             mContext = context;
@@ -214,12 +215,12 @@ public class UploadService extends Service {
 
             Log.d("UploadService", "onPostExecute");
 
-            removeTask(mKey);
+            onTaskFinished(mCanceled, mKey, result);
 
-            onTaskFinished(result);
+            removeTask(mKey);
         }
 
-        private void onTaskFinished(UploadResult result) {
+        private void onTaskFinished(boolean canceled, String key, UploadResult result) {
             if (mFileUri != null) {
                 File file = new File(mFileUri);
                 if (!file.delete()) {
@@ -229,7 +230,7 @@ public class UploadService extends Service {
 
             Intent intent = new Intent(INTENT_ACTION_RESULT);
             intent.putExtra(EXTRA_RESULT, result);
-            intent.putExtra(EXTRA_KEY, mKey);
+            intent.putExtra(EXTRA_KEY, key);
 
             if (!LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent)
                     && result.getErrorCode() != UploadResult.CANCELED) {
@@ -294,9 +295,10 @@ public class UploadService extends Service {
                 if (!task.isCancelled()) {
                     task.cancel(true);
                 }
+                task.mCanceled = true;
                 mTasks.remove(key);
 
-                task.onTaskFinished(new UploadResult(UploadResult.CANCELED, "canceled", null));
+                task.onTaskFinished(true, task.mKey, new UploadResult(UploadResult.CANCELED, "canceled", null));
             }
         }
 
@@ -309,6 +311,7 @@ public class UploadService extends Service {
             if (!task.isCancelled()) {
                 task.cancel(true);
             }
+            task.mCanceled = true;
             mTasks.remove(key);
         }
 
@@ -337,7 +340,7 @@ public class UploadService extends Service {
     private Notification getNotification(int taskCount) {
         return new NotificationCompat.Builder(this)
                 .setContentTitle(taskCount == 0 ?
-                        getString(R.string.uploading) : getResources().getQuantityString(R.plurals.uploading_notification, taskCount))
+                        getString(R.string.uploading) : getResources().getQuantityString(R.plurals.uploading_notification, taskCount, taskCount))
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setSmallIcon(R.drawable.ic_stat)
                 .setProgress(100, 0, true)
