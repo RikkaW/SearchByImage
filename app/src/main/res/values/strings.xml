@@ -182,4 +182,7 @@
     <string name="donate_thanks">Thank you for your support!</string>
     <string name="donate_play_required">Require Google Play version.</string>
 
+    <string name="shortcut_upload_long">Upload new image</string>
+    <string name="shortcut_upload_short">Upload</string>
+    <string name="shortcut_upload_disabled">Upload</string>
 </resources>

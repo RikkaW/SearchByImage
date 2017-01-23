@@ -175,4 +175,9 @@
     <string name="pay_gp_set_up_failed">设置应用内结算失败，可能是由于您没有登录 Google 帐号或没有安装 Google Play。</string>
     <string name="donate_thanks">感谢您的支持！</string>
     <string name="donate_play_required">需要使用 Google Play 版。</string>
+
+    <string name="shortcut_upload_long">上传新图片</string>
+    <string name="shortcut_upload_short">上传</string>
+    <string name="shortcut_upload_disabled">上传</string>
+
 </resources>

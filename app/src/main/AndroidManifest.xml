@@ -51,6 +51,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="rikka.searchbyimage.intent.action.NEW_UPLOAD"/>
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                       android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".ui.DonateActivity"
@@ -61,7 +66,6 @@
         <activity android:name=".ui.ChromeCustomTabsActivity"/>
         <activity
             android:name=".ui.SendReportActivity"
-            android:label="以图搜图错误回报"
             android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="rikka.searchbyimage.SEND_LOG"/>

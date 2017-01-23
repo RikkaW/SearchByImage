@@ -20,6 +20,12 @@ public class MainActivity extends BaseActivity {
     public static final String EXTRA_MINI =
             "rikka.searchbyimage.ui.MainActivity.EXTRA_MINI";
 
+    public static final String ACTION_UPLOAD =
+            "rikka.searchbyimage.intent.action.NEW_UPLOAD";
+
+    private boolean mPaused;
+    private String mAction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +73,28 @@ public class MainActivity extends BaseActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setTitle(R.string.settings);
             }
+        }
+
+        mAction = getIntent().getAction();
+        if (mAction != null && mAction.equals(ACTION_UPLOAD)) {
+            findViewById(R.id.fab).performClick();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mPaused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mPaused &&
+                mAction != null && mAction.equals(ACTION_UPLOAD)) {
+            finish();
         }
     }
 
