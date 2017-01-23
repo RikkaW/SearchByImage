@@ -17,12 +17,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.util.Pair;
@@ -55,6 +57,7 @@ import rikka.searchbyimage.service.UploadService;
 import rikka.searchbyimage.staticdata.SearchEngine;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.FilenameResolver;
+import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.UploadResultUtils;
 import rikka.searchbyimage.utils.Utils;
 import rikka.searchbyimage.widget.ListBottomSheetDialog;
@@ -109,6 +112,7 @@ public class UploadActivity extends BaseActivity {
     private TextView mButton1;
     private TextView mButton2;
     private TextView mButton3;
+    private View mCropButton;
 
     private boolean mOpenSettings;
 
@@ -166,6 +170,37 @@ public class UploadActivity extends BaseActivity {
             }
         });
 
+        mCropButton = findViewById(android.R.id.closeButton);
+        mCropButton.setVisibility(View.INVISIBLE);
+        mCropButton.setEnabled(false);
+        mCropButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFileToUpload == null || !mFileToUpload.exists()) {
+                    return;
+                }
+
+                // TODO build in crop for API 24+
+                Uri uri;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    uri = FileProvider.getUriForFile(getApplicationContext(), "rikka.searchbyimage.fileprovider", mFileToUpload);
+                } else {
+                    uri = Uri.fromFile(mFileToUpload);
+                }
+                Intent intent = new Intent();
+                intent.setAction("com.android.camera.action.CROP");
+                intent.setDataAndType(uri, "image/*");
+                intent.putExtra("crop", "true");
+                intent.putExtra("return-data", false);
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                IntentUtils.startOtherActivityForResult(UploadActivity.this, intent, 1);
+            }
+        });
+
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
@@ -183,6 +218,27 @@ public class UploadActivity extends BaseActivity {
         }
 
         saveImage(mUri);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+        switch (requestCode) {
+            case 1:
+                if (data == null) {
+                    return;
+                }
+
+                mUri = data.getData();
+                mButton1.setEnabled(false);
+                saveImage(mUri);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void setBottomSheetPeekHeight() {
@@ -324,6 +380,8 @@ public class UploadActivity extends BaseActivity {
                     finish();
                 }
             });
+
+            mCropButton.setVisibility(View.GONE);
         }
     }
 
@@ -363,7 +421,7 @@ public class UploadActivity extends BaseActivity {
                         try {
                             String time = Long.toString(System.currentTimeMillis());
                             String filename = FilenameResolver.query(getContentResolver(), uri);
-                            mFilename = TextUtils.isEmpty(filename) ? time : filename;
+                            mFilename = TextUtils.isEmpty(filename) ? (mFilename == null ? time : mFilename) : filename;
 
                             return Utils.streamToFile(
                                     getContentResolver().openInputStream(uri),
@@ -457,6 +515,8 @@ public class UploadActivity extends BaseActivity {
 
     public void onFileReady(File file) {
         mFileToUpload = file;
+        mCropButton.setVisibility(View.VISIBLE);
+        mCropButton.setEnabled(true);
 
         setProgress(null, 0);
 

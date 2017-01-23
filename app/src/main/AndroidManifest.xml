@@ -94,6 +94,16 @@
 
         <service android:name=".service.UploadService"/>
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="rikka.searchbyimage.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!--
          Register AnalyticsReceiver and AnalyticsService to support background
          dispatching on non-Google Play devices.

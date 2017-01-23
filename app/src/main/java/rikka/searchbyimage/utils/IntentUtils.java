@@ -49,4 +49,16 @@ public class IntentUtils {
             Toast.makeText(context, notFoundMessage, Toast.LENGTH_LONG).show();
         }
     }
+
+    public static void startOtherActivityForResult(Activity activity, Intent intent, int requestCode) {
+        startOtherActivityForResult(activity, intent, requestCode, activity.getString(R.string.target_app_not_found));
+    }
+
+    public static void startOtherActivityForResult(Activity activity, Intent intent, int requestCode, String notFoundMessage) {
+        if (canOpenWith(activity, intent)) {
+            activity.startActivityForResult(intent, requestCode);
+        } else {
+            Toast.makeText(activity, notFoundMessage, Toast.LENGTH_LONG).show();
+        }
+    }
 }
