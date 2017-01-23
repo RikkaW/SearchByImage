@@ -20,16 +20,15 @@
         android:title="@string/about">
 
         <Preference
-            android:key="version"
-            android:title="@string/build_version">
-
-        </Preference>
-
-        <Preference
             android:key="contact"
             android:summary="@string/contact_detail"
             android:title="@string/contact">
         </Preference>
+
+        <Preference
+            android:key="donate"
+            android:summary="@string/donate_summary"
+            android:title="@string/donate"/>
 
         <Preference
             android:summary="@string/rate_summary"
@@ -41,15 +40,16 @@
         </Preference>
 
         <Preference
-            android:key="donate"
-            android:summary="@string/donate_summary"
-            android:title="@string/donate"/>
+            android:key="version"
+            android:title="@string/build_version">
 
-        <Preference
+        </Preference>
+
+        <!--<Preference
             android:key="open_source"
             android:summary="https://github.com/RikkaW/SearchByImage"
             android:title="@string/open_source">
-        </Preference>
+        </Preference>-->
 
     </PreferenceCategory>
 </PreferenceScreen>

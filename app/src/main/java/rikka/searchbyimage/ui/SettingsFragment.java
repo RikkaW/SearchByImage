@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.CustomTabsHelper;
 import rikka.searchbyimage.utils.IntentUtils;
 import rikka.searchbyimage.utils.BrowsersUtils;
+import rikka.searchbyimage.utils.Utils;
 
 import static rikka.searchbyimage.staticdata.EngineId.SITE_ASCII2D;
 import static rikka.searchbyimage.staticdata.EngineId.SITE_BAIDU;
@@ -73,7 +77,6 @@ public class SettingsFragment extends PreferenceFragment implements
             addPreferencesFromResource(R.xml.preferences_about);
         }
 
-
         mCategoryGoogle = (PreferenceCategory) findPreference("category_google");
         mCategoryIqdb = (PreferenceCategory) findPreference("category_iqdb");
         mCategorySauceNAO = (PreferenceCategory) findPreference("category_saucenao");
@@ -103,15 +106,9 @@ public class SettingsFragment extends PreferenceFragment implements
         }
 
         if (!popup) {
-            Preference githubPref = findPreference("open_source");
-            githubPref.setOnPreferenceClickListener(this);
-
+            //findPreference("open_source").setOnPreferenceClickListener(this);
             findPreference("contact").setOnPreferenceClickListener(this);
-
-            Preference advancePref = findPreference("advance");
-            if (advancePref != null) {
-                advancePref.setOnPreferenceClickListener(this);
-            }
+            findPreference("advance").setOnPreferenceClickListener(this);
 
             Preference donatePref = findPreference("donate");
             if (BuildConfig.hideOtherEngine) {
@@ -125,6 +122,14 @@ public class SettingsFragment extends PreferenceFragment implements
             findPreference(Settings.ENGINE_ID).setVisible(false);
             findPreference(Settings.SETTINGS_EVERY_TIME).setVisible(false);
         }
+    }
+
+    @Override
+    public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        RecyclerView recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState);
+        recyclerView.setClipToPadding(false);
+        recyclerView.setPadding(0, Utils.dpToPx(8), 0, Utils.dpToPx(8));
+        return recyclerView;
     }
 
     @Nullable
