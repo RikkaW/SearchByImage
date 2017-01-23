@@ -246,7 +246,7 @@ public class UploadActivity extends BaseActivity {
             });
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            int id = Integer.parseInt(preferences.getString("search_engine_preference", "0"));
+            int id = Integer.parseInt(preferences.getString(Settings.ENGINE_ID, "0"));
             setSearchEngineButton(id);
             mButton2.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -271,7 +271,8 @@ public class UploadActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     setSearchEngineButton(id.get(which));
-
+                                    Settings.instance(getApplicationContext())
+                                            .putString(Settings.ENGINE_ID, Integer.toString(id.get(which)));
                                     dialog.dismiss();
                                 }
                             })

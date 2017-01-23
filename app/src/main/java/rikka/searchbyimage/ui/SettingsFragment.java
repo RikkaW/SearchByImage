@@ -122,7 +122,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
             findPreference("version").setSummary(BuildConfig.VERSION_NAME);
         } else {
-            findPreference("search_engine_preference").setVisible(false);
+            findPreference(Settings.ENGINE_ID).setVisible(false);
             findPreference(Settings.SETTINGS_EVERY_TIME).setVisible(false);
         }
     }

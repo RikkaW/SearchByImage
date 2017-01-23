@@ -62,7 +62,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.3'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'
-    compile 'com.github.RikkaW:MaterialPreference:v1.4.2'
+    compile 'com.github.RikkaW:MaterialPreference:v1.4.3'
     /*compile 'com.google.android.gms:play-services-analytics:9.4.0'
 
     coolapkCompile 'cn.leancloud.android:avoscloud-sdk:v3.13.8'

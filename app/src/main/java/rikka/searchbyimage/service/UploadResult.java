@@ -61,12 +61,12 @@ public class UploadResult implements Parcelable {
         mErrorMessage = null;
     }
 
-    public UploadResult(int errorCode, String errorMessage) {
+    public UploadResult(int errorCode, String errorMessage, UploadParam param) {
         mErrorCode = errorCode;
         mErrorMessage = errorMessage;
-        mEngineId = 0;
-        mFileUri = null;
-        mFilename = null;
+        mEngineId = param.getEngineId();
+        mFileUri = param.getFileUri();
+        mFilename = param.getFilename();
         mUrl = null;
         mHtmlUri = null;
         mResultOpenAction = 0;

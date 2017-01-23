@@ -79,7 +79,7 @@ public class UploadService extends Service {
             UploadParam param = params[0];
             File image = new File(param.getFileUri());
             if (!image.exists()) {
-                return new UploadResult(1, mContext.getString(R.string.something_wrong));
+                return new UploadResult(1, mContext.getString(R.string.something_wrong), param);
             }
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -89,7 +89,7 @@ public class UploadService extends Service {
                 inputStream = new FileInputStream(image);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                return new UploadResult(1, getString(R.string.file_not_found));
+                return new UploadResult(1, getString(R.string.file_not_found), param);
             }
 
             byte[] content = null;
@@ -101,7 +101,7 @@ public class UploadService extends Service {
                 }
 
                 if (content == null) {
-                    return new UploadResult(1, "error when try to resize image");
+                    return new UploadResult(1, "error when try to resize image", param);
                 }
             } else {
                 try {
@@ -117,7 +117,7 @@ public class UploadService extends Service {
                 }
 
                 if (content == null) {
-                    return new UploadResult(1, "error when try to resize image");
+                    return new UploadResult(1, "error when try to resize image", param);
                 }
             }
 
@@ -152,17 +152,17 @@ public class UploadService extends Service {
             try {
                 response = okHttpClient.newCall(request).execute();
             } catch (UnknownHostException e) {
-                return new UploadResult(2, mContext.getString(R.string.unknown_host_exception));
+                return new UploadResult(2, mContext.getString(R.string.unknown_host_exception), param);
             } catch (SocketTimeoutException e) {
-                return new UploadResult(3, mContext.getString(R.string.timeout_exception));
+                return new UploadResult(3, mContext.getString(R.string.timeout_exception), param);
             } catch (IOException e) {
-                return new UploadResult(4, mContext.getString(R.string.socket_exception));
+                return new UploadResult(4, mContext.getString(R.string.socket_exception), param);
             } catch (Exception e) {
-                return new UploadResult(5, e.getMessage());
+                return new UploadResult(5, e.getMessage(), param);
             }
 
             if (!response.isSuccessful()) {
-                return new UploadResult(4, mContext.getString(R.string.socket_exception));
+                return new UploadResult(4, mContext.getString(R.string.socket_exception), param);
             }
 
             String url = response.request().url().toString();
@@ -176,7 +176,7 @@ public class UploadService extends Service {
                     try {
                         url = UploadResultUtils.getUrlFromBaiduJSON(mContext, response.body().byteStream());
                     } catch (Exception e) {
-                        return new UploadResult(4, "message from image.baidu.com:" + e.getMessage());
+                        return new UploadResult(4, "message from image.baidu.com:" + e.getMessage(), param);
                     }
                     break;
                 case SITE_IQDB:
@@ -188,6 +188,7 @@ public class UploadService extends Service {
                     break;
             }
 
+            // TODO 出错了也是要删文件的
             return new UploadResult(
                     param.getEngineId(),
                     param.getFileUri(),
@@ -209,7 +210,7 @@ public class UploadService extends Service {
 
             Log.d("UploadService", "onPostExecute");
 
-            if (result.getErrorCode() == 0) {
+            if (result.getFileUri() != null) {
                 File file = new File(result.getFileUri());
                 if (!file.delete()) {
                     Log.w("UploadService", "cache file not deleted");
@@ -225,20 +226,6 @@ public class UploadService extends Service {
             if (!LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent)) {
                 sendBroadcast(intent);
             }
-
-            /*if (item != null) {
-                switch (item.getResultOpenAction()) {*/
-                    /*case SearchEngine.RESULT_OPEN_ACTION.BUILD_IN_IQDB:
-                        UploadResultUtils.openIqdbResult(mContext, result);
-                        break;
-                    case SearchEngine.RESULT_OPEN_ACTION.OPEN_HTML_FILE:
-                        UploadResultUtils.openHTMLinWebView(mContext, result);
-                        break;*/
-                    /*case SearchEngine.RESULT_OPEN_ACTION.DEFAULT:
-                        UploadResultUtils.openURL(mContext, result);
-                        break;
-                }
-            }*/
         }
     }
 

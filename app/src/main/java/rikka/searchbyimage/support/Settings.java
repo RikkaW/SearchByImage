@@ -15,6 +15,7 @@ public class Settings {
     public static final String SETTINGS_EVERY_TIME = "setting_each_time";
     public static final String SHOW_RESULT_IN = "show_result_in";
     public static final String SHOW_NOTIFICATION = "notification_result";
+    public static final String ENGINE_ID = "search_engine_preference";
 
     private static Settings sInstance;
     private SharedPreferences mPrefs;
