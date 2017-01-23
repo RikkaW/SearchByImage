@@ -17,8 +17,9 @@ public class Application extends android.app.Application {
 
         SearchEngine.getList(this);
 
-        CrashHandler.init(getApplicationContext());
-        CrashHandler.register();
+        // use firebase crash reporting
+        /*CrashHandler.init(getApplicationContext());
+        CrashHandler.register();*/
 
         AppCompatDelegate.setDefaultNightMode(
                 Settings.instance(this).getIntFromString(Settings.NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM));
