@@ -114,9 +114,11 @@ public class WebViewActivity extends BaseResultActivity {
         } catch (UnsatisfiedLinkError linkError) {
             Toast.makeText(getApplicationContext(), R.string.webview_version_error, Toast.LENGTH_LONG).show();
             finish();
+            return;
         } catch (RuntimeException runtime) {
             Toast.makeText(getApplicationContext(), R.string.no_webview, Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
 
         mContext = this;

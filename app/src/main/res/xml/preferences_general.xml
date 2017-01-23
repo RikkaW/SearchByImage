@@ -26,8 +26,8 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="notification_result"
-            android:title="结果通知"
-            android:summary="后台运行时当搜索完成时显示一条通知而不是直接打开结果"/>
+            android:title="@string/settings_notify_background"
+            android:summary="@string/settings_notify_background_summary"/>
 
         <SimpleMenuPreference
             android:defaultValue="2"

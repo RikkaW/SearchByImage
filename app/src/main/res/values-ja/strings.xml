@@ -109,8 +109,6 @@
 
     <string name="app_crash_title">アプリを終了します</string>
     <string name="app_crash_message">バグを修正するために役立つ、開発者にクラッシュログを送信します。</string>
-    <string name="app_crash_send_email">送信</string>
-    <string name="app_crash_send_cancel">キャンセル</string>
     <string name="app_crash_no_email_client">メールアプリ見つかりません。</string>
     <string name="baidu_settings">Baidu設定</string>
 
@@ -150,4 +148,20 @@
     <string name="no_webview">WebView not installed on your device.</string>
     <string name="webview_version_error">WebView version is incorrect, please reinstall webview in Google Play.</string>
     <string name="download_manager_disabled">DownloadManager is disabled. Please enable it.</string>
+
+    <plurals name="uploading_notification">
+        <item quantity="one">Uploading %d image</item>
+        <item quantity="other">Uploading %d images</item>
+    </plurals>
+    <string name="upload_select_engine">Select a search engine</string>
+    <string name="upload_start">Start upload</string>
+    <string name="upload_settings">Other settings</string>
+    <string name="upload_background">Run in background</string>
+    <string name="upload_getting_image">Getting image…</string>
+    <string name="upload_require_permission">Require permission</string>
+    <string name="upload_permission_denied">Permission denied</string>
+    <string name="upload_get_image_error">Error getting image</string>
+    <string name="upload_engine_not_exist">Engine not exist</string>
+    <string name="upload_working">Uploading and waiting for response…</string>
+
 </resources>

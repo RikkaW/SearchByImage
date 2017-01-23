@@ -141,6 +141,11 @@ public class SearchEngine implements Observable {
                 SearchEngine item = ParcelableUtils.unmarshall(cursor.getBlob(columnData), SearchEngineParcelable.CREATOR).data;
                 item.id = cursor.getInt(columnId);
                 item.enabled = cursor.getInt(columnEnabled);
+
+                // TODO
+                if (item.id == SITE_SAUCENAO || item.id == SITE_ASCII2D) {
+                    continue;
+                }
                 list.add(item);
             } while (cursor.moveToNext());
         }
@@ -246,7 +251,7 @@ public class SearchEngine implements Observable {
      */
     public static void addBuildInEngines(SQLiteDatabase db) {
 
-        for (int i = 0; i < (BuildConfig.hideOtherEngine ? 1 : 6); i++) {
+        for (int i = 0; i < (BuildConfig.hideOtherEngine ? 1 : 4/*6*/); i++) {
             SearchEngineParcelable parcelable = new SearchEngineParcelable();
             parcelable.data.id = i;
             parcelable.data.enabled = 1;

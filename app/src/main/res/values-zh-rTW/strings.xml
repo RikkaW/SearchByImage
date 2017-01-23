@@ -106,8 +106,6 @@
 
     <string name="app_crash_title">壞掉了 QAQ</string>
     <string name="app_crash_message">使用Email發送錯誤報告給開發者以幫助解決問題。</string>
-    <string name="app_crash_send_email">確定</string>
-    <string name="app_crash_send_cancel">取消</string>
     <string name="app_crash_no_email_client">啊..沒有Email軟體的樣子..</string>
     <string name="baidu_settings">Baidu 設定</string>
 
@@ -147,4 +145,18 @@
     <string name="no_webview">設備上未安裝WebView</string>
     <string name="webview_version_error">WebView 版本錯誤，請在Google Play上重新安裝WebView。</string>
     <string name="download_manager_disabled">下載管理器被禁用了，請啟用它。</string>
+
+    <plurals name="uploading_notification">
+        <item quantity="other">正在上传 %d 张图片</item>
+    </plurals>
+    <string name="upload_select_engine">选择一个搜索引擎</string>
+    <string name="upload_start">开始上传</string>
+    <string name="upload_settings">其他设置</string>
+    <string name="upload_background">后台运行</string>
+    <string name="upload_getting_image">获取图片中…</string>
+    <string name="upload_require_permission">需要权限</string>
+    <string name="upload_permission_denied">被拒绝</string>
+    <string name="upload_get_image_error">获取图片出错</string>
+    <string name="upload_working">正在上传并等待响应…</string>
+
 </resources>

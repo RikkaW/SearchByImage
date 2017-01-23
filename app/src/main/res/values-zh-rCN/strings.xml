@@ -108,8 +108,6 @@
 
     <string name="app_crash_title">坏掉了 QAQ</string>
     <string name="app_crash_message">使用邮件客户端发送错误报告给开发者以帮助解决问题。</string>
-    <string name="app_crash_send_email">确定</string>
-    <string name="app_crash_send_cancel">取消</string>
     <string name="app_crash_no_email_client">唉..没有邮件客户端的样子..</string>
     <string name="baidu_settings">百度设置</string>
 
@@ -150,4 +148,21 @@
     <string name="no_webview">设备上未安装WebView</string>
     <string name="webview_version_error">WebView版本错误，请在Google Play上重新安装WebVew</string>
     <string name="download_manager_disabled">下载管理器被禁用，请启用。</string>
+
+    <plurals name="uploading_notification">
+        <item quantity="other">正在上传 %d 张图片</item>
+    </plurals>
+    <string name="upload_select_engine">选择一个搜索引擎</string>
+    <string name="upload_start">开始上传</string>
+    <string name="upload_settings">其他设置</string>
+    <string name="upload_background">后台运行</string>
+    <string name="upload_getting_image">获取图片中…</string>
+    <string name="upload_require_permission">需要权限</string>
+    <string name="upload_permission_denied">被拒绝</string>
+    <string name="upload_get_image_error">获取图片出错</string>
+    <string name="upload_working">正在上传并等待响应…</string>
+
+    <string name="settings_notify_background">结果通知</string>
+    <string name="settings_notify_background_summary">当上传在后台进行时发送通知而不是直接打开结果</string>
+
 </resources>

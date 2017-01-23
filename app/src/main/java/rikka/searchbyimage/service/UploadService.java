@@ -207,9 +207,6 @@ public class UploadService extends Service {
         }
 
         protected void onProgressUpdate(Integer... values) {
-            /*Intent intent = new Intent(INTENT_ACTION_RESULT);
-            intent.putExtra(INTENT_RETRY_TIMES, values[0]);
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);*/
         }
 
         protected void onPostExecute(UploadResult result) {
@@ -286,17 +283,7 @@ public class UploadService extends Service {
     public IBinder onBind(Intent intent) {
         Log.d("Service", "onBind");
 
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle(getString(R.string.uploading))
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setSmallIcon(R.drawable.ic_stat)
-                .setProgress(100, 0, true)
-                .setColor(0xFF3F51B5)
-                .addAction(R.drawable.ic_stat_cancel, "取消",
-                        PendingIntent.getBroadcast(this, 0, new Intent(INTENT_ACTION_CANCEL), PendingIntent.FLAG_ONE_SHOT))
-                .build();
-
-        startForeground(NOTIFICATION_ID, notification);
+        startForeground(NOTIFICATION_ID, getNotification(mTasks.size()));
         return mUploadBinder;
     }
 
@@ -344,24 +331,24 @@ public class UploadService extends Service {
             return;
         }
 
-        updateNotification("正在上传 " + mTasks.size() + " 个图片");
+        updateNotification();
     }
 
-    private void updateNotification(String title) {
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle(title)
+    private Notification getNotification(int taskCount) {
+        return new NotificationCompat.Builder(this)
+                .setContentTitle(taskCount == 0 ?
+                        getString(R.string.uploading) : getResources().getQuantityString(R.plurals.uploading_notification, taskCount))
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setSmallIcon(R.drawable.ic_stat)
                 .setProgress(100, 0, true)
                 .setColor(0xFF3F51B5)
-                //.setOngoing(true)
-                .addAction(R.drawable.ic_stat_cancel, "取消",
+                .addAction(R.drawable.ic_stat_cancel, getString(android.R.string.cancel),
                         PendingIntent.getBroadcast(this, 0, new Intent(INTENT_ACTION_CANCEL), PendingIntent.FLAG_ONE_SHOT))
                 .build();
+    }
 
-        startForeground(NOTIFICATION_ID, notification);
-        /*((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
-                .notify(NOTIFICATION_ID, notification);*/
+    private void updateNotification() {
+        startForeground(NOTIFICATION_ID, getNotification(mTasks.size()));
     }
 
     private boolean isServiceUploading() {

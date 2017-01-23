@@ -207,9 +207,10 @@ public class UploadActivity extends BaseActivity {
 
     private void setSearchEngineButton(int id) {
         SearchEngine item = SearchEngine.getItemById(id);
-        Drawable icon = null;
+        Drawable icon;
         if (item == null) {
-            mButton2.setText("选择搜索引擎");
+            mButton2.setText(R.string.upload_select_engine);
+            icon = getDrawableAndSetTint(SearchEngine.DEFAULT_ENGINE_ICON);
         } else {
             mButton2.setText(item.getName());
             if (id < SearchEngine.SITE_CUSTOM_START) {
@@ -237,7 +238,7 @@ public class UploadActivity extends BaseActivity {
 
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mButton1,
                     getDrawableAndSetTint(R.drawable.ic_file_upload_24dp), null, null, null);
-            mButton1.setText("上传");
+            mButton1.setText(R.string.start_upload);
             mButton1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -282,7 +283,7 @@ public class UploadActivity extends BaseActivity {
 
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mButton3,
                     getDrawableAndSetTint(R.drawable.ic_settings_24dp), null, null, null);
-            mButton3.setText("其他设置");
+            mButton3.setText(R.string.upload_settings);
             mButton3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -300,7 +301,7 @@ public class UploadActivity extends BaseActivity {
 
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mButton1,
                     getDrawableAndSetTint(R.drawable.ic_all_out_24dp), null, null, null);
-            mButton1.setText("后台运行");
+            mButton1.setText(R.string.upload_background);
             mButton1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -310,7 +311,7 @@ public class UploadActivity extends BaseActivity {
 
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mButton3,
                     getDrawableAndSetTint(R.drawable.ic_clear_24dp), null, null, null);
-            mButton3.setText("取消上传");
+            mButton3.setText(android.R.string.cancel);
             mButton3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -373,7 +374,7 @@ public class UploadActivity extends BaseActivity {
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        setProgress("获取图片中", 0);
+                        setProgress(R.string.upload_getting_image, 0);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -389,7 +390,7 @@ public class UploadActivity extends BaseActivity {
                         }
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            setProgress("需要权限", R.drawable.ic_security_24dp);
+                            setProgress(R.string.upload_require_permission, R.drawable.ic_security_24dp);
 
                             new RxPermissions(UploadActivity.this)
                                     .request(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -399,12 +400,12 @@ public class UploadActivity extends BaseActivity {
                                             if (granted) {
                                                 saveImage(mUri);
                                             } else {
-                                                setProgress("被拒绝", R.drawable.ic_error_24dp);
+                                                setProgress(R.string.upload_permission_denied, R.drawable.ic_error_24dp);
                                             }
                                         }
                                     });
                         } else {
-                            setProgress("获取图片出错", R.drawable.ic_error_24dp);
+                            setProgress(R.string.upload_get_image_error, R.drawable.ic_error_24dp);
                         }
                     }
 
@@ -427,7 +428,7 @@ public class UploadActivity extends BaseActivity {
                                 .listener(new RequestListener<File, GlideDrawable>() {
                                     @Override
                                     public boolean onException(Exception e, File model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                        setProgress("获取图片出错", R.drawable.ic_error_24dp);
+                                        setProgress(R.string.upload_get_image_error, R.drawable.ic_error_24dp);
 
                                         return false;
                                     }
@@ -465,10 +466,10 @@ public class UploadActivity extends BaseActivity {
 
     public void startUpload() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int id = Integer.parseInt(preferences.getString("search_engine_preference", "0"));
+        int id = Integer.parseInt(preferences.getString(Settings.ENGINE_ID, "0"));
         SearchEngine item = SearchEngine.getItemById(id);
         if (item == null) {
-            setProgress("不存在的引擎", R.drawable.ic_error_24dp);
+            setProgress(R.string.upload_engine_not_exist, R.drawable.ic_error_24dp);
             return;
         }
 
@@ -482,7 +483,7 @@ public class UploadActivity extends BaseActivity {
         }
 
         mUploadParam = getUploadParam(item);
-        setProgress("上传中..", 0);
+        setProgress(R.string.upload_working, 0);
         startService();
     }
 
@@ -561,8 +562,8 @@ public class UploadActivity extends BaseActivity {
     };
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onResume() {
+        super.onResume();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UploadService.INTENT_ACTION_RESULT);
@@ -572,8 +573,8 @@ public class UploadActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
 

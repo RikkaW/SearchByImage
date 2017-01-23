@@ -110,8 +110,6 @@
 
     <string name="app_crash_title">App crashed…</string>
     <string name="app_crash_message">Send the crash log to app developer with mail app to help fix the bug.</string>
-    <string name="app_crash_send_email">OK</string>
-    <string name="app_crash_send_cancel">Cancel</string>
     <string name="app_crash_no_email_client">No mail app installed</string>
     <string name="baidu_settings">Baidu settings</string>
 
@@ -152,4 +150,23 @@
     <string name="no_webview">WebView not installed on your device.</string>
     <string name="webview_version_error">WebView version is incorrect, please reinstall webview in Google Play.</string>
     <string name="download_manager_disabled">DownloadManager is disabled. Please enable it.</string>
+
+    <plurals name="uploading_notification">
+        <item quantity="one">Uploading %d image</item>
+        <item quantity="other">Uploading %d images</item>
+    </plurals>
+    <string name="upload_select_engine">Select a search engine</string>
+    <string name="upload_start">Start upload</string>
+    <string name="upload_settings">Other settings</string>
+    <string name="upload_background">Run in background</string>
+    <string name="upload_getting_image">Getting image…</string>
+    <string name="upload_require_permission">Require permission</string>
+    <string name="upload_permission_denied">Permission denied</string>
+    <string name="upload_get_image_error">Error getting image</string>
+    <string name="upload_engine_not_exist">Engine not exist</string>
+    <string name="upload_working">Uploading and waiting for response…</string>
+
+    <string name="settings_notify_background">Notify when background</string>
+    <string name="settings_notify_background_summary">Notify instead of directly open result when upload background</string>
+
 </resources>

@@ -29,14 +29,14 @@ public class SendReportActivity extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.app_crash_title)
                 .setMessage(R.string.app_crash_message)
-                .setPositiveButton(R.string.app_crash_send_email, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sendEmail(intent.getStringExtra(EXTRA_EMAIL_BODY));
                         finish();
                     }
                 })
-                .setNegativeButton(R.string.app_crash_send_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
