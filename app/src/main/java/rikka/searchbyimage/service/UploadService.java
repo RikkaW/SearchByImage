@@ -8,13 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
@@ -100,10 +103,19 @@ public class UploadService extends Service {
                 return new UploadResult(UploadResult.ERROR_FILE_NOT_FOUND, getString(R.string.file_not_found), param);
             }
 
+            boolean resize = preferences.getBoolean("resize_image", true);
+
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (ConnectivityManagerCompat.isActiveNetworkMetered(cm)
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && ConnectivityManagerCompat.getRestrictBackgroundStatus(cm) != ConnectivityManagerCompat.RESTRICT_BACKGROUND_STATUS_DISABLED) {
+                resize = true;
+            }
+
             byte[] content = null;
-            if (preferences.getBoolean("resize_image", true)) {
+            if (resize) {
                 try {
-                    content = ImageUtils.resizeImage(inputStream);
+                    content = ImageUtils.resizeImage(inputStream, 1024 * 1024); // 1MB
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

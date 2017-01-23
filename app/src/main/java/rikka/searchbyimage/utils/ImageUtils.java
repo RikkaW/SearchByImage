@@ -14,16 +14,14 @@ import java.io.InputStream;
  */
 public class ImageUtils {
 
-
-
     @Nullable
-    public static byte[] resizeImage(@Nullable InputStream inputStream) throws IOException {
+    public static byte[] resizeImage(@Nullable InputStream inputStream, int maxSize) throws IOException {
         if (inputStream == null) {
             return null;
         }
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = calculateInSampleSize(inputStream.available(), 1024 * 1024); // 1MB
+        options.inSampleSize = calculateInSampleSize(inputStream.available(), maxSize);
 
         Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
         if (bitmap == null) {
