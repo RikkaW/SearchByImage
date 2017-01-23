@@ -9,6 +9,14 @@ import android.os.Parcelable;
 
 public class UploadResult implements Parcelable {
 
+    public final static int NO_ERROR = 0;
+    public final static int CANCELED = -1;
+    public final static int ERROR_FILE_NOT_FOUND = 1;
+    public final static int ERROR_UNKNOWN_HOST = 2;
+    public final static int ERROR_TIMEOUT = 3;
+    public final static int ERROR_IO = 4;
+    public final static int ERROR_UNKNOWN = 5;
+
     private final int mEngineId;
     private final String mFileUri;
     private final String mFilename;
@@ -57,16 +65,16 @@ public class UploadResult implements Parcelable {
         mUrl = url;
         mHtmlUri = htmlUri;
         mResultOpenAction = resultOpenAction;
-        mErrorCode = 0;
+        mErrorCode = NO_ERROR;
         mErrorMessage = null;
     }
 
     public UploadResult(int errorCode, String errorMessage, UploadParam param) {
         mErrorCode = errorCode;
         mErrorMessage = errorMessage;
-        mEngineId = param.getEngineId();
-        mFileUri = param.getFileUri();
-        mFilename = param.getFilename();
+        mEngineId = param == null ? 0 : param.getEngineId();
+        mFileUri = param == null ? null : param.getFileUri();
+        mFilename = param == null ? null : param.getFilename();
         mUrl = null;
         mHtmlUri = null;
         mResultOpenAction = 0;

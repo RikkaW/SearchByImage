@@ -164,12 +164,12 @@ public class UploadResultUtils {
             // TODO group notification for android 7.0+
 
             int code = result.getFileUri().hashCode();
-            if (errorCode != 0) {
+            if (errorCode != UploadResult.NO_ERROR) {
                 notification = new NotificationCompat.Builder(context)
                         .setColor(0xFF3F51B5)
                         .setSmallIcon(R.drawable.ic_stat)
-                        .setContentTitle(result.getFilename())
-                        .setContentText("上传失败")
+                        .setContentTitle(result.getFilename() + " 上传失败")
+                        .setContentText(errorMessage)
                         .build();
             } else {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, code, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -191,8 +191,10 @@ public class UploadResultUtils {
 
             notificationManager.notify(code, notification);
         } else {
-            if (errorCode != 0) {
-                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+            if (errorCode != UploadResult.NO_ERROR) {
+                if (errorCode != UploadResult.CANCELED) {
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
 

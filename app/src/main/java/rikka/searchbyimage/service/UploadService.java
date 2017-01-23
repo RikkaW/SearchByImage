@@ -1,10 +1,14 @@
 package rikka.searchbyimage.service;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -54,6 +58,7 @@ public class UploadService extends Service {
     private static final int NOTIFICATION_ID = 0x10;
 
     public static final String INTENT_ACTION_RESULT = "rikka.searchbyimage.intent.action.upload_result";
+    public static final String INTENT_ACTION_CANCEL = "rikka.searchbyimage.intent.action.upload_cancel";
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
     public static final String EXTRA_KEY = "EXTRA_KEY";
 
@@ -65,6 +70,7 @@ public class UploadService extends Service {
 
         private Context mContext;
         private String mKey;
+        private String mFileUri;
 
         public UploadTask(Context context, String key) {
             mContext = context;
@@ -77,9 +83,10 @@ public class UploadService extends Service {
             SearchEngine.getList(mContext);
 
             UploadParam param = params[0];
+            mFileUri = param.getFileUri();
             File image = new File(param.getFileUri());
             if (!image.exists()) {
-                return new UploadResult(1, mContext.getString(R.string.something_wrong), param);
+                return new UploadResult(UploadResult.ERROR_FILE_NOT_FOUND, mContext.getString(R.string.file_not_found), param);
             }
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -89,7 +96,7 @@ public class UploadService extends Service {
                 inputStream = new FileInputStream(image);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                return new UploadResult(1, getString(R.string.file_not_found), param);
+                return new UploadResult(UploadResult.ERROR_FILE_NOT_FOUND, getString(R.string.file_not_found), param);
             }
 
             byte[] content = null;
@@ -101,7 +108,7 @@ public class UploadService extends Service {
                 }
 
                 if (content == null) {
-                    return new UploadResult(1, "error when try to resize image", param);
+                    return new UploadResult(UploadResult.ERROR_FILE_NOT_FOUND, "error when try to resize image", param);
                 }
             } else {
                 try {
@@ -117,14 +124,14 @@ public class UploadService extends Service {
                 }
 
                 if (content == null) {
-                    return new UploadResult(1, "error when try to resize image", param);
+                    return new UploadResult(UploadResult.ERROR_FILE_NOT_FOUND, "error when try to resize image", param);
                 }
             }
 
             return upload(param, content);
         }
 
-        private UploadResult upload(UploadParam param, byte[] content) {
+        private synchronized UploadResult upload(UploadParam param, byte[] content) {
             OkHttpClient okHttpClient = OkHttpClientProvider.get();
 
             MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
@@ -143,6 +150,7 @@ public class UploadService extends Service {
                     .addHeader("accept-encoding", "deflate")
                     .addHeader("cache-control", "no-cache")
                     .addHeader("connection", "close")
+                    .addHeader("host", Uri.parse(param.getUrl()).getHost())
                     .addHeader("user-agent",
                             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36")
                     .post(bodyBuilder.build());
@@ -152,17 +160,17 @@ public class UploadService extends Service {
             try {
                 response = okHttpClient.newCall(request).execute();
             } catch (UnknownHostException e) {
-                return new UploadResult(2, mContext.getString(R.string.unknown_host_exception), param);
+                return new UploadResult(UploadResult.ERROR_UNKNOWN_HOST, mContext.getString(R.string.unknown_host_exception), param);
             } catch (SocketTimeoutException e) {
-                return new UploadResult(3, mContext.getString(R.string.timeout_exception), param);
+                return new UploadResult(UploadResult.ERROR_TIMEOUT, mContext.getString(R.string.timeout_exception), param);
             } catch (IOException e) {
-                return new UploadResult(4, mContext.getString(R.string.socket_exception), param);
+                return new UploadResult(UploadResult.ERROR_IO, mContext.getString(R.string.socket_exception), param);
             } catch (Exception e) {
-                return new UploadResult(5, e.getMessage(), param);
+                return new UploadResult(UploadResult.ERROR_UNKNOWN, e.getMessage(), param);
             }
 
             if (!response.isSuccessful()) {
-                return new UploadResult(4, mContext.getString(R.string.socket_exception), param);
+                return new UploadResult(UploadResult.ERROR_IO, mContext.getString(R.string.socket_exception), param);
             }
 
             String url = response.request().url().toString();
@@ -176,7 +184,7 @@ public class UploadService extends Service {
                     try {
                         url = UploadResultUtils.getUrlFromBaiduJSON(mContext, response.body().byteStream());
                     } catch (Exception e) {
-                        return new UploadResult(4, "message from image.baidu.com:" + e.getMessage(), param);
+                        return new UploadResult(UploadResult.ERROR_IO, "message from image.baidu.com:" + e.getMessage(), param);
                     }
                     break;
                 case SITE_IQDB:
@@ -188,7 +196,6 @@ public class UploadService extends Service {
                     break;
             }
 
-            // TODO 出错了也是要删文件的
             return new UploadResult(
                     param.getEngineId(),
                     param.getFileUri(),
@@ -210,38 +217,54 @@ public class UploadService extends Service {
 
             Log.d("UploadService", "onPostExecute");
 
-            if (result.getFileUri() != null) {
-                File file = new File(result.getFileUri());
+            removeTask(mKey);
+
+            onTaskFinished(result);
+        }
+
+        private void onTaskFinished(UploadResult result) {
+            if (mFileUri != null) {
+                File file = new File(mFileUri);
                 if (!file.delete()) {
                     Log.w("UploadService", "cache file not deleted");
                 }
             }
 
-            removeTask(mKey);
-
             Intent intent = new Intent(INTENT_ACTION_RESULT);
             intent.putExtra(EXTRA_RESULT, result);
             intent.putExtra(EXTRA_KEY, mKey);
 
-            if (!LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent)) {
+            if (!LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent)
+                    && result.getErrorCode() != UploadResult.CANCELED) {
                 sendBroadcast(intent);
             }
         }
     }
 
-    /*@Override
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            removeTask();
+        }
+    };
+
+    @Override
     public void onCreate() {
         super.onCreate();
         Log.d("Service", "onCreate");
+
+        registerReceiver(mBroadcastReceiver, new IntentFilter(INTENT_ACTION_CANCEL));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d("Service", "onDestroy");
+
+        unregisterReceiver(mBroadcastReceiver);
     }
 
-    @Override
+    /*@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Service", "onStartCommand");
         return super.onStartCommand(intent, flags, startId);
@@ -269,10 +292,28 @@ public class UploadService extends Service {
                 .setSmallIcon(R.drawable.ic_stat)
                 .setProgress(100, 0, true)
                 .setColor(0xFF3F51B5)
+                .addAction(R.drawable.ic_stat_cancel, "取消",
+                        PendingIntent.getBroadcast(this, 0, new Intent(INTENT_ACTION_CANCEL), PendingIntent.FLAG_ONE_SHOT))
                 .build();
 
         startForeground(NOTIFICATION_ID, notification);
         return mUploadBinder;
+    }
+
+    private void removeTask() {
+        for (String key : mTasks.keySet()) {
+            UploadTask task = mTasks.get(key);
+            if (task != null) {
+                if (!task.isCancelled()) {
+                    task.cancel(true);
+                }
+                mTasks.remove(key);
+
+                task.onTaskFinished(new UploadResult(UploadResult.CANCELED, "canceled", null));
+            }
+        }
+
+        checkStopAndUpdateNotification();
     }
 
     private void removeTask(String key) {
@@ -314,6 +355,8 @@ public class UploadService extends Service {
                 .setProgress(100, 0, true)
                 .setColor(0xFF3F51B5)
                 //.setOngoing(true)
+                .addAction(R.drawable.ic_stat_cancel, "取消",
+                        PendingIntent.getBroadcast(this, 0, new Intent(INTENT_ACTION_CANCEL), PendingIntent.FLAG_ONE_SHOT))
                 .build();
 
         startForeground(NOTIFICATION_ID, notification);
