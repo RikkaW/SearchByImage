@@ -59,7 +59,7 @@ public class IqdbResultActivity extends BaseResultActivity {
 
             @Override
             public void onItemClick(View view, int position, IqdbResultCollecter.IqdbItem item) {
-                BrowsersUtils.open(IqdbResultActivity.this, item.imageURL, false);
+                BrowsersUtils.open(IqdbResultActivity.this, item.imageURL);
             }
 
             @Override

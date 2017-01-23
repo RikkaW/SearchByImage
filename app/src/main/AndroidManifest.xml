@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE" android:maxSdkVersion="18"/>
     <!-- Get permission for reliable local dispatching on non-Google Play devices. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
 
     <application
         android:name=".Application"
@@ -45,10 +45,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.WebViewActivity"/>
-        <activity android:name=".ui.IqdbResultActivity"/>
         <activity android:name=".ui.ResultActivity"/>
+        <activity android:name=".ui.WebViewActivity"/>
+        <activity android:name=".ui.IqdbResultActivity"/>
+        <activity android:name=".ui.ChromeCustomTabsActivity"/>
         <activity
             android:name=".ui.SendReportActivity"
             android:label="以图搜图错误回报"

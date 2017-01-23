@@ -255,8 +255,7 @@ public class EditSiteInfoActivity extends BaseActivity {
             case R.id.help:
                 BrowsersUtils.open(
                         this,
-                        "https://github.com/RikkaW/SearchByImage/wiki/%E5%B8%AE%E5%8A%A9%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E",
-                        false);
+                        "https://github.com/RikkaW/SearchByImage/wiki/%E5%B8%AE%E5%8A%A9%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E");
                 return true;
         }
 

@@ -164,7 +164,7 @@ public class UploadService extends Service {
             } catch (SocketTimeoutException e) {
                 return new UploadResult(UploadResult.ERROR_TIMEOUT, mContext.getString(R.string.timeout_exception), param);
             } catch (IOException e) {
-                return new UploadResult(UploadResult.ERROR_IO, mContext.getString(R.string.socket_exception), param);
+                return new UploadResult(UploadResult.ERROR_IO, mContext.getString(R.string.socket_exception) + "\n" + e.getMessage(), param);
             } catch (Exception e) {
                 return new UploadResult(UploadResult.ERROR_UNKNOWN, e.getMessage(), param);
             }

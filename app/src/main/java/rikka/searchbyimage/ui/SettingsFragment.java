@@ -252,7 +252,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 startActivity(new Intent(getContext(), EditSitesActivity.class));
                 break;
             case "open_source":
-                BrowsersUtils.open(getActivity(), "https://github.com/RikkaW/SearchByImage", false);
+                BrowsersUtils.open(getActivity(), "https://github.com/RikkaW/SearchByImage");
                 break;
             case "donate":
                 ClipBoardUtils.putTextIntoClipboard(getContext(), "rikka@xing.moe");

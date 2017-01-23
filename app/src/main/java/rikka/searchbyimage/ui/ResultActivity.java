@@ -10,7 +10,10 @@ import rikka.searchbyimage.staticdata.SearchEngine;
 import rikka.searchbyimage.utils.BrowsersUtils;
 import rikka.searchbyimage.utils.UploadResultUtils;
 
-public class ResultActivity extends BaseResultActivity {
+public class ResultActivity extends BaseActivity {
+
+    public static final String EXTRA_RESULT =
+            "rikka.searchbyimage.ui.ResultActivity.EXTRA_RESULT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +21,13 @@ public class ResultActivity extends BaseResultActivity {
 
         UploadResult result = UploadResultUtils.getResultFromIntent(getIntent(), EXTRA_RESULT);
         if (result == null) {
+            finish();
             return;
         }
 
         switch (result.getResultOpenAction()) {
             case SearchEngine.RESULT_OPEN_ACTION.DEFAULT:
-                BrowsersUtils.open(this, result.getUrl(), true);
+                BrowsersUtils.open(this, result.getUrl(), true, result);
                 break;
             case SearchEngine.RESULT_OPEN_ACTION.BUILD_IN_IQDB:
                 openIqdbResult(this, result);

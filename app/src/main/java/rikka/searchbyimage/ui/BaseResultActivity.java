@@ -20,17 +20,32 @@ public class BaseResultActivity extends BaseActivity {
     public static final String EXTRA_RESULT =
             "rikka.searchbyimage.ui.BaseResultActivity.EXTRA_RESULT";
 
+    protected UploadResult mUploadResult;
+    protected ActivityManager.TaskDescription mTaskDescription;
+
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            UploadResult result = UploadResultUtils.getResultFromIntent(getIntent(), EXTRA_RESULT);
-            if (result == null) {
-                return;
-            }
+        mUploadResult = UploadResultUtils.getResultFromIntent(getIntent(), EXTRA_RESULT);
+        if (mUploadResult == null) {
+            return;
+        }
 
-            int siteId = result.getEngineId();
+        setTaskDescription();
+    }
+
+    private void setTaskDescription() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+
+        if (mUploadResult == null) {
+            return;
+        }
+
+        if (mTaskDescription == null) {
+            int siteId = mUploadResult.getEngineId();
             String siteName = null;
             if (siteId <= 5) {
                 siteName = getResources().getStringArray(R.array.search_engines)[siteId];
@@ -41,11 +56,12 @@ public class BaseResultActivity extends BaseActivity {
                 }
             }
 
-            String title = String.format(getString(R.string.search_result), siteName);
-            setTaskDescription(new ActivityManager.TaskDescription(
-                    title,
+            mTaskDescription = new ActivityManager.TaskDescription(
+                    String.format(getString(R.string.search_result), siteName),
                     null,
-                    ContextCompat.getColor(this, R.color.colorPrimary)));
+                    ContextCompat.getColor(this, R.color.colorPrimary));
         }
+
+        setTaskDescription(mTaskDescription);
     }
 }
