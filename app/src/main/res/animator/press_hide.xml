@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_enabled="true"
+        android:state_pressed="true">
+        <objectAnimator
+            android:duration="300"
+            android:propertyName="alpha"
+            android:startOffset="200"
+            android:valueTo="0"/>
+    </item>
+    <item>
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="alpha"
+            android:valueTo="1"/>
+    </item>
+</selector>

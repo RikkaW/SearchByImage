@@ -91,8 +91,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         if (!CustomTabsHelper.getIsChromeInstalled(getContext())) {
             ListPreference showResultInPreference = (ListPreference) findPreference(Settings.SHOW_RESULT_IN);
-            CharSequence[] entries = ArrayUtils.remove(showResultInPreference.getEntries(), CharSequence.class, 1);
-            CharSequence[] entryValues = ArrayUtils.remove(showResultInPreference.getEntryValues(), CharSequence.class, 1);
+            CharSequence[] entries = ArrayUtils.remove(showResultInPreference.getEntries(), CharSequence.class, 0);
+            CharSequence[] entryValues = ArrayUtils.remove(showResultInPreference.getEntryValues(), CharSequence.class, 0);
             showResultInPreference.setEntries(entries);
             showResultInPreference.setEntryValues(entryValues);
 
@@ -105,14 +105,7 @@ public class SettingsFragment extends PreferenceFragment implements
             //findPreference("open_source").setOnPreferenceClickListener(this);
             findPreference("contact").setOnPreferenceClickListener(this);
             findPreference("advance").setOnPreferenceClickListener(this);
-
-            Preference donatePref = findPreference("donate");
-            if (BuildConfig.hideOtherEngine) {
-                ((PreferenceCategory) findPreference("about")).removePreference(donatePref);
-            } else {
-                donatePref.setOnPreferenceClickListener(this);
-            }
-
+            findPreference("donate").setOnPreferenceClickListener(this);
             findPreference("version").setSummary(BuildConfig.VERSION_NAME);
         } else {
             findPreference(Settings.ENGINE_ID).setVisible(false);
@@ -262,9 +255,9 @@ public class SettingsFragment extends PreferenceFragment implements
                 BrowsersUtils.open(getActivity(), "https://github.com/RikkaW/SearchByImage");
                 break;
             case "donate":
-                ClipBoardUtils.putTextIntoClipboard(getContext(), "rikka@xing.moe");
-                Toast.makeText(getContext(), String.format(getString(R.string.copy_to_clipboard), "rikka@xing.moe"), Toast.LENGTH_SHORT).show();
-
+                //ClipBoardUtils.putTextIntoClipboard(getContext(), "rikka@xing.moe");
+                //Toast.makeText(getContext(), String.format(getString(R.string.copy_to_clipboard), "rikka@xing.moe"), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), DonateActivity.class));
                 break;
             case "contact":
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikkanyaaa+imageSearchFeedback@gmail.moe", null));

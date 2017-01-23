@@ -17,6 +17,7 @@ public class Settings {
     public static final String SHOW_NOTIFICATION = "notification_result";
     public static final String ENGINE_ID = "search_engine_preference";
     public static final String NIGHT_MODE = "night_mode";
+    public static final String DONATED = "donated";
 
     private static Settings sInstance;
     private SharedPreferences mPrefs;

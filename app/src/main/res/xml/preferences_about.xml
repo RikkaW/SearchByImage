@@ -41,7 +41,6 @@
 
         <Preference
             android:key="donate"
-            android:summary="@string/donate_summary"
             android:title="@string/donate"/>
 
         <Preference

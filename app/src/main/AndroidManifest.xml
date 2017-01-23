@@ -6,9 +6,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.VIBRATE" android:maxSdkVersion="18"/>
+    <uses-permission
+        android:name="android.permission.VIBRATE"
+        android:maxSdkVersion="18"/>
     <!-- Get permission for reliable local dispatching on non-Google Play devices. -->
-    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
 
     <uses-permission android:name="com.android.vending.BILLING"/>
 
@@ -22,9 +24,11 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <!-- Add the following meta-data for devices running Google Play service. -->
-        <!--<meta-data
+        <!--
+            <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />-->
+            android:value="@integer/google_play_services_version" />
+        -->
 
         <activity
             android:name=".ui.UploadActivity"
@@ -48,6 +52,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.DonateActivity"
+            android:label="@string/donate"/>
         <activity android:name=".ui.ResultActivity"/>
         <activity android:name=".ui.WebViewActivity"/>
         <activity android:name=".ui.IqdbResultActivity"/>
@@ -83,9 +90,12 @@
 
         <service android:name=".service.UploadService"/>
 
-        <!-- Register AnalyticsReceiver and AnalyticsService to support background
-         dispatching on non-Google Play devices. -->
-        <!--<receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+        <!--
+         Register AnalyticsReceiver and AnalyticsService to support background
+         dispatching on non-Google Play devices.
+        -->
+        <!--
+        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
                   android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
@@ -93,18 +103,21 @@
         </receiver>
         <service android:name="com.google.android.gms.analytics.AnalyticsService"
                  android:enabled="true"
-                 android:exported="false"/>-->
+                 android:exported="false"/>
+        -->
+
 
         <!-- Google Analytics -->
-        <!--<receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+        <!--
+        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
                   android:enabled="true"
                   android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />-->
-
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+        -->
     </application>
 
 </manifest>

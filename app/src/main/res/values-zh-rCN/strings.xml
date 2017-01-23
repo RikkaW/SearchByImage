@@ -160,6 +160,7 @@
     <string name="upload_require_permission">需要权限</string>
     <string name="upload_permission_denied">被拒绝</string>
     <string name="upload_get_image_error">获取图片出错</string>
+    <string name="upload_engine_not_exist">选择的搜索引擎不存在</string>
     <string name="upload_working">正在上传并等待响应…</string>
 
     <string name="settings_notify_background">结果通知</string>
@@ -170,4 +171,12 @@
     <string name="night_mode_on">开启</string>
     <string name="night_mode_auto">自动</string>
     <string name="night_mode_follow_system">跟随系统</string>
+
+    <string name="pay_gp">Google Play</string>
+    <string name="pay_alipay">支付宝</string>
+    <string name="donate_text">觉得这个应用有用吗？\n给开发者捐赠来鼓励开发者吧！</string>
+    <string name="pay_gp_set_up_failed">设置应用内结算失败，可能是由于您没有登录 Google 帐号或没有安装 Google Play。</string>
+    <string name="donate_thanks">感谢您的支持！</string>
+    <string name="donate_play_required">需要使用 Google Play 版。</string>
+
 </resources>

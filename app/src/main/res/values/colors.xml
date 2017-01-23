@@ -22,4 +22,7 @@
     <color name="background_list">@color/material_grey_50</color>
 
     <color name="upload_image_mask">#80FFFFFF</color>
+
+    <color name="secondary_text_default_material">#8a000000</color>
+
 </resources>

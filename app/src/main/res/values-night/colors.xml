@@ -7,5 +7,6 @@
     <color name="colorAccent">#FF80AB</color>
 
     <color name="upload_image_mask">#80000000</color>
+    <color name="secondary_text_default_material">#b3ffffff</color>
 
 </resources>

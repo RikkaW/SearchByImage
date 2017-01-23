@@ -164,9 +164,19 @@
     <string name="upload_engine_not_exist">Engine not exist</string>
     <string name="upload_working">Uploading and waiting for response…</string>
 
+    <string name="settings_notify_background">Notify when background</string>
+    <string name="settings_notify_background_summary">Notify instead of directly open result when upload background</string>
+
     <string name="night_mode">夜間モード</string>
     <string name="night_mode_off">オフ</string>
     <string name="night_mode_on">オン</string>
     <string name="night_mode_auto">自動</string>
     <string name="night_mode_follow_system">端末の設定に従う</string>
+
+    <string name="pay_gp">Google Play</string>
+    <string name="pay_alipay">Alipay</string>
+    <string name="donate_text">Do you find this app useful?\nSupport developer by sending donation to the developer!</string>
+    <string name="pay_gp_set_up_failed">Setting up in-app billing failed, maybe you haven\'t signed in your Google account or Google Play Store is not installed properly.</string>
+    <string name="donate_thanks">Thank you for your support!</string>
+    <string name="donate_play_required">Require Google Play version.</string>
 </resources>
