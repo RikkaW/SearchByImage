@@ -169,4 +169,9 @@
     <string name="settings_notify_background">Notify when background</string>
     <string name="settings_notify_background_summary">Notify instead of directly open result when upload background</string>
 
+    <string name="night_mode">Night mode</string>
+    <string name="night_mode_off">Off</string>
+    <string name="night_mode_on">On</string>
+    <string name="night_mode_auto">Auto</string>
+    <string name="night_mode_follow_system">Follow system</string>
 </resources>

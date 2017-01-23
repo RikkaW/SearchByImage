@@ -273,7 +273,10 @@ public class UploadActivity extends BaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     setSearchEngineButton(id.get(which));
                                     Settings.instance(getApplicationContext())
-                                            .putString(Settings.ENGINE_ID, Integer.toString(id.get(which)));
+                                            .edit()
+                                            .putString(Settings.ENGINE_ID, Integer.toString(id.get(which)))
+                                            .putString("search_engine_id", Integer.toString(id.get(which)))
+                                            .apply();
                                     dialog.dismiss();
                                 }
                             })

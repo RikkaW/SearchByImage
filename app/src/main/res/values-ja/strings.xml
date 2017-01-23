@@ -164,4 +164,9 @@
     <string name="upload_engine_not_exist">Engine not exist</string>
     <string name="upload_working">Uploading and waiting for response…</string>
 
+    <string name="night_mode">夜間モード</string>
+    <string name="night_mode_off">オフ</string>
+    <string name="night_mode_on">オン</string>
+    <string name="night_mode_auto">自動</string>
+    <string name="night_mode_follow_system">端末の設定に従う</string>
 </resources>

@@ -16,6 +16,7 @@ public class Settings {
     public static final String SHOW_RESULT_IN = "show_result_in";
     public static final String SHOW_NOTIFICATION = "notification_result";
     public static final String ENGINE_ID = "search_engine_preference";
+    public static final String NIGHT_MODE = "night_mode";
 
     private static Settings sInstance;
     private SharedPreferences mPrefs;

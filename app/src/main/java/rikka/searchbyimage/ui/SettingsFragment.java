@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -59,10 +61,6 @@ public class SettingsFragment extends PreferenceFragment implements
     PreferenceCategory mCategorySauceNAO;
     ListPreference mSearchEngine;
 
-    Preference mNotice;
-
-    List<SearchEngine> mData;
-
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         boolean popup = getArguments().getBoolean(ARG_POPUP);
@@ -83,13 +81,11 @@ public class SettingsFragment extends PreferenceFragment implements
         mCategoryBaidu = (PreferenceCategory) findPreference("category_baidu");
         mCategoryAdvance = (PreferenceCategory) findPreference("category_advance");
 
-        mData = SearchEngine.getList(getContext());
         mSearchEngine = (ListPreference) findPreference("search_engine_preference");
 
         mSafeSearch = (SwitchPreference) findPreference("safe_search_preference");
         mScreen = (PreferenceScreen) findPreference("screen");
         mCustomGoogleUri = (EditTextPreference) findPreference("google_region");
-        mNotice = findPreference("preference_notice");
 
         setCustomGoogleUriHide();
 
@@ -127,8 +123,10 @@ public class SettingsFragment extends PreferenceFragment implements
     @Override
     public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         RecyclerView recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState);
-        recyclerView.setClipToPadding(false);
-        recyclerView.setPadding(0, Utils.dpToPx(8), 0, Utils.dpToPx(8));
+        if (!getArguments().getBoolean(ARG_POPUP)) {
+            recyclerView.setClipToPadding(false);
+            recyclerView.setPadding(0, Utils.dpToPx(8), 0, Utils.dpToPx(8));
+        }
         return recyclerView;
     }
 
@@ -152,7 +150,7 @@ public class SettingsFragment extends PreferenceFragment implements
         List<CharSequence> entryValues = new ArrayList<>();
 
         String value = null;
-        for (SearchEngine item : mData) {
+        for (SearchEngine item : SearchEngine.getList(getContext())) {
             if (item.getEnabled() == 1) {
                 entries.add(item.getName());
                 entryValues.add(Integer.toString(item.getId()));
@@ -186,7 +184,7 @@ public class SettingsFragment extends PreferenceFragment implements
             case "google_region_preference":
                 setCustomGoogleUriHide();
                 break;
-            case "search_engine_preference":
+            case Settings.ENGINE_ID:
                 String value = sharedPreferences.getString(key, "0");
                 sharedPreferences
                         .edit()
@@ -195,8 +193,12 @@ public class SettingsFragment extends PreferenceFragment implements
 
                 setSearchEngineHide(Integer.parseInt(value));
                 break;
+            case Settings.NIGHT_MODE:
+                AppCompatDelegate.setDefaultNightMode(Integer.parseInt(sharedPreferences.getString(key, "-1")));
+                getActivity().getWindow().setWindowAnimations(R.style.AnimationFadeInOut);
+                ((AppCompatActivity) getActivity()).getDelegate().applyDayNight();
+                break;
         }
-
     }
 
     private void setCustomGoogleUriHide() {

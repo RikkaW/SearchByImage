@@ -11,10 +11,6 @@ import android.support.v7.app.AppCompatDelegate;
 public abstract class BaseActivity extends AppCompatActivity {
     //private Tracker mTracker;
 
-    static {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

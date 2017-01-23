@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="search_engines_value" translatable="false">
         <item>0</item>
         <item>1</item>
@@ -120,4 +120,19 @@
         <item>@string/open_html</item>
         <item>@string/open_iqdb</item>
     </string-array>
+
+    <string-array name="night_mode">
+        <item>@string/night_mode_follow_system</item>
+        <item>@string/night_mode_off</item>
+        <item>@string/night_mode_on</item>
+        <item>@string/night_mode_auto</item>
+    </string-array>
+
+    <string-array name="night_mode_value" translatable="false">
+        <item>-1</item>
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+
 </resources>

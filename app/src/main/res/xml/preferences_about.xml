@@ -5,13 +5,27 @@
 
     <PreferenceCategory
         android:key="category_advance"
-        android:order="8"
+        android:order="7"
         android:title="@string/advance">
 
         <Preference
             android:key="advance"
             android:title="@string/custom_search_engine">
         </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_night_mode"
+        android:order="7"
+        android:title="@string/night_mode">
+
+        <SimpleMenuPreference
+            android:key="night_mode"
+            android:title="@string/night_mode"
+            android:summary="%s"
+            android:entries="@array/night_mode"
+            android:entryValues="@array/night_mode_value"
+            android:defaultValue="-1"/>
     </PreferenceCategory>
 
     <PreferenceCategory

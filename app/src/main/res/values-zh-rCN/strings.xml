@@ -165,4 +165,9 @@
     <string name="settings_notify_background">结果通知</string>
     <string name="settings_notify_background_summary">当上传在后台进行时发送通知而不是直接打开结果</string>
 
+    <string name="night_mode">夜间模式</string>
+    <string name="night_mode_off">关闭</string>
+    <string name="night_mode_on">开启</string>
+    <string name="night_mode_auto">自动</string>
+    <string name="night_mode_follow_system">跟随系统</string>
 </resources>
