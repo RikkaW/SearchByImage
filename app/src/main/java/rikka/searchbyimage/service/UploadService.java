@@ -188,6 +188,7 @@ public class UploadService extends Service {
 
             String url = response.request().url().toString();
             File html = null;
+            String htmlFilename = new File(param.getFileUri()).getName();
 
             switch (param.getEngineId()) {
                 case SITE_GOOGLE:
@@ -202,10 +203,10 @@ public class UploadService extends Service {
                     break;
                 case SITE_IQDB:
                 case SITE_SAUCENAO:
-                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", param.getFilename());
+                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", htmlFilename + ".html");
                     break;
                 default:
-                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", param.getFilename());
+                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", htmlFilename + ".html");
                     break;
             }
 

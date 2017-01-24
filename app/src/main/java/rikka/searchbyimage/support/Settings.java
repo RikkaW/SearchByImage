@@ -19,6 +19,8 @@ public class Settings {
     public static final String NIGHT_MODE = "night_mode";
     public static final String DONATED = "donated";
 
+    public static final String LAST_INSTALLED_VERSION = "last_installed_version";
+
     private static Settings sInstance;
     private SharedPreferences mPrefs;
 

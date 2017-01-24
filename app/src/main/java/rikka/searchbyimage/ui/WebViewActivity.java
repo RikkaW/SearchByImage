@@ -35,6 +35,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -42,15 +43,18 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import rikka.searchbyimage.R;
+import rikka.searchbyimage.staticdata.SearchEngine;
 import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.ClipBoardUtils;
 import rikka.searchbyimage.utils.DownloadManagerResolver;
@@ -75,7 +79,7 @@ public class WebViewActivity extends BaseResultActivity {
             "", // baidu
             "", // iqdb
             "", // tineye
-            "http://saucenao.com/", //saucenao
+            "https://saucenao.com/", //saucenao
             ""
     };
 
@@ -189,7 +193,7 @@ public class WebViewActivity extends BaseResultActivity {
     private void handleSendFile(Intent intent) {
         mWebSettings.setSupportZoom(false);
 
-        siteId = intent.getIntExtra(EXTRA_SITE_ID, 3);
+        siteId = mUploadResult == null ? SearchEngine.SITE_SAUCENAO : mUploadResult.getEngineId();
         baseUrl = SITE_URL[siteId];
         mNormalMode = false;
 
@@ -460,24 +464,29 @@ public class WebViewActivity extends BaseResultActivity {
 
         File file = new File(htmlFilePath);
 
-        BufferedInputStream fileStream = null;
+        if (!file.exists()) {
+            return;
+        }
+
         StringBuilder sb = new StringBuilder();
+        BufferedReader br = null;
 
         try {
-            byte[] buffer = new byte[4096];
-
-            fileStream = new BufferedInputStream(new FileInputStream(file));
-            while ((fileStream.read(buffer)) != -1) {
-                sb.append(new String(buffer, Charset.forName("UTF-8")));
+            br = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(file), "UTF-8"));
+            int c = br.read();
+            while (c != -1) {
+                sb.append((char) c);
+                c = br.read();
             }
-        } catch (IOException e) {
+            br.close();
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (fileStream != null)
+            if (br != null)
                 try {
-                    fileStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    br.close();
+                } catch (IOException ignored) {
                 }
         }
 

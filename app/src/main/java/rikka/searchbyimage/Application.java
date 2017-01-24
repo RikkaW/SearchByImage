@@ -3,7 +3,6 @@ package rikka.searchbyimage;
 import android.support.v7.app.AppCompatDelegate;
 
 import rikka.searchbyimage.staticdata.SearchEngine;
-import rikka.searchbyimage.support.CrashHandler;
 import rikka.searchbyimage.support.Settings;
 
 /**
@@ -17,6 +16,7 @@ public class Application extends android.app.Application {
 
         SearchEngine.getList(this);
 
+        Settings.instance(this).putInt(Settings.LAST_INSTALLED_VERSION, BuildConfig.VERSION_CODE);
         // use firebase crash reporting
         /*CrashHandler.init(getApplicationContext());
         CrashHandler.register();*/

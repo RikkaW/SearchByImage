@@ -102,6 +102,9 @@ public class BrowsersUtils {
             intent.putExtra(WebViewActivity.EXTRA_RESULT, result);
         }
         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
+        if (result != null) {
+            intent.putExtra(WebViewActivity.EXTRA_SITE_ID, result.getEngineId());
+        }
         activity.startActivity(intent);
 
         if (newTask) {
