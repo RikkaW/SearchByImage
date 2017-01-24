@@ -120,6 +120,8 @@ public class UploadActivity extends BaseActivity {
     private String mFilename;
     private UploadParam mUploadParam;
 
+    private boolean mPaused;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -592,6 +594,24 @@ public class UploadActivity extends BaseActivity {
                 item.getResultOpenAction());
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(getClass().getSimpleName(), "onReceive");
+
+            if (mFileToUpload == null
+                    || !intent.getStringExtra(UploadService.EXTRA_KEY).equals(mFileToUpload.getName())) {
+                return;
+            }
+
+            UploadResultUtils.handleResult(context, intent, mPaused);
+
+            if (!isFinishing()) {
+                finish();
+            }
+        }
+    };
+
     private void startService() {
         setButtons(true);
 
@@ -604,29 +624,6 @@ public class UploadActivity extends BaseActivity {
         if (sUploadBinder != null) {
             sUploadBinder.addTask(mUploadParam, mFileToUpload.getName());
         }
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(getClass().getSimpleName(), "onReceive");
-
-            if (mFileToUpload == null
-                    || !intent.getStringExtra(UploadService.EXTRA_KEY).equals(mFileToUpload.getName())) {
-                return;
-            }
-
-            UploadResultUtils.handleResult(context, intent, false);
-
-            if (!isFinishing()) {
-                finish();
-            }
-        }
-    };
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UploadService.INTENT_ACTION_RESULT);
@@ -638,6 +635,20 @@ public class UploadActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        mPaused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mPaused = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
 
