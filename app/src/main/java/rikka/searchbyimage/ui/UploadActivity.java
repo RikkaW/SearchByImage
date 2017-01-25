@@ -44,6 +44,8 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.tbruyelle.rxpermissions.RxPermissions;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -178,28 +180,14 @@ public class UploadActivity extends BaseActivity {
         mCropButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFileToUpload == null || !mFileToUpload.exists()) {
-                    return;
-                }
-
-                // TODO build in crop for API 24+
-                Uri uri;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    uri = FileProvider.getUriForFile(getApplicationContext(), "rikka.searchbyimage.fileprovider", mFileToUpload);
-                } else {
-                    uri = Uri.fromFile(mFileToUpload);
-                }
-                Intent intent = new Intent();
-                intent.setAction("com.android.camera.action.CROP");
-                intent.setDataAndType(uri, "image/*");
-                intent.putExtra("crop", "true");
-                intent.putExtra("return-data", false);
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                        | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-                IntentUtils.startOtherActivityForResult(UploadActivity.this, intent, 1);
+                startCrop(true);
+            }
+        });
+        mCropButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startCrop(false);
+                return true;
             }
         });
 
@@ -222,13 +210,53 @@ public class UploadActivity extends BaseActivity {
         saveImage(mUri);
     }
 
+    private void startCrop(boolean useBuiltIn) {
+        if (mFileToUpload == null || !mFileToUpload.exists()) {
+            return;
+        }
+
+        Uri uri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = FileProvider.getUriForFile(getApplicationContext(), "rikka.searchbyimage.fileprovider", mFileToUpload);
+        } else {
+            uri = Uri.fromFile(mFileToUpload);
+        }
+
+        if (useBuiltIn) {
+            CropImage.activity(uri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(UploadActivity.this);
+        } else {
+            Intent intent = new Intent();
+            intent.setAction("com.android.camera.action.CROP");
+            intent.setDataAndType(uri, "image/*");
+            intent.putExtra("crop", "true");
+            intent.putExtra("return-data", false);
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            IntentUtils.startOtherActivityForResult(UploadActivity.this, intent, 1);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
             super.onActivityResult(requestCode, resultCode, data);
+            return;
         }
 
         switch (requestCode) {
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (result.getUri() != null) {
+                    mUri = result.getUri();
+                    mButton1.setEnabled(false);
+                    saveImage(mUri);
+                }
+                break;
             case 1:
                 if (data == null) {
                     return;

@@ -11,7 +11,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 20002
+        versionCode 20003
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -64,6 +64,7 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'
     compile 'com.github.RikkaW:MaterialPreference:v1.4.3'
+    compile project(':cropper')
 
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'

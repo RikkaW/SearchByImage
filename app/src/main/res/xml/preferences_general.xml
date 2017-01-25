@@ -14,7 +14,7 @@
             android:summary="%s"/>
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="setting_each_time"
             android:title="@string/setting_each_time"/>
 
