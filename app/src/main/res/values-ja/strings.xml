@@ -185,10 +185,16 @@
     <string name="shortcut_upload_disabled">Upload</string>
 
     <string name="donate_request">Do you enjoy using this app?</string>
-    <string name="donate_request_2">Would like to send donation to the developer as support?</string>
-    <string name="donate_request_yes">Yes, bring me there!</string>
-    <string name="donate_request_no">No, maybe later.</string>
+    <string name="donate_request_1_message">Would like to send donation to the developer as support?</string>
+    <string name="donate_request_2_message">Can you tell why don\'t like it?</string>
+    <string name="donate_request_1_yes">Yes, bring me there!</string>
+    <string name="donate_request_1_no">No, maybe later.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
+    <string name="not_like_1">I can\'t get the result I want.</string>
+    <string name="not_like_1_message">I\'m sorry I can\'t help. The result is controlled by search engine you select.\nIt\'s harder if you want to get result related to the thing in the image.</string>
+    <string name="not_like_2">I meet some bug.</string>
+    <string name="not_like_2_message">Do you want to send feedback to the developer?</string>
+    <string name="not_like_3">I want to send feedback.</string>
+    <string name="send_feedback">Send feedback</string>
 </resources>

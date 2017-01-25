@@ -40,7 +40,6 @@
             android:clickable="true"
             android:focusable="true"
             android:stateListAnimator="@animator/raise"
-            android:foreground="?android:attr/selectableItemBackground"
             app:contentPaddingTop="24dp"
             app:contentPaddingBottom="8dp"
             app:cardCornerRadius="2dp"

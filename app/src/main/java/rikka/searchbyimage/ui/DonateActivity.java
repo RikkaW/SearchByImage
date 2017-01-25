@@ -84,7 +84,7 @@ public class DonateActivity extends BaseActivity {
             }
         });
 
-        if (!PackageUtils.isPackageInstalled(DonateActivity.this, "com.eg.android.AlipayGphone")) {
+        if (BuildConfig.hideOtherEngine/*!PackageUtils.isPackageInstalled(DonateActivity.this, "com.eg.android.AlipayGphone")*/) {
             mButtonAlipay.setVisibility(View.GONE);
         }
 

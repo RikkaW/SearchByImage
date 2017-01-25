@@ -181,10 +181,16 @@
     <string name="shortcut_upload_disabled">上傳</string>
 
     <string name="donate_request">觉得这个应用有用吗？</string>
-    <string name="donate_request_2">想要给开发者捐赠来支持开发者吗？</string>
-    <string name="donate_request_yes">好呀好呀！</string>
-    <string name="donate_request_no">才不要呢</string>
+    <string name="donate_request_1_message">想要给开发者捐赠来支持开发者吗？</string>
+    <string name="donate_request_2_message">为什么呢？</string>
+    <string name="donate_request_1_yes">好呀好呀！</string>
+    <string name="donate_request_1_no">才不要呢</string>
     <string name="yes">是</string>
     <string name="no">并没有</string>
-
+    <string name="not_like_1">我不能得到我想要的结果。</string>
+    <string name="not_like_1_message">很抱歉，搜索结果由您选择的搜索引擎决定。\n如果想得到与图中出现的物体相关的搜索结果通常更难。</string>
+    <string name="not_like_2">我遇到一些 BUG。</string>
+    <string name="not_like_2_message">您想要发送反馈给开发者吗？</string>
+    <string name="not_like_3">我想发送反馈。</string>
+    <string name="send_feedback">发送反馈</string>
 </resources>

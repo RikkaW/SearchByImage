@@ -17,6 +17,9 @@ import android.widget.Toast;
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.support.Settings;
+import rikka.searchbyimage.utils.IntentUtils;
+
+import static rikka.searchbyimage.support.GetDeviceInfo.getAppInfo;
 
 
 public class MainActivity extends BaseActivity {
@@ -73,7 +76,7 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if ((Settings.instance(this).getInt(Settings.SUCCESSFULLY_UPLOAD_COUNT, 0) >= 5
+        if ((Settings.instance(this).getInt(Settings.SUCCESSFULLY_UPLOAD_COUNT, 0) >= 3
                 && Settings.instance(this).getBoolean(Settings.HIDE_DONATE_REQUEST, false))
                 || BuildConfig.DEBUG) {
             new AlertDialog.Builder(this)
@@ -82,15 +85,14 @@ public class MainActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             new AlertDialog.Builder(MainActivity.this)
-                                    .setMessage(R.string.donate_request_2)
-                                    .setPositiveButton(R.string.donate_request_yes, new DialogInterface.OnClickListener() {
+                                    .setMessage(R.string.donate_request_1_message)
+                                    .setPositiveButton(R.string.donate_request_1_yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             startActivity(new Intent(MainActivity.this, DonateActivity.class));
-                                            Settings.instance(getApplicationContext()).putBoolean(Settings.HIDE_DONATE_REQUEST, true);
                                         }
                                     })
-                                    .setNegativeButton(R.string.donate_request_no, new DialogInterface.OnClickListener() {
+                                    .setNegativeButton(R.string.donate_request_1_no, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             Settings.instance(getApplicationContext()).putBoolean(Settings.HIDE_DONATE_REQUEST, true);
@@ -103,12 +105,59 @@ public class MainActivity extends BaseActivity {
                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Settings.instance(getApplicationContext()).putBoolean(Settings.HIDE_DONATE_REQUEST, true);
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle(R.string.donate_request_2_message)
+                                    .setItems(new CharSequence[]{
+                                            getString(R.string.not_like_1),
+                                            getString(R.string.not_like_2),
+                                            getString(R.string.not_like_3),
+                                    }, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which) {
+                                                case 0:
+                                                    new AlertDialog.Builder(MainActivity.this)
+                                                            .setMessage(R.string.not_like_1_message)
+                                                            .setPositiveButton(android.R.string.ok, null)
+                                                            .show();
+                                                    break;
+                                                case 1:
+                                                    new AlertDialog.Builder(MainActivity.this)
+                                                            .setMessage(R.string.not_like_2_message)
+                                                            .setPositiveButton(R.string.send_feedback, new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    sendFeedback();                                                        }
+                                                            })
+                                                            .setNegativeButton(android.R.string.cancel, null)
+                                                            .show();
+                                                    break;
+                                                case 2:
+                                                    sendFeedback();
+                                                    break;
+                                            }
+                                        }
+                                    })
+                                    .show();
                         }
                     })
                     .setCancelable(false)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Settings.instance(getApplicationContext()).putBoolean(Settings.HIDE_DONATE_REQUEST, true);
+                        }
+                    })
                     .show();
         }
+    }
+
+    private void sendFeedback() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikkanyaaa+imageSearchFeedback@gmail.moe", null));
+        intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchFeedback@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage Feedback");
+        intent.putExtra(Intent.EXTRA_TEXT, getAppInfo(this).toString());
+        IntentUtils.startOtherActivity(this, intent);
     }
 
     private void selectImage() {
