@@ -183,4 +183,10 @@
     <string name="shortcut_upload_short">上传</string>
     <string name="shortcut_upload_disabled">上传</string>
 
+    <string name="donate_request">觉得这个应用有用吗？</string>
+    <string name="donate_request_2">想要给开发者捐赠来支持开发者吗？</string>
+    <string name="donate_request_yes">好呀好呀！</string>
+    <string name="donate_request_no">才不要呢</string>
+    <string name="yes">是</string>
+    <string name="no">并没有</string>
 </resources>

@@ -128,6 +128,8 @@ public class DonateActivity extends BaseActivity {
                                 iabHelperWrapper.consume(purchase);
 
                                 Settings.instance(getApplicationContext()).putBoolean(Settings.DONATED, true);
+                                Settings.instance(getApplicationContext()).putBoolean(Settings.HIDE_DONATE_REQUEST, true);
+
                                 if (!isFinishing()) {
                                     findViewById(android.R.id.text1).setVisibility(View.VISIBLE);
                                 }

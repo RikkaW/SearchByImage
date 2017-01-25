@@ -21,6 +21,9 @@ public class Settings {
 
     public static final String LAST_INSTALLED_VERSION = "last_installed_version";
 
+    public static final String SUCCESSFULLY_UPLOAD_COUNT = "successfully_upload_count";
+    public static final String HIDE_DONATE_REQUEST = "hide_donate_request";
+
     private static Settings sInstance;
     private SharedPreferences mPrefs;
 

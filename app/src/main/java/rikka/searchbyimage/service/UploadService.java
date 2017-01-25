@@ -41,6 +41,7 @@ import okhttp3.Response;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.SearchEngine;
 import rikka.searchbyimage.support.OkHttpClientProvider;
+import rikka.searchbyimage.support.Settings;
 import rikka.searchbyimage.utils.HttpUtils;
 import rikka.searchbyimage.utils.ImageUtils;
 import rikka.searchbyimage.utils.UploadResultUtils;
@@ -185,6 +186,9 @@ public class UploadService extends Service {
             if (!response.isSuccessful()) {
                 return new UploadResult(UploadResult.ERROR_IO, mContext.getString(R.string.socket_exception), param);
             }
+
+            int count = Settings.instance(mContext).getInt(Settings.SUCCESSFULLY_UPLOAD_COUNT, 0);
+            Settings.instance(mContext).putInt(Settings.SUCCESSFULLY_UPLOAD_COUNT, count + 1);
 
             String url = response.request().url().toString();
             File html = null;
