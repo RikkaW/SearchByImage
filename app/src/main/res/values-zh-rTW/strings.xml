@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">以圖搜圖</string>
     <string name="share_action_name">圖片搜尋</string>
-    <string name="hello">在分享選單選擇該應用程式將圖片上傳至選擇的搜尋引擎\n或者直接按下上傳按鈕來選擇圖片</string>
-    <string name="hello_gp">在分享選單選擇該應用將圖片上傳至 Google 圖片搜尋\n或者直接按下上傳按鈕來選擇圖片</string>
+    <string name="hello">在分享選單選擇本應用程式將圖片上傳至選擇的搜尋引擎\n或者直接按下上傳按鈕來選擇圖片</string>
+    <string name="hello_gp">在分享選單選擇本應用程式將圖片上傳至 Google 圖片搜尋\n或者直接按下上傳按鈕來選擇圖片</string>
     <string name="uploading">上傳中…</string>
 
     <string-array name="search_engines">
@@ -19,7 +19,7 @@
     <string name="safe_search">安全搜尋</string>
     <string name="about">關於</string>
     <string name="open_source">開源</string>
-    <string name="general">通用</string>
+    <string name="general">一般</string>
     <string name="safe_search_summary">阻止不合適的圖片</string>
     <string name="rate">評分</string>
     <string name="rate_summary">能給5星就太好啦 &gt;﹏&lt;</string>
@@ -40,7 +40,7 @@
     <string name="iqdb_forcegray">忽略顏色</string>
 
     <string name="copy_url">複製網址</string>
-    <string name="save_image">保存圖片</string>
+    <string name="save_image">儲存圖片</string>
     <string name="open_with">使用其他軟體打開…</string>
     <string name="open">打開</string>
 
@@ -82,7 +82,7 @@
     <string name="unknown_host_exception">域名解析錯誤</string>
 
     <string name="notice">注意</string>
-    <string name="notice_baidu">Baidu不支持WebP格式和較大圖片</string>
+    <string name="notice_baidu">Baidu不支援WebP格式和較大圖片</string>
 
     <string name="show_result_in">搜尋結果打開方式</string>
     <string name="built_in_browser">內建瀏覽器</string>
@@ -92,9 +92,9 @@
     <string name="refresh">重新整理</string>
     <string name="copy_link">複製連接</string>
     <string name="open_in_browser">在瀏覽器中打開</string>
-    <string name="copy_to_clipboard">%s 已複製到剪貼板</string>
+    <string name="copy_to_clipboard">%s 已複製到剪貼簿</string>
 
-    <string name="save_failed">保存失敗</string>
+    <string name="save_failed">儲存失敗</string>
     <string name="downloaded">%s 下載完成</string>
     <string name="download_failed">下載失敗</string>
 
@@ -120,14 +120,14 @@
     <string name="upload_form_add">新增表單資料</string>
     <string name="built_in">內建搜尋引擎</string>
     <string name="custom">自訂</string>
-    <string name="check_your_data">請確定是否輸入了資料...</string>
+    <string name="check_your_data">請確定是否輸入了資料…</string>
     <string name="choose_one">請至少開啟一個搜尋引擎</string>
 
     <string name="open_url">打開URL</string>
-    <string name="open_html">在WebView中打開保存的HTML檔案</string>
+    <string name="open_html">在WebView中打開儲存的HTML檔案</string>
     <string name="open_iqdb">內建iqdb.org結果檢視器</string>
 
-    <string name="advance">高級設定</string>
+    <string name="advance">進階設定</string>
     <string name="custom_search_engine">自訂搜尋引擎</string>
     <string name="help">幫助</string>
     <string name="delete">刪除</string>
@@ -142,26 +142,26 @@
     <string name="contact">聯絡</string>
     <string name="download_complete">下載完成</string>
     <string name="no_chrome_available">由於沒有可用的Chrome，使用WebView替代</string>
-    <string name="no_webview">設備上未安裝WebView</string>
+    <string name="no_webview">裝置上未安裝WebView</string>
     <string name="webview_version_error">WebView 版本錯誤，請在Google Play上重新安裝WebView。</string>
-    <string name="download_manager_disabled">下載管理器被禁用了，請啟用它。</string>
+    <string name="download_manager_disabled">下載管理器被停用了，請啟用它。</string>
 
     <plurals name="uploading_notification">
-        <item quantity="other">正在上传 %d 张图片</item>
+        <item quantity="other">正在上傳 %d 張圖片</item>
     </plurals>
-    <string name="upload_select_engine">选择一个搜索引擎</string>
-    <string name="upload_start">开始上传</string>
-    <string name="upload_settings">其他设置</string>
-    <string name="upload_background">后台运行</string>
-    <string name="upload_getting_image">获取图片中…</string>
-    <string name="upload_require_permission">需要权限</string>
-    <string name="upload_permission_denied">被拒绝</string>
-    <string name="upload_get_image_error">获取图片出错</string>
-    <string name="upload_engine_not_exist">选择的搜索引擎不存在</string>
-    <string name="upload_working">正在上传并等待响应…</string>
+    <string name="upload_select_engine">選擇一個搜尋引擎</string>
+    <string name="upload_start">開始上傳</string>
+    <string name="upload_settings">其他設定</string>
+    <string name="upload_background">背景執行</string>
+    <string name="upload_getting_image">獲取圖片中…</string>
+    <string name="upload_require_permission">需要權限</string>
+    <string name="upload_permission_denied">被拒絕</string>
+    <string name="upload_get_image_error">獲取圖片出錯</string>
+    <string name="upload_engine_not_exist">選擇的搜尋引擎不存在</string>
+    <string name="upload_working">正在上傳並等待回應…</string>
 
-    <string name="settings_notify_background">结果通知</string>
-    <string name="settings_notify_background_summary">当上传在后台进行时发送通知而不是直接打开结果</string>
+    <string name="settings_notify_background">結果通知</string>
+    <string name="settings_notify_background_summary">當上傳在背景進行時發送通知而不是直接打開結果</string>
 
     <string name="night_mode">夜間模式</string>
     <string name="night_mode_off">關閉</string>
@@ -171,13 +171,13 @@
 
     <string name="pay_gp">Google Play</string>
     <string name="pay_alipay">Alipay</string>
-    <string name="donate_text">觉得这个应用有用吗？\n给开发者捐赠来鼓励开发者吧！</string>
-    <string name="pay_gp_set_up_failed">设置应用内结算失败，可能是由于您没有登录 Google 帐号或没有安装 Google Play。</string>
-    <string name="donate_thanks">感谢您的支持！</string>
+    <string name="donate_text">覺得這個應用程式好用嗎？\n給開發者捐贈來鼓勵開發者吧！</string>
+    <string name="pay_gp_set_up_failed">設定應用程式內結算失敗，可能是由於您沒有登入 Google 帳號或沒有安裝 Google Play。</string>
+    <string name="donate_thanks">感謝您的支持！</string>
     <string name="donate_play_required">需要使用 Google Play 版。</string>
 
-    <string name="shortcut_upload_long">上传新图片</string>
-    <string name="shortcut_upload_short">上传</string>
-    <string name="shortcut_upload_disabled">上传</string>
+    <string name="shortcut_upload_long">上傳新圖片</string>
+    <string name="shortcut_upload_short">上傳</string>
+    <string name="shortcut_upload_disabled">上傳</string>
 
 </resources>
