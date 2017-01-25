@@ -21,7 +21,7 @@
     <string name="open_source">Open source</string>
     <string name="general">General</string>
     <string name="rate">Rate me</string>
-    <string name="rate_summary">I\'ll be happy if you give me 5 stars</string>
+    <string name="rate_summary">I\'ll be happy if you rate me 5 stars</string>
     <string name="build_version">Build version</string>
 
     <string name="safe_search_summary">Block inappropriate or explicit images</string>

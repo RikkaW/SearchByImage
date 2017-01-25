@@ -53,6 +53,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.service.UploadParam;
 import rikka.searchbyimage.service.UploadService;
@@ -217,13 +218,14 @@ public class UploadActivity extends BaseActivity {
 
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = FileProvider.getUriForFile(getApplicationContext(), "rikka.searchbyimage.fileprovider", mFileToUpload);
+            uri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", mFileToUpload);
         } else {
             uri = Uri.fromFile(mFileToUpload);
         }
 
         if (useBuiltIn) {
             CropImage.activity(uri)
+                    .setAutoZoomEnabled(true)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .start(UploadActivity.this);
         } else {

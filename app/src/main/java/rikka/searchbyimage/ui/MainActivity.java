@@ -28,7 +28,7 @@ public class MainActivity extends BaseActivity {
             "rikka.searchbyimage.ui.MainActivity.EXTRA_MINI";
 
     public static final String ACTION_UPLOAD =
-            "rikka.searchbyimage.intent.action.NEW_UPLOAD";
+            BuildConfig.APPLICATION_ID + ".intent.action.NEW_UPLOAD";
 
     private boolean mPaused;
     private String mAction;

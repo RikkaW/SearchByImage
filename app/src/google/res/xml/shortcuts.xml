@@ -10,7 +10,7 @@
         android:shortcutDisabledMessage="@string/shortcut_upload_disabled"
         tools:ignore="UnusedAttribute">
         <intent
-            android:action="rikka.searchbyimage.intent.action.NEW_UPLOAD"
+            android:action="rikka.searchbyimage2.intent.action.NEW_UPLOAD"
             android:targetPackage="rikka.searchbyimage2"
             android:targetClass="rikka.searchbyimage.ui.MainActivity"/>
         <categories android:name="android.shortcut.conversation"/>

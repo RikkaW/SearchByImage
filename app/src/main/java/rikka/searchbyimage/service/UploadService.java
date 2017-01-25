@@ -21,6 +21,8 @@ import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.theartofdev.edmodo.cropper.BuildConfig;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,8 +63,8 @@ public class UploadService extends Service {
 
     private static final int NOTIFICATION_ID = 0x10;
 
-    public static final String INTENT_ACTION_RESULT = "rikka.searchbyimage.intent.action.upload_result";
-    public static final String INTENT_ACTION_CANCEL = "rikka.searchbyimage.intent.action.upload_cancel";
+    public static final String INTENT_ACTION_RESULT = BuildConfig.APPLICATION_ID + ".intent.action.upload_result";
+    public static final String INTENT_ACTION_CANCEL = BuildConfig.APPLICATION_ID + ".intent.action.upload_cancel";
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
     public static final String EXTRA_KEY = "EXTRA_KEY";
 

@@ -52,7 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="rikka.searchbyimage.intent.action.NEW_UPLOAD"/>
+                <action android:name="${applicationId}.intent.action.NEW_UPLOAD"/>
             </intent-filter>
             <meta-data android:name="android.app.shortcuts"
                        android:resource="@xml/shortcuts" />
@@ -68,7 +68,7 @@
             android:name=".ui.SendReportActivity"
             android:theme="@style/AppTheme.Transparent">
             <intent-filter>
-                <action android:name="rikka.searchbyimage.SEND_LOG"/>
+                <action android:name="${applicationId}.SEND_LOG"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
@@ -88,7 +88,7 @@
             android:name=".receiver.UploadMessageReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="rikka.searchbyimage.intent.action.upload_result"/>
+                <action android:name="${applicationId}.intent.action.upload_result"/>
             </intent-filter>
         </receiver>
 
@@ -96,7 +96,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="rikka.searchbyimage.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

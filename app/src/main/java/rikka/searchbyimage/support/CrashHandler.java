@@ -96,7 +96,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                         .build());*/
 
         Intent intent = new Intent();
-        intent.setAction("rikka.searchbyimage.SEND_LOG");
+        intent.setAction(BuildConfig.APPLICATION_ID + ".SEND_LOG");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(SendReportActivity.EXTRA_EMAIL_BODY, sb.toString());
         mContext.startActivity(intent);
