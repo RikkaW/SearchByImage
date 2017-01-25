@@ -184,4 +184,11 @@
     <string name="shortcut_upload_short">Upload</string>
     <string name="shortcut_upload_disabled">Upload</string>
 
+    <string name="donate_request">Do you enjoy using this app?</string>
+    <string name="donate_request_2">Would like to send donation to the developer as support?</string>
+    <string name="donate_request_yes">Yes, bring me there!</string>
+    <string name="donate_request_no">No, maybe later.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
 </resources>
