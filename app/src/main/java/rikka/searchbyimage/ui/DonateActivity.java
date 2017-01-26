@@ -112,7 +112,7 @@ public class DonateActivity extends BaseActivity {
             }
         });
 
-        if (!Settings.instance(DonateActivity.this).getBoolean(Settings.DONATED, false)) {
+        if (!Settings.instance(DonateActivity.this).getBoolean(Settings.DONATED, false) && !BuildConfig.DEBUG) {
             findViewById(android.R.id.text1).setVisibility(View.GONE);
         }
     }

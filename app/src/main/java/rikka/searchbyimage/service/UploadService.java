@@ -209,10 +209,10 @@ public class UploadService extends Service {
                     break;
                 case SITE_IQDB:
                 case SITE_SAUCENAO:
-                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", htmlFilename + ".html");
+                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", htmlFilename);
                     break;
                 default:
-                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", htmlFilename + ".html");
+                    html = Utils.streamToCacheFile(mContext, response.body().byteStream(), "html", htmlFilename);
                     break;
             }
 

@@ -344,6 +344,10 @@ public class UploadActivity extends BaseActivity {
                     List<Integer> icons = new ArrayList<>();
                     List<CharSequence> texts = new ArrayList<>();
                     for (SearchEngine item : SearchEngine.getList(v.getContext())) {
+                        if (item.getEnabled() != 1) {
+                            continue;
+                        }
+
                         texts.add(item.getName());
                         id.add(item.getId());
                         if (item.getId() < SearchEngine.SITE_CUSTOM_START) {
