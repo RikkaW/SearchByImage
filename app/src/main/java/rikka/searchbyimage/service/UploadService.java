@@ -21,8 +21,6 @@ import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
-import com.theartofdev.edmodo.cropper.BuildConfig;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
 import rikka.searchbyimage.staticdata.SearchEngine;
 import rikka.searchbyimage.support.OkHttpClientProvider;
@@ -252,7 +251,8 @@ public class UploadService extends Service {
             intent.putExtra(EXTRA_KEY, key);
 
             if (!LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent)
-                    && result.getErrorCode() != UploadResult.CANCELED) {
+                    && result.getErrorCode() != UploadResult.CANCELED
+                    && !canceled) {
                 sendBroadcast(intent);
             }
         }
