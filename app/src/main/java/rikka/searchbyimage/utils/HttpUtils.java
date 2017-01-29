@@ -1,5 +1,7 @@
 package rikka.searchbyimage.utils;
 
+import android.text.TextUtils;
+
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
@@ -10,8 +12,14 @@ public class HttpUtils {
 
     public static String guessMimeType(String path) {
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String contentTypeFor = fileNameMap.getContentTypeFor(path);
-        if (contentTypeFor == null) {
+        String contentTypeFor;
+        try {
+            contentTypeFor = fileNameMap.getContentTypeFor(path);
+        } catch (Exception e) {
+            contentTypeFor = "application/octet-stream";
+        }
+
+        if (TextUtils.isEmpty(contentTypeFor)) {
             contentTypeFor = "application/octet-stream";
         }
         return contentTypeFor;
