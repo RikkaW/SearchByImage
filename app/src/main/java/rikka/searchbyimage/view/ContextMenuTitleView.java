@@ -24,7 +24,7 @@ public class ContextMenuTitleView extends ScrollView {
         TextView titleView = new TextView(context);
         titleView.setText(title);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        titleView.setTextColor(context.getResources().getColor(R.color.contextMenuTitle));
+        titleView.setTextColor(context.getResources().getColor(R.color.primary_text));
         addView(titleView);
     }
 
