@@ -2,4 +2,5 @@
 <paths>
     <cache-path name="images" path="images/"/>
     <external-cache-path name="images" path="images/"/>
+    <external-path name="downloaded" path="Pictures/SearchByImage/"/>
 </paths>

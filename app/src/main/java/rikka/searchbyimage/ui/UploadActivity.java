@@ -461,6 +461,7 @@ public class UploadActivity extends BaseActivity {
 
                             return Utils.streamToFile(
                                     getContentResolver().openInputStream(uri),
+                                    // TODO should give a different path if getExternalCacheDir() return null (for file provider)
                                     path + "/images/" + time);
                         } catch (Exception e) {
                             return null;

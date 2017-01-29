@@ -11,7 +11,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 20006
+        versionCode 20100
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -24,7 +24,7 @@ android {
     }
 
     productFlavors {
-        def String name = "2.0.0"
+        def String name = "2.0.1"
 
         coolapk {
             applicationId "rikka.searchbyimage"
@@ -63,7 +63,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.3'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'
-    compile 'com.github.RikkaW:MaterialPreference:v1.4.3'
+    compile 'com.github.RikkaW:MaterialPreference:v1.4.4'
     compile project(':cropper')
 
     compile 'com.google.firebase:firebase-core:10.0.1'
