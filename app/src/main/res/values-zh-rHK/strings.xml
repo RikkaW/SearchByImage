@@ -194,4 +194,10 @@
     <string name="not_like_3">我想发送反馈。</string>
     <string name="send_feedback">发送反馈</string>
 
+    <plurals name="notification_result_count">
+        <item quantity="other">%d 个结果</item>
+    </plurals>
+    <string name="notification_upload_failed" formatted="false">%s 上传失败</string>
+    <string name="notification_uploaded" formatted="false">%s 已上传完成</string>
+    <string name="notification_tap_to_view" formatted="false">点按即可查看结果</string>
 </resources>

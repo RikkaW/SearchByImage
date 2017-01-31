@@ -197,4 +197,9 @@
     <string name="not_like_2_message">Do you want to send feedback to the developer?</string>
     <string name="not_like_3">I want to send feedback.</string>
     <string name="send_feedback">Send feedback</string>
+
+    <plurals name="notification_result_count">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
 </resources>

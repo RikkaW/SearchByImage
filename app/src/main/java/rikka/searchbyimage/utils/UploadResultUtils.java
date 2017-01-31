@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.JsonReader;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 import rikka.searchbyimage.BuildConfig;
 import rikka.searchbyimage.R;
@@ -161,24 +163,51 @@ public class UploadResultUtils {
                     (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
             Notification notification;
 
-            // TODO group notification for android 7.0+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                int count = 1;
+                for (StatusBarNotification sbn: notificationManager.getActiveNotifications()) {
+                    if (sbn.isGroup() && sbn.getId() != 0) {
+                        count ++;
+                    }
+                }
+
+                notification = new NotificationCompat.Builder(context)
+                        .setColor(0xFF3F51B5)
+                        .setGroup("results")
+                        .setGroupSummary(true)
+                        .setSubText(context.getResources().getQuantityString(R.plurals.notification_result_count, count, count))
+                        .setSmallIcon(R.drawable.ic_stat)
+                        .setShowWhen(true)
+                        .setWhen(System.currentTimeMillis())
+                        .build();
+
+                notificationManager.notify(0, notification);
+            }
 
             int code = result.getFileUri().hashCode();
             if (errorCode != UploadResult.NO_ERROR) {
                 notification = new NotificationCompat.Builder(context)
                         .setColor(0xFF3F51B5)
+                        .setGroup("results")
                         .setSmallIcon(R.drawable.ic_stat)
-                        .setContentTitle(result.getFilename() + " 上传失败")
+                        .setContentTitle(String.format(Locale.ENGLISH,
+                                context.getString(R.string.notification_upload_failed), result.getFilename()))
                         .setContentText(errorMessage)
+                        .setShowWhen(true)
+                        .setWhen(System.currentTimeMillis())
                         .build();
             } else {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, code, intent, PendingIntent.FLAG_ONE_SHOT);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                         .setColor(0xFF3F51B5)
+                        .setGroup("results")
                         .setSmallIcon(R.drawable.ic_stat)
-                        .setContentTitle(result.getFilename() + " 已上传完成")
-                        .setContentText("轻触查看结果")
+                        .setContentTitle(String.format(Locale.ENGLISH,
+                                context.getString(R.string.notification_uploaded), result.getFilename()))
+                        .setContentText(context.getString(R.string.notification_tap_to_view))
                         .setContentIntent(pendingIntent)
+                        .setShowWhen(true)
+                        .setWhen(System.currentTimeMillis())
                         .setAutoCancel(true);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
