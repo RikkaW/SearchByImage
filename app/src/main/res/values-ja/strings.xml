@@ -202,4 +202,8 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
+    <string name="notification_upload_failed" formatted="false">%s upload failed</string>
+    <string name="notification_uploaded" formatted="false">%s uploaded</string>
+    <string name="notification_tap_to_view" formatted="false">Tap to view result</string>
+
 </resources>

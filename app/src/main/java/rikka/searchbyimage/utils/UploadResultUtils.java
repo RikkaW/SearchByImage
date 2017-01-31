@@ -179,6 +179,7 @@ public class UploadResultUtils {
                         .setSmallIcon(R.drawable.ic_stat)
                         .setShowWhen(true)
                         .setWhen(System.currentTimeMillis())
+                        .setAutoCancel(true)
                         .build();
 
                 notificationManager.notify(0, notification);
