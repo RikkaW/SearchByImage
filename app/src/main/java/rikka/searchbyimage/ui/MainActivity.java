@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void sendFeedback() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikkanyaaa+imageSearchFeedback@gmail.moe", null));
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "rikkanyaaa+imageSearchFeedback@gmail.com", null));
         intent.putExtra(Intent.EXTRA_CC, new String[]{"xmu.miffy+imageSearchFeedback@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "SearchByImage Feedback");
         intent.putExtra(Intent.EXTRA_TEXT, getAppInfo(this).toString());
