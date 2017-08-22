@@ -7,26 +7,27 @@
 
     <string-array name="search_engines">
         <item>Google</item>
-        <item>百度</item>
+        <item>Baidu</item>
         <item>iqdb</item>
         <item>TinEye</item>
         <item>SauceNAO</item>
         <item>ascii2d</item>
     </string-array>
 
-    <string name="usage">使用方法</string>
+    <string name="usage">使用方式</string>
     <string name="search_engine">搜尋引擎</string>
     <string name="safe_search">安全搜尋</string>
     <string name="about">關於</string>
-    <string name="open_source">開源</string>
+    <string name="open_source">開放原始碼</string>
     <string name="general">一般</string>
-    <string name="safe_search_summary">阻止不合適的圖片</string>
     <string name="rate">評分</string>
     <string name="rate_summary">能給5星就太好啦 &gt;﹏&lt;</string>
-    <string name="build_version">版本</string>
+    <string name="build_version">組建版本</string>
+
+    <string name="safe_search_summary">封鎖不當的圖片</string>
 
     <string name="google_settings">Google 設定</string>
-    <string name="google_region_redirect">區域重定向</string>
+    <string name="google_region_redirect">區域重新導向</string>
     <string name="google_region_redirect_custom">自訂 Google URL</string>
 
     <string-array name="google_region_redirects">
@@ -37,35 +38,35 @@
 
     <string name="iqdb_settings">iqdb 設定</string>
     <string name="iqdb_service_select">搜尋網站</string>
-    <string name="iqdb_forcegray">忽略顏色</string>
+    <string name="iqdb_forcegray">略過色彩</string>
 
     <string name="copy_url">複製網址</string>
     <string name="save_image">儲存圖片</string>
-    <string name="open_with">使用其他軟體打開…</string>
-    <string name="open">打開</string>
+    <string name="open_with">開啟檔案…</string>
+    <string name="open">開啟</string>
 
     <string name="share">分享</string>
-    <string name="share_url">選擇分享方式</string>
+    <string name="share_url">共用方式</string>
 
     <string name="use_chrome_custom_tabs">使用內建瀏覽器</string>
-    <string name="use_chrome_custom_tabs_summary">使用 WebView 或 Chrome custom tabs</string>
+    <string name="use_chrome_custom_tabs_summary">使用 WebView 或 Chrome Custom Tabs</string>
 
-    <string name="search_result">%s 搜尋結果</string>
+    <string name="search_result">%s 個搜尋結果</string>
 
     <string name="settings">設定</string>
-    <string name="setting_each_time">上傳圖片前設定</string>
+    <string name="setting_each_time">上傳前開啟設定</string>
     <string name="resize_image">壓縮上傳圖片</string>
-    <string name="try_resize_image_if_error">當圖片不能正常上傳時可嘗試此選項</string>
+    <string name="try_resize_image_if_error">若上傳失敗可嘗試此選項</string>
     <string name="start_upload">開始上傳</string>
 
     <string name="permission_require">需要權限</string>
-    <string name="permission_require_detail">您需要授予軟體“讀取外部存儲”權限才能上傳該圖片。</string>
-    <string name="get_permission">獲取權限</string>
+    <string name="permission_require_detail">程式似乎需要「讀取外部儲存」(READ_EXTERNAL_STORAGE) 權限才能上傳本圖片。</string>
+    <string name="get_permission">取得權限</string>
 
     <string name="donate">捐贈</string>
     <string name="donate_summary">Alipay: rikka@xing.moe</string>
 
-    <string name="something_wrong">出錯了 OAO</string>
+    <string name="something_wrong">發生錯誤</string>
 
     <string name="saucenao_settings">SauceNAO 設定</string>
     <string name="saucenao_hide_title">隱藏</string>
@@ -73,78 +74,80 @@
 
     <string-array name="saucenao_hide">
         <item>無</item>
-        <item>已知危險來源</item>
-        <item>已知和預估危險來源</item>
-        <item>除了已知安全來源</item>
+        <item>已知偏激</item>
+        <item>已知與可疑偏激</item>
+        <item>除了已知安全</item>
     </string-array>
-    <string name="timeout_exception">連線超時</string>
+    <string name="timeout_exception">連線逾時</string>
     <string name="socket_exception">網路錯誤</string>
-    <string name="unknown_host_exception">域名解析錯誤</string>
+    <string name="unknown_host_exception">網域解析錯誤</string>
 
     <string name="notice">注意</string>
-    <string name="notice_baidu">Baidu不支援WebP格式和較大圖片</string>
+    <string name="notice_baidu">Baidu 不支援 WebP 格式與大型圖片</string>
 
-    <string name="show_result_in">搜尋結果打開方式</string>
+    <string name="show_result_in">在…顯示結果</string>
     <string name="built_in_browser">內建瀏覽器</string>
-    <string name="chrome_custom_tabs">Chrome custom tabs</string>
-    <string name="browser_app">外部瀏覽器</string>
+    <string name="chrome_custom_tabs">Chrome Custom Tabs</string>
+    <string name="browser_app">瀏覽器程式</string>
     <string name="search_this_image_by_google">使用 Google 搜尋此圖片</string>
     <string name="refresh">重新整理</string>
-    <string name="copy_link">複製連接</string>
-    <string name="open_in_browser">在瀏覽器中打開</string>
-    <string name="copy_to_clipboard">%s 已複製到剪貼簿</string>
-
-    <string name="save_failed">儲存失敗</string>
-    <string name="downloaded">%s 下載完成</string>
-    <string name="download_failed">下載失敗</string>
+    <string name="copy_link">複製連結</string>
+    <string name="open_in_browser">在瀏覽器程式中開啟</string>
+    <string name="copy_to_clipboard">%s 已複製至剪貼簿</string>
 
     <string name="replace_file">取代檔案</string>
     <string name="create_new_file">建立新檔案</string>
-    <string name="file_overwrite" formatted="false"><![CDATA[您要取代「<b>%2$s</b>」目錄中現有的 <b>%1$s</b> 嗎？]]></string>
+    <string name="file_overwrite" formatted="false"><![CDATA[您要取代 <b>%2$s</b> 中現有的 <b>%1$s</b> 檔案嗎？]]></string>
 
-    <string name="send_via">發送方式</string>
+    <string name="save_failed">儲存失敗</string>
+    <string name="downloaded">%s 已下載</string>
+    <string name="download_complete">下載完成。</string>
+    <string name="download_failed">下載失敗</string>
 
-    <string name="app_crash_title">壞掉了 QAQ</string>
-    <string name="app_crash_message">使用Email發送錯誤報告給開發者以幫助解決問題。</string>
-    <string name="app_crash_no_email_client">啊..沒有Email軟體的樣子..</string>
+    <string name="send_via">透過…傳送</string>
+
+    <string name="app_crash_title">程式損毀了</string>
+    <string name="app_crash_message">使用電子信箱程式向開發人員傳送損毀紀錄檔以協助修復 Bug。</string>
+    <string name="app_crash_no_email_client">未安裝電子信箱程式</string>
     <string name="baidu_settings">Baidu 設定</string>
 
     <string name="edit_sites">搜尋引擎</string>
     <string name="edit_site">編輯資料</string>
-    <string name="request_url">請求URL</string>
+    <string name="request_url">要求 URL</string>
     <string name="engine_name">名稱</string>
     <string name="upload_form_key">Key</string>
-    <string name="upload_form_value">Value</string>
+    <string name="upload_form_value">值</string>
     <string name="upload_form_your_image">(圖片)</string>
-    <string name="upload_form_built_in_selector">(選擇)</string>
+    <string name="upload_form_built_in_selector">(選擇器)</string>
     <string name="upload_form_add">新增表單資料</string>
-    <string name="built_in">內建搜尋引擎</string>
+    <string name="built_in">內建</string>
     <string name="custom">自訂</string>
-    <string name="check_your_data">請確定是否輸入了資料…</string>
+    <string name="check_your_data">檢查你的資料</string>
     <string name="choose_one">請至少開啟一個搜尋引擎</string>
 
-    <string name="open_url">打開URL</string>
-    <string name="open_html">在WebView中打開儲存的HTML檔案</string>
-    <string name="open_iqdb">內建iqdb.org結果檢視器</string>
+    <string name="open_url">開啟 URL</string>
+    <string name="open_html">在 WebView 中開啟儲存的 HTML 檔案</string>
+    <string name="open_iqdb">內建 iqdb.org 檢視器</string>
 
-    <string name="advance">進階設定</string>
+    <string name="open_action">開啟動作</string>
+    <string name="advance">進階</string>
     <string name="custom_search_engine">自訂搜尋引擎</string>
-    <string name="help">幫助</string>
+    <string name="help">說明</string>
     <string name="delete">刪除</string>
-    <string name="open_action">打開方式</string>
     <string name="post_form">表單</string>
-    <string name="not_empty">不能是空的..</string>
-    <string name="invalid_web_url">網址不正確</string>
-    <string name="target_app_not_found">沒找到可以使用的應用程式</string>
+    <string name="not_empty">不應為空..</string>
+
+    <string name="invalid_web_url">網址無效</string>
+    <string name="target_app_not_found">沒有應用程式處理此動作</string>
+    <string name="file_not_found">未找到檔案。\n請稍後再試。</string>
+
     <string name="upload_failed">上傳失敗</string>
-    <string name="file_not_found">沒有找到檔案\n請重試</string>
-    <string name="contact_detail">如果您遇到問題，麻煩請聯絡我</string>
-    <string name="contact">聯絡</string>
-    <string name="download_complete">下載完成</string>
-    <string name="no_chrome_available">由於沒有可用的Chrome，使用WebView替代</string>
-    <string name="no_webview">裝置上未安裝WebView</string>
-    <string name="webview_version_error">WebView 版本錯誤，請在Google Play上重新安裝WebView。</string>
-    <string name="download_manager_disabled">下載管理器被停用了，請啟用它。</string>
+    <string name="contact">聯絡我</string>
+    <string name="contact_detail">若你遇到問題，請聯絡我</string>
+    <string name="no_chrome_available">由於未安裝可用的Chrome，請使用 WebView</string>
+    <string name="no_webview">你的裝置未安裝 WebView</string>
+    <string name="webview_version_error">WebView 版本不正確，請在 Google Play 上重新安裝 WebView。</string>
+    <string name="download_manager_disabled">下載管理員被停用了，請啟用它。</string>
 
     <plurals name="uploading_notification">
         <item quantity="other">正在上傳 %d 張圖片</item>
@@ -153,15 +156,15 @@
     <string name="upload_start">開始上傳</string>
     <string name="upload_settings">其他設定</string>
     <string name="upload_background">背景執行</string>
-    <string name="upload_getting_image">獲取圖片中…</string>
+    <string name="upload_getting_image">正在取得圖片…</string>
     <string name="upload_require_permission">需要權限</string>
-    <string name="upload_permission_denied">被拒絕</string>
-    <string name="upload_get_image_error">獲取圖片出錯</string>
-    <string name="upload_engine_not_exist">選擇的搜尋引擎不存在</string>
+    <string name="upload_permission_denied">權限被拒絕</string>
+    <string name="upload_get_image_error">取得圖片時出錯</string>
+    <string name="upload_engine_not_exist">引擎不存在</string>
     <string name="upload_working">正在上傳並等待回應…</string>
 
-    <string name="settings_notify_background">結果通知</string>
-    <string name="settings_notify_background_summary">當上傳在背景進行時發送通知而不是直接打開結果</string>
+    <string name="settings_notify_background">背景通知</string>
+    <string name="settings_notify_background_summary">在上傳在背景進行時傳達通知而不是直接開啟結果</string>
 
     <string name="night_mode">夜間模式</string>
     <string name="night_mode_off">關閉</string>
@@ -171,33 +174,33 @@
 
     <string name="pay_gp">Google Play</string>
     <string name="pay_alipay">Alipay</string>
-    <string name="donate_text">覺得這個應用程式好用嗎？\n給開發者捐贈來鼓勵開發者吧！</string>
-    <string name="pay_gp_set_up_failed">設定應用程式內結算失敗，可能是由於您沒有登入 Google 帳號或沒有安裝 Google Play。</string>
-    <string name="donate_thanks">感謝您的支持！</string>
-    <string name="donate_play_required">需要使用 Google Play 版。</string>
+    <string name="donate_text">你覺得本應用程式好用嗎？\n向開發人員傳送捐贈來鼓勵開發人員吧！</string>
+    <string name="pay_gp_set_up_failed">設定應用程式內購失敗，或許是由於你未登入你的 Google 帳號或 Google Play 商店未正常安裝。</string>
+    <string name="donate_thanks">感謝你的支持！</string>
+    <string name="donate_play_required">需要使用 Google Play 版本。</string>
 
     <string name="shortcut_upload_long">上傳新圖片</string>
     <string name="shortcut_upload_short">上傳</string>
     <string name="shortcut_upload_disabled">上傳</string>
 
-    <string name="donate_request">觉得这个应用有用吗？</string>
-    <string name="donate_request_1_message">想要给开发者捐赠来支持开发者吗？</string>
-    <string name="donate_request_2_message">为什么呢？</string>
-    <string name="donate_request_1_yes">好呀好呀！</string>
-    <string name="donate_request_1_no">才不要呢</string>
+    <string name="donate_request">你喜歡使用本程式嗎？</string>
+    <string name="donate_request_1_message">要向開發人員傳送捐贈作為鼓勵嗎？</string>
+    <string name="donate_request_2_message">你能講講為何不喜歡它嗎？</string>
+    <string name="donate_request_1_yes">好的，帶我去那裡！</string>
+    <string name="donate_request_1_no">不，你遲了。</string>
     <string name="yes">是</string>
-    <string name="no">并没有</string>
-    <string name="not_like_1">我不能得到我想要的结果。</string>
-    <string name="not_like_1_message">很抱歉，搜索结果由您选择的搜索引擎决定。\n如果想得到与图中出现的物体相关的搜索结果通常更难。</string>
+    <string name="no">不</string>
+    <string name="not_like_1">我未能得到我想要的结果。</string>
+    <string name="not_like_1_message">我很抱歉，我幫不上什麼忙。結果由您選擇的搜尋引擎控制。\n若你要得到與圖中事物相關的結果，那就更困難了。</string>
     <string name="not_like_2">我遇到一些 BUG。</string>
-    <string name="not_like_2_message">您想要发送反馈给开发者吗？</string>
-    <string name="not_like_3">我想发送反馈。</string>
-    <string name="send_feedback">发送反馈</string>
+    <string name="not_like_2_message">您要向開發人員傳送回饋嗎？</string>
+    <string name="not_like_3">我想傳送回饋。</string>
+    <string name="send_feedback">傳送回饋</string>
 
     <plurals name="notification_result_count">
-        <item quantity="other">%d 个结果</item>
+        <item quantity="other">%d 個結果</item>
     </plurals>
-    <string name="notification_upload_failed" formatted="false">%s 上传失败</string>
-    <string name="notification_uploaded" formatted="false">%s 已上传完成</string>
-    <string name="notification_tap_to_view" formatted="false">点按即可查看结果</string>
+    <string name="notification_upload_failed" formatted="false">%s 上傳已失敗</string>
+    <string name="notification_uploaded" formatted="false">%s 已上傳</string>
+    <string name="notification_tap_to_view" formatted="false">輕觸即可檢視結果</string>
 </resources>
